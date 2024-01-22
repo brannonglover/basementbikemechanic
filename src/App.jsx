@@ -38,6 +38,10 @@ const Title = styled.h1`
   margin: 0 auto;
   padding-top: .5rem;
 
+  a {
+    color: #000;
+  }
+
   @media screen and (min-width: 1000px) {
     font-size: 2rem;
     font-weight: bold;
@@ -101,6 +105,7 @@ const MyEmail = styled.div`
 
   a {
     text-decoration: none;
+    color: #000;
   }
 `;
 
