@@ -139,7 +139,7 @@ const App = () => {
       <IndividualServices>
         {config.individual_services.map(item => <IndividualBox services={item} key={item.id} />)}
       </IndividualServices>
-      <MyEmail>Contact Me @: <a href={`mailto:${config.email}`}>{config.email}</a> or <a href={`tel:${config.phone}`}>{config.phone}</a></MyEmail>
+      <MyEmail>Contact Me: <a href={`mailto:${config.email}`}>{config.email}</a> or <a href={`tel:${config.phone}`}>{config.phone}</a></MyEmail>
     </PageWrapper>
   )
 }
