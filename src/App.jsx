@@ -40,6 +40,7 @@ const Title = styled.h1`
 
   a {
     color: #fff;
+    text-decoration: none;
   }
 
   @media screen and (min-width: 1000px) {
