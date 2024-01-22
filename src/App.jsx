@@ -39,7 +39,7 @@ const Title = styled.h1`
   padding-top: .5rem;
 
   a {
-    color: #000;
+    color: #fff;
   }
 
   @media screen and (min-width: 1000px) {
