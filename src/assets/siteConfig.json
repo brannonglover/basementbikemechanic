@@ -106,8 +106,13 @@
     },
     {
       "id": 3,
-      "service": "Component installation",
+      "service": "Component Installation",
       "price": 55
+    },
+    {
+      "id": 4,
+      "service": "Brake Bleed",
+      "price": 35
     }
   ]
 }
