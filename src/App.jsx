@@ -11,6 +11,15 @@ const PageWrapper = styled.div`
   padding: 0;
 `;
 
+const SiteDescription = styled.section`
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1.1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 0;
+    line-height: 25px;
+`;
+
 const PageHeader = styled.section`
   background-color: #000;
   text-align: center;
@@ -130,6 +139,9 @@ const App = () => {
         <Logo src={BikeLogo} alt={config.title} />
         <Title>{config.title} {width < 1000 && <a href={`tel:${config.phone}`}>{config.phone}</a>}</Title>
       </PageHeader>
+        <SiteDescription>
+            {config.site_description}
+        </SiteDescription>
       <ServiceHeader>{ config.service_header }</ServiceHeader>
       <MyServices>
         {config.services.map(item => <ServiceBox services={item} key={item.id} />)}
