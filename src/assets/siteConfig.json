@@ -97,12 +97,12 @@
     },
     {
       "id": 1,
-      "service": "Single Tire Replacement w/tube",
+      "service": "Tire Replacement with tube (per tire)",
       "price": 10
     },
     {
       "id": 2,
-      "service": "Single Tire Replacement tubeless",
+      "service": "Tire Replacement tubeless (per tire)",
       "price": 20
     },
     {
@@ -112,7 +112,7 @@
     },
     {
       "id": 4,
-      "service": "Brake Bleed",
+      "service": "Brake Bleed (per brake)",
       "price": 35
     }
   ]
