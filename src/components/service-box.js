@@ -2,8 +2,12 @@ import React from 'react';
 import { styled } from 'styled-components';
 
 const ServiceBoxWrapper = styled.div`
-  width: 35rem;
+  width: 100%;
   padding-top: 1rem;
+
+  @media screen and (min-width: 1000px) {
+    width: 33%;
+  }
 `;
 
 const ServiceBoxName = styled.h3`
@@ -32,12 +36,12 @@ const ServiceList = styled.div`
   ul {
     margin: 0;
     padding: 1rem 0 1rem 2rem;
-    list-style: none;
   }
   li {
     font-size: 1.3rem;
     font-family: Arial, Helvetica, sans-serif;
     line-height: 35px;
+    padding-bottom: 0.7rem;
   }
 `;
 

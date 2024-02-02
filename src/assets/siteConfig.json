@@ -86,6 +86,53 @@
         }
       ],
       "price": 150
+    },
+    {
+      "id": 3,
+      "service": "Complete Bike Restore",
+      "list": [
+        {
+          "id": 1,
+          "task": "Complete tear down of bike"
+        },
+        {
+          "id": 2,
+          "task": "Bottom bracket inspected and if salvageable, will be cleaned and greased"
+        },
+        {
+          "id": 3,
+          "task": "Head tube cleaned and greased"
+        },
+        {
+          "id": 4,
+          "task": "Brakes cleaned and any rust removed as best possible and pivets greased"
+        },
+        {
+          "id": 5,
+          "task": "Bike frame inspected, paint touch up if needed and polished"
+        },
+        {
+          "id": 6,
+          "task": "Handlebars and stem inspected, rust removed and if needed, painted black or chrome polished"
+        },
+        {
+          "id": 7,
+          "task": "Brake levers cleaned, lubed, rust removed if any and polished"
+        },
+        {
+          "id": 8,
+          "task": "Derailleurs cleaned, rust removed if any and lubed"
+        },
+        {
+          "id": 9,
+          "task": "New cables installed and lubed for gears and brakes; if hydraulic brakes, new oil with brake bleed"
+        },
+        {
+          "id": 10,
+          "task": "Saddle greased and installed"
+        }
+      ],
+      "price": 300
     }
   ],
   "additional_services": "Services",

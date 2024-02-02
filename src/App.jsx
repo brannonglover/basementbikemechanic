@@ -12,12 +12,12 @@ const PageWrapper = styled.div`
 `;
 
 const SiteDescription = styled.section`
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 1.1rem;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem 0;
-    line-height: 25px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1.1rem;
+  max-width: 2000px;
+  margin: 0 auto;
+  padding: 2rem;
+  line-height: 25px;
 `;
 
 const PageHeader = styled.section`
