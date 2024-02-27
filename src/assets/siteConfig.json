@@ -31,11 +31,11 @@
         },
         {
           "id": 5,
-          "task": "Brakes clean/bed-in"
+          "task": "Brakes clean/bed-in (if needed)"
         },
         {
           "id": 6,
-          "task": "Wheel truing"
+          "task": "Wheel cleaning/truing"
         }
       ],
       "price": 75
@@ -66,11 +66,11 @@
         },
         {
           "id": 5,
-          "task": "Brakes clean/bed-in"
+          "task": "Brakes clean/bed-in (if needed)"
         },
         {
           "id": 6,
-          "task": "Wheel truing"
+          "task": "Wheel cleaning/truing"
         },
         {
           "id": 7,
@@ -89,7 +89,7 @@
     },
     {
       "id": 3,
-      "service": "Complete Bike Restore",
+      "service": "Complete Bike Tuneup",
       "list": [
         {
           "id": 1,
@@ -97,7 +97,7 @@
         },
         {
           "id": 2,
-          "task": "Bottom bracket inspected and if salvageable, will be cleaned and greased"
+          "task": "Bottom bracket cleaned and greased"
         },
         {
           "id": 3,
@@ -109,26 +109,18 @@
         },
         {
           "id": 5,
-          "task": "Bike frame inspected, paint touch up if needed and polished"
-        },
-        {
-          "id": 6,
-          "task": "Handlebars and stem inspected, rust removed and if needed, painted black or chrome polished"
-        },
-        {
-          "id": 7,
           "task": "Brake levers cleaned, lubed, rust removed if any and polished"
         },
         {
-          "id": 8,
+          "id": 6,
           "task": "Derailleurs cleaned, rust removed if any and lubed"
         },
         {
-          "id": 9,
+          "id": 7,
           "task": "New cables installed and lubed for gears and brakes; if hydraulic brakes, new oil with brake bleed"
         },
         {
-          "id": 10,
+          "id": 8,
           "task": "Saddle greased and installed"
         }
       ],
@@ -139,7 +131,7 @@
   "individual_services": [
     {
       "id": 0,
-      "service": "Wheel Truing (both)",
+      "service": "Wheel Cleaning/Truing (both)",
       "price": 50
     },
     {
@@ -161,6 +153,14 @@
       "id": 4,
       "service": "Brake Bleed (per brake)",
       "price": 35
+    }
+  ],
+  "bikes": [
+    {
+      "id": 0,
+      "name": "",
+      "images": [],
+      "price": 300
     }
   ]
 }
