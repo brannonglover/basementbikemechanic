@@ -92,7 +92,7 @@ const IndividualServices = styled.section`
   padding-top: 1rem;
 
   @media screen and (min-width: 1000px) {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     width: 53rem;
     column-gap: 1rem;
   }
