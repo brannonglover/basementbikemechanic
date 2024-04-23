@@ -153,6 +153,16 @@
       "id": 4,
       "service": "Brake Bleed (per brake)",
       "price": 35
+    },
+    {
+      "id": 5,
+      "service": "Cable Replacement (per cable)",
+      "price": 15
+    },
+    {
+      "id": 6,
+      "service": "Cable and Housing Replacement (per cable)",
+      "price": 35
     }
   ],
   "bikes": [
