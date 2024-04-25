@@ -163,6 +163,11 @@
       "id": 6,
       "service": "Cable and Housing Replacement (per cable)",
       "price": 35
+    },
+    {
+      "id": 7,
+      "service": "Gear Indexing",
+      "price": 25
     }
   ],
   "bikes": [
