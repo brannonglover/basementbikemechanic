@@ -168,6 +168,11 @@
       "id": 7,
       "service": "Gear Indexing",
       "price": 25
+    },
+    {
+      "id": 8,
+      "service": "Brake Pad Cleaning and Bedding (per brake)",
+      "price": 20
     }
   ],
   "bikes": [
