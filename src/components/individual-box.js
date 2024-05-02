@@ -16,6 +16,7 @@ const ServiceBoxName = styled.span`
   padding: 1rem 0;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 19px;
+  background-color: #FFF8E8;
 `;
 
 const ServicePrice = styled.span`
@@ -23,6 +24,7 @@ const ServicePrice = styled.span`
   font-family: Arial, Helvetica, sans-serif;
   font-weight: 700;
   padding: .5rem 0;
+  background-color: #E8EFFF;
 `;
 
 const ServiceBox = ({ services }) => {
