@@ -14,7 +14,7 @@ const PageWrapper = styled.div`
 const SiteDescription = styled.section`
   font-family: Arial, Helvetica, sans-serif;
   font-size: 1.1rem;
-  max-width: 2000px;
+  max-width: 1325px;
   margin: 0 auto;
   padding: 2rem;
   line-height: 25px;
@@ -77,7 +77,7 @@ const ServiceHeader = styled.h2`
 const MyServices = styled.section`
   margin: 0 auto;
   padding-top: 1rem;
-  width: 100%;
+  max-width: 1325px;
   font-size: 1rem;
   display: flex;
   flex-wrap: wrap;
