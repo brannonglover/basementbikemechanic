@@ -14,10 +14,14 @@ const PageWrapper = styled.div`
 const SiteDescription = styled.section`
   font-family: Arial, Helvetica, sans-serif;
   font-size: 1.1rem;
-  max-width: 1325px;
+  max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   line-height: 25px;
+
+  @media screen and (min-width: 1350px) {
+    padding-top: 2rem; 
+  }
 `;
 
 const PageHeader = styled.section`
