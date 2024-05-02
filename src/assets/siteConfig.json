@@ -173,6 +173,11 @@
       "id": 8,
       "service": "Brake Pad Cleaning and Bedding (per brake)",
       "price": 20
+    },
+    {
+      "id": 9,
+      "service": "Drop Bar Wrap",
+      "price": 35
     }
   ],
   "bikes": [
