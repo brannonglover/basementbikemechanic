@@ -145,7 +145,7 @@ const App = () => {
     <PageWrapper>
       <PageHeader>
         <Logo src={BikeLogo} alt={config.title} />
-        <Title>{config.title} {width < 1000 && <a href={`tel:${config.phone}`}>{config.phone}</a>}</Title>
+        <Title>{config.title} {"Text: " + width < 1000 && <a href={`tel:${config.phone}`}>{config.phone}</a>}</Title>
       </PageHeader>
         <SiteDescription>
             {config.site_description}
@@ -159,7 +159,7 @@ const App = () => {
       <IndividualServices>
         {config.individual_services.map(item => <IndividualBox services={item} key={item.id} />)}
       </IndividualServices>
-      <MyEmail>Contact Me: <a href={`mailto:${config.email}`}>{config.email}</a> or <a href={`tel:${config.phone}`}>{config.phone}</a></MyEmail>
+      <MyEmail>Email: <a href={`mailto:${config.email}`}>{config.email}</a> or Text: <a href={`tel:${config.phone}`}>{config.phone}</a></MyEmail>
     </PageWrapper>
   )
 }
