@@ -3,7 +3,7 @@ import { styled } from 'styled-components';
 import ServiceBox from "./components/service-box";
 import IndividualBox from "./components/individual-box";
 import config from './assets/siteConfig.json';
-import BikeLogo from './images/bike-repair.svg';
+import BikeLogo from './images/bike-repair.png';
 import HeaderImage from './images/header-image.jpeg';
 
 const PageWrapper = styled.div`
@@ -26,7 +26,6 @@ const SiteDescription = styled.section`
 
 const PageHeader = styled.section`
   background-color: #000;
-  text-align: center;
   padding: 1rem;
   border-bottom: 2px solid #E1AE8B;
 
@@ -64,6 +63,12 @@ const Title = styled.h1`
     width: auto;
   }
 `;
+
+const Tagline = styled.span`
+  font-size: 1rem;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #8bbe45;
+`
 
 const Logo = styled.img`
   width: 5rem;
@@ -145,7 +150,10 @@ const App = () => {
     <PageWrapper>
       <PageHeader>
         <Logo src={BikeLogo} alt={config.title} />
-        <Title>{config.title} {width < 1000 && <a href={`tel:${config.phone}`}>{config.phone}</a>}</Title>
+        <div>
+          <Title>{config.title} {width < 1000 && <a href={`tel:${config.phone}`}>{config.phone}</a>}</Title>
+          <Tagline>{config.tagline}</Tagline>
+        </div>
       </PageHeader>
         <SiteDescription>
             {config.site_description}
