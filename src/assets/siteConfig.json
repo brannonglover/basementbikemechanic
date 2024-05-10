@@ -138,12 +138,12 @@
     {
       "id": 1,
       "service": "Tube Replacement (per tire)",
-      "price": 10
+      "price": 15
     },
     {
       "id": 2,
       "service": "Tire Replacement tubeless (per tire)",
-      "price": 20
+      "price": 25
     },
     {
       "id": 3,
