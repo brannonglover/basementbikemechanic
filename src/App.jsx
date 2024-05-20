@@ -28,16 +28,27 @@ const PageHeader = styled.section`
   background-color: #000;
   padding: 1rem;
   border-bottom: 2px solid #E1AE8B;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  h1 {
+    text-align: center;
+  }
 
   @media screen and (min-width: 1000px) {
     display: flex;
-    align-items: center;
+    flex-direction: row;
     padding: 5rem 1rem 1rem;
     background-color: unset;
     background-image: url(${HeaderImage});
     background-size: cover;
     background-position: 0 -10rem;
     background-repeat: no-repeat;
+
+    h1 {
+      text-align: left;
+    }
   }
 `;
 
@@ -155,9 +166,9 @@ const App = () => {
           <Tagline>{config.tagline}</Tagline>
         </div>
       </PageHeader>
-        <SiteDescription>
-            {config.site_description}
-        </SiteDescription>
+      <SiteDescription>
+        {config.site_description}
+      </SiteDescription>
       <ServiceHeader>{ config.service_header }</ServiceHeader>
       <MyServices>
         {config.services.map(item => <ServiceBox services={item} key={item.id} />)}
