@@ -136,9 +136,9 @@ const MyEmail = styled.div`
   font-family: Arial, Helvetica, sans-serif;
   font-size: 1.3rem;
   text-align: center;
+  line-height: 2rem;
 
   a {
-    text-decoration: none;
     color: #000;
   }
 `;
@@ -178,7 +178,11 @@ const App = () => {
       <IndividualServices>
         {config.individual_services.map(item => <IndividualBox services={item} key={item.id} />)}
       </IndividualServices>
-      <MyEmail>Email: <a href={`mailto:${config.email}`}>{config.email}</a><br/>Text: <a href={`tel:${config.phone}`}>{config.phone}</a></MyEmail>
+      <MyEmail>
+        Text: <a href={`tel:${config.phone}`}>{config.phone}</a><br />
+        Email: <a href={`mailto:${config.email}`}>{config.email}</a><br />
+        Location: In the <a href="https://maps.app.goo.gl/dPsymJhVVwD5ymha6">Echo Hills</a> neighborhood
+      </MyEmail>
     </PageWrapper>
   )
 }
