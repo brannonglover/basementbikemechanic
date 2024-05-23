@@ -3,7 +3,7 @@
   "tagline": "Pedal with Confidence, Repair with Care",
   "phone": "404.809.7225",
   "email": "brannonglover@gmail.com",
-  "site_description": "Need a quick tune-up?  Tire go flat?  Feel free to hit me up through text or a call and I'll be happy to help you with your bike repair needs.  My bike repair \"shop\" is in the Atlanta area, but I'm happy to service and maintain your bike if you are outside the Atlanta area.  Contact me if you want the personal neighborly service.  I also provide bike pickup/drop-off, within a 5 mile radius, for $10.",
+  "site_description": "Need a quick tune-up?  Tire go flat?  Feel free to hit me up through text or a call and I'll be happy to help you with your bike repair needs.  My bike repair \"shop\" is in the Atlanta area within the Echo Hills neighborhood, but I'm happy to service and maintain your bike if you are outside the Atlanta area.  Contact me if you want the personal neighborly service.  I also provide bike pickup/drop-off, within a 5 mile radius, for $10.",
   "service_header": "Tune Ups",
   "services": [
     {
@@ -132,56 +132,61 @@
   "individual_services": [
     {
       "id": 0,
+      "service": "Bike Pick Up/Drop Off",
+      "price": 10
+    },
+    {
+      "id": 1,
       "service": "Wheel Cleaning/Truing (both)",
       "price": 50
     },
     {
-      "id": 1,
+      "id": 2,
       "service": "Tube Replacement (per tire)",
       "price": 15
     },
     {
-      "id": 2,
+      "id": 3,
       "service": "Tire Replacement tubeless (per tire)",
       "price": 25
     },
     {
-      "id": 3,
+      "id": 4,
       "service": "Component Installation",
       "price": 55
     },
     {
-      "id": 4,
+      "id": 5,
       "service": "Brake Bleed (per brake)",
       "price": 45
     },
     {
-      "id": 5,
+      "id": 6,
       "service": "Cable Replacement (per cable)",
       "price": 15
     },
     {
-      "id": 6,
+      "id": 7,
       "service": "Cable and Housing Replacement (per cable)",
       "price": 35
     },
     {
-      "id": 7,
+      "id": 8,
       "service": "Gear Indexing",
       "price": 25
     },
     {
-      "id": 8,
+      "id": 9,
       "service": "Chain Replacement",
       "price": 10
     },
     {
-      "id": 9,
+      "id": 10,
       "service": "Brake Pad Cleaning and Bedding (per brake)",
       "price": 20
     },
     {
-      "id": 10,
+      "id": 11,
       "service": "Drop Bar Wrap",
       "price": 35
     }
