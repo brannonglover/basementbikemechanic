@@ -3,7 +3,7 @@ import { styled } from 'styled-components';
 import ServiceBox from "./components/service-box";
 import IndividualBox from "./components/individual-box";
 import config from './assets/siteConfig.json';
-import BikeLogo from './images/bike-repair.png';
+import BikeLogo from './images/logo192.png';
 import HeaderImage from './images/header-image.jpeg';
 
 const PageWrapper = styled.div`
