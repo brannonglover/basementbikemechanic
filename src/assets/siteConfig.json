@@ -47,50 +47,22 @@
       "list": [
         {
           "id": 0,
-          "task": "Complete bike wash"
-        },
-        {
-          "id": 1,
-          "task": "Cassette/Freewheel cleaning"
-        },
-        {
-          "id": 2,
-          "task": "Cables lubed"
-        },
-        {
-          "id": 3,
-          "task": "Chain clean/lubed"
-        },
-        {
-          "id": 4,
-          "task": "Gear indexing"
-        },
-        {
-          "id": 5,
-          "task": "Brakes clean/bed-in (if needed)"
-        },
-        {
-          "id": 6,
-          "task": "Wheel cleaning/truing"
+          "task": "Standard Tune-Up plus..."
         },
         {
           "id": 7,
-          "task": "Hub bearings cleaning and re-grease"
-        },
-        {
-          "id": 8,
-          "task": "Bottom bracket bearings cleaning and re-grease"
+          "task": "Hub bearings replaced and greased"
         },
         {
           "id": 9,
-          "task": "Brake bleed (if needed)"
+          "task": "Brake bleed (if hydraulic)"
         }
       ],
-      "price": 150
+      "price": 125
     },
     {
       "id": 3,
-      "service": "Complete Bike Tuneup",
+      "service": "Complete Bike Tune-Up",
       "list": [
         {
           "id": 1,
@@ -106,19 +78,19 @@
         },
         {
           "id": 4,
-          "task": "Brakes cleaned and any rust removed as best possible and pivets greased"
+          "task": "Brakes cleaned, pivets cleaned and greased (v-brakes), pistons cleaned (mechanical or hydraulic)"
         },
         {
           "id": 5,
-          "task": "Brake levers cleaned, lubed, rust removed if any and polished"
+          "task": "Brake levers cleaned and lubed"
         },
         {
           "id": 6,
-          "task": "Derailleurs cleaned, rust removed if any and lubed"
+          "task": "Derailleurs cleaned and lubed"
         },
         {
           "id": 7,
-          "task": "New cables installed and lubed for gears and brakes; if hydraulic brakes, new oil with brake bleed"
+          "task": "New cables installed (if needed) and lubed for gears and brakes; if hydraulic brakes, new oil with brake bleed"
         },
         {
           "id": 8,
@@ -152,46 +124,41 @@
     },
     {
       "id": 4,
-      "service": "Component Installation",
-      "price": 55
-    },
-    {
-      "id": 5,
       "service": "Brake Bleed (per brake)",
       "price": 45
     },
     {
-      "id": 6,
+      "id": 5,
       "service": "Cable Replacement (per cable)",
       "price": 15
     },
     {
-      "id": 7,
+      "id": 6,
       "service": "Cable and Housing Replacement (per cable)",
       "price": 35
     },
     {
-      "id": 8,
+      "id": 7,
       "service": "Gear Indexing",
       "price": 25
     },
     {
-      "id": 9,
+      "id": 8,
       "service": "Chain Replacement",
       "price": 10
     },
     {
-      "id": 10,
+      "id": 9,
       "service": "Brake Pad Cleaning and Bedding (per brake)",
-      "price": 20
+      "price": 30
     },
     {
-      "id": 11,
+      "id": 10,
       "service": "Drop Bar Wrap",
       "price": 35
     },
     {
-      "id": 12,
+      "id": 11,
       "service": "Pedals installalation",
       "price": 8
     }
