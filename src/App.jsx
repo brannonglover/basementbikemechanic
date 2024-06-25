@@ -179,7 +179,7 @@ const App = () => {
         {config.individual_services.map(item => <IndividualBox services={item} key={item.id} />)}
       </IndividualServices>
       <MyEmail>
-        Text: <a href={`tel:${config.phone}`}>{config.phone}</a><br />
+        Text: <a href={`sms:${config.phone}`}>{config.phone}</a><br />
         Email: <a href={`mailto:${config.email}`}>{config.email}</a><br />
         Location: In the <a href="https://maps.app.goo.gl/dPsymJhVVwD5ymha6">Echo Hills</a> neighborhood
       </MyEmail>
