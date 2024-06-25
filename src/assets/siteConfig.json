@@ -3,7 +3,7 @@
   "tagline": "Pedal with Confidence, Repair with Care",
   "phone": "404.809.7225",
   "email": "brannonglover@gmail.com",
-  "site_description": "Welcome to Basement Bike Mechanic!  Need a quick tune-up?  Tire go flat?  Feel free to hit me up through text (by appointment only) and I'll be happy to help you with your bike repair needs.  My bike repair \"shop\" is in the Atlanta area within the Echo Hills neighborhood, but I'm happy to service and maintain your bike if you are outside the Atlanta area.  Contact me if you want the personal neighborly service.  I also provide bike pickup/drop-off, within a 5 mile radius, for $10.",
+  "site_description": "Welcome to Basement Bike Mechanic, a boutique bike repair shop!  Feel free to hit me up through text (by appointment only) and I'll be happy to help you with your bike repair needs.  My bike repair \"shop\" is in the Atlanta area within the Echo Hills neighborhood, but I'm happy to service and maintain your bike if you are outside the Atlanta area.  Contact me if you want the personal neighborly service.  I also provide bike pickup/drop-off, within a 5 mile radius, for $20.",
   "service_header": "Tune Ups",
   "services": [
     {
@@ -105,7 +105,7 @@
     {
       "id": 0,
       "service": "Bike Pick Up/Drop Off",
-      "price": 10
+      "price": 20
     },
     {
       "id": 1,
