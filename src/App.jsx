@@ -162,7 +162,7 @@ const App = () => {
       <PageHeader>
         <Logo src={BikeLogo} alt={config.title} />
         <div>
-          <Title>{config.title} {width < 1000 && <a href={`tel:${config.phone}`}>{config.phone}</a>}</Title>
+          <Title>{config.title} {width < 1000 && <a href={`sms:${config.phone}`}>{config.phone}</a>}</Title>
           <Tagline>{config.tagline}</Tagline>
         </div>
       </PageHeader>
