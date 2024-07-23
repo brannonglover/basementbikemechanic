@@ -157,12 +157,27 @@ const App = () => {
     }
   }, []);
 
+  function gtag_report_conversion(url) {
+    var callback = function () {
+      if (typeof (url) != 'undefined') {
+        window.location = url;
+      }
+    };
+    gtag('event', 'conversion', {
+      'send_to': 'TAG_ID/CONVERSION_LABEL',
+      'value': 1.0,
+      'currency': 'USD',
+      'event_callback': callback
+    });
+    return false;
+  }
+
   return (
     <PageWrapper>
       <PageHeader>
         <Logo src={BikeLogo} alt={config.title} />
         <div>
-          <Title>{config.title} {width < 1000 && <a href={`sms:${config.phone}`}>{config.phone}</a>}</Title>
+          <Title>{config.title} {width < 1000 && <a onClick={gtag_report_conversion} href={`sms:${config.phone}`}>{config.phone}</a>}</Title>
           <Tagline>{config.tagline}</Tagline>
         </div>
       </PageHeader>
