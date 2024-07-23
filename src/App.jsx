@@ -151,6 +151,13 @@ const App = () => {
       setWidth(window.innerWidth);
     }
     window.addEventListener('resize', handleResize);
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() { dataLayer.push(arguments); }
+    
+    gtag('js', new Date());
+    gtag('config', 'AW-16578987654');
+    gtag('event', 'conversion', {'send_to': 'AW-16578987654/JcCuCIuT27gZEIaNveE9'});
 
     return () => {
       window.removeEventListener('resize', handleResize);
