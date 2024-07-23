@@ -146,14 +146,14 @@ const MyEmail = styled.div`
 const App = () => {
   const [width, setWidth] = useState(window.innerWidth);
 
+  function gtag() { window.dataLayer.push(arguments); }
+
   useEffect(() => {
     const handleResize = () => {
       setWidth(window.innerWidth);
     }
     window.addEventListener('resize', handleResize);
     window.dataLayer = window.dataLayer || [];
-
-    function gtag() { dataLayer.push(arguments); }
     
     gtag('js', new Date());
     gtag('config', 'AW-16578987654');
