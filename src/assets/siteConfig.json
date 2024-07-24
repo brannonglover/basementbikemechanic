@@ -16,27 +16,39 @@
         },
         {
           "id": 1,
-          "task": "Cassette/Freewheel cleaning"
-        },
-        {
-          "id": 2,
-          "task": "Cables lubed"
-        },
-        {
-          "id": 3,
           "task": "Chain clean/lubed"
         },
         {
+          "id": 2,
+          "task": "Cassette/Freewheel cleaning"
+        },
+        {
+          "id": 3,
+          "task": "Cables lubed"
+        },
+        {
           "id": 4,
-          "task": "Gear indexing"
+          "task": "Brake levers cleaned and lubed"
         },
         {
           "id": 5,
-          "task": "Brakes clean/bed-in (if needed)"
+          "task": "Derailleurs cleaned and lubed"
         },
         {
           "id": 6,
+          "task": "Gear indexing"
+        },
+        {
+          "id": 7,
+          "task": "Brakes clean/bed-in (if needed)"
+        },
+        {
+          "id": 8,
           "task": "Wheel cleaning/truing"
+        },
+        {
+          "id": 9,
+          "task": "Saddle greased"
         }
       ],
       "price": 75
@@ -50,54 +62,15 @@
           "task": "Standard Tune-Up plus..."
         },
         {
-          "id": 7,
-          "task": "Hub bearings replaced and greased"
+          "id": 1,
+          "task": "Wheel hub bearings replaced"
         },
         {
-          "id": 9,
+          "id": 2,
           "task": "Brake bleed (if hydraulic)"
         }
       ],
       "price": 125
-    },
-    {
-      "id": 3,
-      "service": "Complete Bike Tune-Up",
-      "list": [
-        {
-          "id": 1,
-          "task": "Complete tear down of bike"
-        },
-        {
-          "id": 2,
-          "task": "Bottom bracket cleaned and greased"
-        },
-        {
-          "id": 3,
-          "task": "Head tube cleaned and greased"
-        },
-        {
-          "id": 4,
-          "task": "Brakes cleaned, pivets cleaned and greased (v-brakes), pistons cleaned (mechanical or hydraulic)"
-        },
-        {
-          "id": 5,
-          "task": "Brake levers cleaned and lubed"
-        },
-        {
-          "id": 6,
-          "task": "Derailleurs cleaned and lubed"
-        },
-        {
-          "id": 7,
-          "task": "New cables installed (if needed) and lubed for gears and brakes; if hydraulic brakes, new oil with brake bleed"
-        },
-        {
-          "id": 8,
-          "task": "Saddle greased and installed"
-        }
-      ],
-      "price": 300
     }
   ],
   "additional_services": "Services",
@@ -109,8 +82,8 @@
     },
     {
       "id": 1,
-      "service": "Wheel Cleaning/Truing (both)",
-      "price": 50
+      "service": "Wheel Cleaning/Truing (per tire)",
+      "price": 25
     },
     {
       "id": 2,
@@ -161,6 +134,11 @@
       "id": 11,
       "service": "Pedals installalation",
       "price": 8
+    },
+    {
+      "id": 12,
+      "service": "Wheel hub bearings replaced",
+      "price": 35
     }
   ],
   "bikes": [
