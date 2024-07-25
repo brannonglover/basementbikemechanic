@@ -209,7 +209,7 @@ const App = () => {
       <MyEmail>
         Text: <a onClick={gtag_report_conversion} href={`sms:${config.phone}`}>{config.phone}</a><br />
         Email: <a href={`mailto:${config.email}`}>{config.email}</a><br />
-        Location: In the <a href="https://maps.app.goo.gl/dPsymJhVVwD5ymha6">Echo Hills</a> neighborhood
+        Location: <a href="https://maps.app.goo.gl/dPsymJhVVwD5ymha6">Melinda Dr NE, Atlanta GA 30345</a>
       </MyEmail>
     </PageWrapper>
   )
