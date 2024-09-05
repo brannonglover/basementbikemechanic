@@ -155,42 +155,17 @@ const App = () => {
     window.addEventListener('resize', handleResize);
     window.dataLayer = window.dataLayer || [];
     
-    gtag('js', new Date());
-    gtag('config', 'AW-16578987654');
-    gtag('event', 'conversion', {'send_to': 'AW-16578987654/JcCuCIuT27gZEIaNveE9'});
-
     return () => {
       window.removeEventListener('resize', handleResize);
     }
   }, []);
-
-  function gtag_report_conversion(url) {
-    var callback = function () {
-      if (typeof(url) != 'undefined') {
-        window.location = url;
-      }
-    };
-
-    gtag('event', 'conversion', {
-        'send_to': 'AW-16578987654/P1sJCJPchsUZEIaNveE9',
-        'event_callback': callback
-    });
-
-    gtag('event', 'conversion', {
-      'send_to': 'TAG_ID/CONVERSION_LABEL',
-      'value': 1.0,
-      'currency': 'USD',
-      'event_callback': callback
-    });
-    return false;
-  }
 
   return (
     <PageWrapper>
       <PageHeader>
         <Logo src={BikeLogo} alt={config.title} />
         <div>
-          <Title>{config.title} {width < 1000 && <a onClick={gtag_report_conversion} href={`sms:${config.phone}`}>{config.phone}</a>}</Title>
+          <Title>{config.title} {width < 1000 && <a href={`sms:${config.phone}`}>{config.phone}</a>}</Title>
           <Tagline>{config.tagline}</Tagline>
         </div>
       </PageHeader>
