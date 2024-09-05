@@ -146,8 +146,6 @@ const MyEmail = styled.div`
 const App = () => {
   const [width, setWidth] = useState(window.innerWidth);
 
-  function gtag() { window.dataLayer.push(arguments); }
-
   useEffect(() => {
     const handleResize = () => {
       setWidth(window.innerWidth);
