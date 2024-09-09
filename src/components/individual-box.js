@@ -4,11 +4,11 @@ import { styled } from 'styled-components';
 const IndividualBoxWrapper = styled.div`
   display: grid;
   align-items: center;
-  grid-template-columns: 1fr 3rem;
+  grid-template-columns: 1fr 5rem;
   border-bottom: 1px solid gray;
 
   @media screen and (min-width: 1000px) {
-    grid-template-columns: 23rem 3rem;
+    grid-template-columns: 23rem 5rem;
     justify-content: center;
   }
 `;
@@ -21,10 +21,12 @@ const ServiceBoxName = styled.span`
 `;
 
 const ServicePrice = styled.span`
-  font-size: 19px;
+  display: flex;
+  justify-content: center;
+  font-size: 1.1875rem;
   font-family: Arial, Helvetica, sans-serif;
   font-weight: 700;
-  padding: 1rem 0.5rem;
+  padding: 1rem 2rem;
   background-color: #cee3f0;
 `;
 
