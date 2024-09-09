@@ -55,7 +55,7 @@
     },
     {
       "id": 1,
-      "service": "A Bit More Tune-Up",
+      "service": "Deep Clean Tune-Up",
       "list": [
         {
           "id": 0,
@@ -63,14 +63,18 @@
         },
         {
           "id": 1,
-          "task": "Wheel hub bearings replaced"
+          "task": "Wheel hub bearings cleaned and replaced"
         },
         {
           "id": 2,
-          "task": "Brake bleed (if hydraulic)"
+          "task": "Bottom bracket removed and cleaned"
+        },
+        {
+          "id": 3,
+          "task": "Headset removed and cleaned"
         }
       ],
-      "price": 125
+      "price": 180
     }
   ],
   "additional_services": "Services",
@@ -139,6 +143,11 @@
       "id": 12,
       "service": "Wheel hub bearings replaced",
       "price": 35
+    },
+    {
+      "id": 13,
+      "service": "Complete bike build",
+      "price": 250
     }
   ],
   "bikes": [
