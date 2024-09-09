@@ -32,22 +32,18 @@
         },
         {
           "id": 5,
-          "task": "Derailleurs cleaned and lubed"
-        },
-        {
-          "id": 6,
           "task": "Gear indexing"
         },
         {
-          "id": 7,
+          "id": 6,
           "task": "Brakes clean/bed-in (if needed)"
         },
         {
-          "id": 8,
+          "id": 7,
           "task": "Wheel cleaning/truing"
         },
         {
-          "id": 9,
+          "id": 8,
           "task": "Saddle greased"
         }
       ],
@@ -63,14 +59,18 @@
         },
         {
           "id": 1,
-          "task": "Wheel hub bearings cleaned and replaced"
+          "task": "Derailleurs cleaned and lubed"
         },
         {
           "id": 2,
-          "task": "Bottom bracket removed and cleaned"
+          "task": "Wheel hub bearings cleaned and replaced"
         },
         {
           "id": 3,
+          "task": "Bottom bracket removed and cleaned"
+        },
+        {
+          "id": 4,
           "task": "Headset removed and cleaned"
         }
       ],
