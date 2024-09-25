@@ -113,11 +113,12 @@ const IndividualServices = styled.section`
 
   @media screen and (min-width: 1000px) {
     grid-template-columns: 1fr 1fr;
-    width: 53rem;
+    width: 57rem;
     column-gap: 1rem;
   }
 
-  @media screen and (min-width: 1350px) {
+  @media screen and (min-width: 1450px) {
+    width: 86rem;
     grid-template-columns: 1fr 1fr 1fr;
   }
 `;
