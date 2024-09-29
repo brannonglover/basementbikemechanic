@@ -119,7 +119,6 @@ const IndividualServices = styled.section`
 
   @media screen and (min-width: 1450px) {
     width: 86rem;
-    max-width: 550px;
     grid-template-columns: 1fr 1fr 1fr;
   }
 `;
