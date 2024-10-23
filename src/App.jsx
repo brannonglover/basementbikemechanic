@@ -149,17 +149,18 @@ const ViewButton = styled.div`
   justify-content: center;
   align-items: center;
 
+  .active {
+    background-color: #f9a61c;
+  }
+
   button {
     margin: 0 .5rem;
     background-color: #fecf11;
     border: 1px solid #b90000;
     padding: .5rem 1.5rem;
     font-size: 1rem;
-  }
-
-  button:focus,
-  button:visited {
-    background-color: #f9a61c;
+    color: #000;
+    cursor: pointer;
   }
 `;
 
@@ -200,7 +201,7 @@ const App = () => {
         {config.site_description}
       </SiteDescription>
       <ViewButton>
-        <button onClick={() => switchViews('tuneup')}>Tune Ups</button><button onClick={() => switchViews('service')}>Services</button>
+        <button onClick={() => switchViews('tuneup')} className={view === 'tuneup' && 'active'}>Tune Ups</button><button onClick={() => switchViews('service')} className={view === 'service' && 'active'}>Services</button>
       </ViewButton>
       {view === 'tuneup' && (
         <>
