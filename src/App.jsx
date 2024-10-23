@@ -144,8 +144,28 @@ const MyEmail = styled.div`
   }
 `;
 
+const ViewButton = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  button {
+    margin: 0 .5rem;
+    background-color: #fecf11;
+    border: 1px solid #b90000;
+    padding: .5rem 1.5rem;
+    font-size: 1rem;
+  }
+
+  button:focus,
+  button:visited {
+    background-color: #f9a61c;
+  }
+`;
+
 const App = () => {
   const [width, setWidth] = useState(window.innerWidth);
+  const [view, setView] = useState('tuneup');
 
   useEffect(() => {
     const handleResize = () => {
@@ -159,6 +179,14 @@ const App = () => {
     }
   }, []);
 
+  function switchViews(view) {
+    if (view === 'tuneup') {
+      setView('tuneup');
+    } else {
+      setView('service');
+    }
+  }
+
   return (
     <PageWrapper>
       <PageHeader>
@@ -171,15 +199,26 @@ const App = () => {
       <SiteDescription>
         {config.site_description}
       </SiteDescription>
-      <ServiceHeader>{ config.service_header }</ServiceHeader>
-      <MyServices>
-        {config.services.map(item => <ServiceBox services={item} key={item.id} />)}
-      </MyServices>
-      <BreakLine />
-      <ServiceHeader>{ config.additional_services }</ServiceHeader>
-      <IndividualServices>
-        {config.individual_services.map(item => <IndividualBox services={item} key={item.id} />)}
-      </IndividualServices>
+      <ViewButton>
+        <button onClick={() => switchViews('tuneup')}>Tune Ups</button><button onClick={() => switchViews('service')}>Services</button>
+      </ViewButton>
+      {view === 'tuneup' && (
+        <>
+          <ServiceHeader>{ config.service_header }</ServiceHeader>
+          <MyServices>
+            {config.services.map(item => <ServiceBox services={item} key={item.id} />)}
+          </MyServices>
+        </>
+      )}
+      {/* <BreakLine /> */}
+      {view === 'service' && (
+        <>
+          <ServiceHeader>{ config.additional_services }</ServiceHeader>
+          <IndividualServices>
+            {config.individual_services.map(item => <IndividualBox services={item} key={item.id} />)}
+          </IndividualServices>
+        </>
+      )}
       <MyEmail>
         Text: <a href={`tel:${config.phone}`}>{config.phone}</a><br />
         Email: <a href={`mailto:${config.email}`}>{config.email}</a><br />
