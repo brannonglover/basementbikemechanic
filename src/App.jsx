@@ -123,13 +123,13 @@ const IndividualServices = styled.section`
   }
 `;
 
-const BreakLine = styled.div`
-  width: 50%;
-  background-color: #7a7979;
-  height: 2px;
-  padding: 0;
-  margin: 5rem auto 1rem;
-`;
+// const BreakLine = styled.div`
+//   width: 50%;
+//   background-color: #7a7979;
+//   height: 2px;
+//   padding: 0;
+//   margin: 5rem auto 1rem;
+// `;
 
 const MyEmail = styled.div`
   padding-top: 4rem;
