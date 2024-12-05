@@ -150,12 +150,12 @@ const ViewButton = styled.div`
   align-items: center;
 
   .active {
-    background-color: #f9a61c;
+    background-color: #fecf11;
   }
 
   button {
     margin: 0 .5rem;
-    background-color: #fecf11;
+    background-color: #f9a61c;
     border: 1px solid #b90000;
     padding: .5rem 1.5rem;
     font-size: 1rem;
@@ -174,7 +174,7 @@ const App = () => {
     }
     window.addEventListener('resize', handleResize);
     window.dataLayer = window.dataLayer || [];
-    
+
     return () => {
       window.removeEventListener('resize', handleResize);
     }

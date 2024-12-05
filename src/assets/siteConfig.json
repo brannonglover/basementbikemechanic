@@ -20,30 +20,22 @@
         },
         {
           "id": 2,
-          "task": "Cassette/Freewheel cleaning"
+          "task": "Cables lubed (+15 for drop bar)"
         },
         {
           "id": 3,
-          "task": "Cables lubed"
-        },
-        {
-          "id": 4,
-          "task": "Brake levers cleaned and lubed"
-        },
-        {
-          "id": 5,
           "task": "Gear indexing"
         },
         {
-          "id": 6,
-          "task": "Brakes clean/bed-in (if needed)"
+          "id": 4,
+          "task": "Brakes cleaned"
         },
         {
-          "id": 7,
+          "id": 5,
           "task": "Wheel cleaning/truing"
         },
         {
-          "id": 8,
+          "id": 6,
           "task": "Saddle greased"
         }
       ],
@@ -59,18 +51,22 @@
         },
         {
           "id": 1,
-          "task": "Derailleurs cleaned and lubed"
+          "task": "Cassette/Freewheel cleaning"
         },
         {
           "id": 2,
-          "task": "Wheel hub bearings cleaned and/or replaced"
+          "task": "Derailleurs cleaned and lubed"
         },
         {
           "id": 3,
-          "task": "Bottom bracket removed and cleaned"
+          "task": "Wheel hub bearings cleaned and/or replaced"
         },
         {
           "id": 4,
+          "task": "Bottom bracket removed and cleaned"
+        },
+        {
+          "id": 5,
           "task": "Headset removed and cleaned"
         }
       ],
