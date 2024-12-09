@@ -123,13 +123,13 @@ const IndividualServices = styled.section`
   }
 `;
 
-// const BreakLine = styled.div`
-//   width: 50%;
-//   background-color: #7a7979;
-//   height: 2px;
-//   padding: 0;
-//   margin: 5rem auto 1rem;
-// `;
+const BreakLine = styled.div`
+  width: 50%;
+  background-color: #7a7979;
+  height: 2px;
+  padding: 0;
+  margin: 5rem auto 1rem;
+`;
 
 const MyEmail = styled.div`
   padding-top: 4rem;
@@ -167,6 +167,7 @@ const ViewButton = styled.div`
 const App = () => {
   const [width, setWidth] = useState(window.innerWidth);
   const [view, setView] = useState('tuneup');
+  console.log(width);
 
   useEffect(() => {
     const handleResize = () => {
@@ -200,20 +201,35 @@ const App = () => {
       <SiteDescription>
         {config.site_description}
       </SiteDescription>
-      <ViewButton>
-        <button onClick={() => switchViews('tuneup')} className={view === 'tuneup' && 'active'}>Tune Ups</button><button onClick={() => switchViews('service')} className={view === 'service' && 'active'}>Services</button>
-      </ViewButton>
-      {view === 'tuneup' && (
+      {width <= 1000 ? (
+        <>
+          <ViewButton>
+            <button onClick={() => switchViews('tuneup')} className={view === 'tuneup' && 'active'}>Tune Ups</button><button onClick={() => switchViews('service')} className={view === 'service' && 'active'}>Services</button>
+          </ViewButton>
+          {view === 'tuneup' && (
+            <>
+              <ServiceHeader>{ config.service_header }</ServiceHeader>
+              <MyServices>
+                {config.services.map(item => <ServiceBox services={item} key={item.id} />)}
+              </MyServices>
+            </>
+          )}
+          {view === 'service' && (
+          <>
+            <ServiceHeader>{ config.additional_services }</ServiceHeader>
+            <IndividualServices>
+              {config.individual_services.map(item => <IndividualBox services={item} key={item.id} />)}
+            </IndividualServices>
+          </>
+          )}
+        </>  
+      ) : (
         <>
           <ServiceHeader>{ config.service_header }</ServiceHeader>
           <MyServices>
             {config.services.map(item => <ServiceBox services={item} key={item.id} />)}
           </MyServices>
-        </>
-      )}
-      {/* <BreakLine /> */}
-      {view === 'service' && (
-        <>
+          <BreakLine/>
           <ServiceHeader>{ config.additional_services }</ServiceHeader>
           <IndividualServices>
             {config.individual_services.map(item => <IndividualBox services={item} key={item.id} />)}
