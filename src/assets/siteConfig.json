@@ -188,7 +188,12 @@
     },
     {
       "id": 13,
-      "service": "Complete bike build",
+      "service": "Complete bike build (kids)",
+      "price": 180
+    },
+    {
+      "id": 14,
+      "service": "Complete bike build (adult)",
       "price": 250
     }
   ],
