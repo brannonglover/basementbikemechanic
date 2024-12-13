@@ -167,7 +167,6 @@ const ViewButton = styled.div`
 const App = () => {
   const [width, setWidth] = useState(window.innerWidth);
   const [view, setView] = useState('tuneup');
-  console.log(width);
 
   useEffect(() => {
     const handleResize = () => {
@@ -187,6 +186,24 @@ const App = () => {
     } else {
       setView('service');
     }
+  }
+
+  function gtag(){window.dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'AW-16578987654');
+
+  function gtag_report_conversion(url) {
+    var callback = function () {
+      if (typeof(url) != 'undefined') {
+        window.location = url;
+      }
+    };
+    gtag('event', 'conversion', {
+        'send_to': 'AW-16578987654/P1sJCJPchsUZEIaNveE9',
+        'event_callback': callback
+    });
+    return false;
   }
 
   return (
