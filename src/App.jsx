@@ -193,6 +193,9 @@ const App = () => {
 
   gtag('config', 'AW-16578987654');
 
+  // record page view
+  gtag('event', 'conversion', {'send_to': 'AW-16578987654/JcCuCIuT27gZEIaNveE9'});
+
   function gtag_report_conversion(url) {
     var callback = function () {
       if (typeof(url) != 'undefined') {
