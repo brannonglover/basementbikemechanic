@@ -197,14 +197,9 @@ const App = () => {
   gtag('event', 'conversion', {'send_to': 'AW-16578987654/JcCuCIuT27gZEIaNveE9'});
 
   function gtag_report_conversion(url) {
-    var callback = function () {
-      if (typeof(url) != 'undefined') {
-        window.location = url;
-      }
-    };
     gtag('event', 'conversion', {
         'send_to': 'AW-16578987654/P1sJCJPchsUZEIaNveE9',
-        'event_callback': callback
+        'event_callback': ''
     });
     return false;
   }
@@ -214,7 +209,7 @@ const App = () => {
       <PageHeader>
         <Logo src={BikeLogo} alt={config.title} />
         <div>
-          <Title>{config.title} {width < 1000 && <a onClick={() => gtag_report_conversion(config.phone)} href={`tel:${config.phone}`}>{config.phone}</a>}</Title>
+          <Title>{config.title} {width < 1000 && <a onClick={() => gtag_report_conversion()} href={`tel:${config.phone}`}>{config.phone}</a>}</Title>
           <Tagline>{config.tagline}</Tagline>
         </div>
       </PageHeader>
@@ -257,7 +252,7 @@ const App = () => {
         </>
       )}
       <MyEmail>
-        Text: <a onClick={() => gtag_report_conversion(config.phone)} href={`tel:${config.phone}`}>{config.phone}</a><br />
+        Text: <a onClick={() => gtag_report_conversion()} href={`tel:${config.phone}`}>{config.phone}</a><br />
         Email: <a href={`mailto:${config.email}`}>{config.email}</a><br />
         Location: <a href="https://maps.app.goo.gl/dPsymJhVVwD5ymha6">Melinda Dr NE, Atlanta GA 30345</a>
       </MyEmail>
