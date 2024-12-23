@@ -82,18 +82,81 @@
         },
         {
           "id": 1,
-          "task": "Cleaning of lowers"
+          "task": "Cleaning of lower cylinders"
         },
         {
-          "id": 2,
-          "task": "New oil added"
+          "id": 1,
+          "task": "Remove, clean and install foam rings"
+        },
+        {
+          "id": 1,
+          "task": "Cleaning of upper tubes"
+        },
+        {
+          "id": 1,
+          "task": "New grease added to seals"
         },
         {
           "id": 3,
           "task": "Reassembly of lowers"
+        },
+        {
+          "id": 2,
+          "task": "New oil added to lowers (if needed)"
         }
       ],
-      "price": 125
+      "price": 75
+    },
+    {
+      "id": 2,
+      "service": "200 Hr Fork Service",
+      "list": [
+        {
+          "id": 0,
+          "task": "Tear down of lowers"
+        },
+        {
+          "id": 1,
+          "task": "Cleaning of lower cylinders"
+        },
+        {
+          "id": 1,
+          "task": "Remove, clean and install foam rings"
+        },
+        {
+          "id": 3,
+          "task": "Remove, clean and install wiper seals"
+        },
+        {
+          "id": 3,
+          "task": "Tear down of uppers"
+        },
+        {
+          "id": 3,
+          "task": "Clean/lube/install (or replace) all o-rings"
+        },
+        {
+          "id": 3,
+          "task": "Reassemble upper tubes"
+        },
+        {
+          "id": 1,
+          "task": "Cleaning of upper tubes (outter)"
+        },
+        {
+          "id": 1,
+          "task": "New grease added to seals"
+        },
+        {
+          "id": 3,
+          "task": "Reassembly of lowers"
+        },
+        {
+          "id": 2,
+          "task": "New oil added to uppers"
+        }
+      ],
+      "price": 150
     },
     {
       "id": 3,
