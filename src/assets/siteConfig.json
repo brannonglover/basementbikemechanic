@@ -3,7 +3,7 @@
   "tagline": "Pedal with Confidence, Repair with Care",
   "phone": "404.809.7225",
   "email": "brannonglover@gmail.com",
-  "site_description": "Welcome to the Basement Bike Mechanic, a boutique bike repair shop based in Atlanta!  Feel free to contact me through text or phone call and I'll be happy to help you with your bike repair needs.  My bike repair \"shop\" is in the Atlanta area, but I'm happy to service and maintain your bike if you are outside the Atlanta area.  Contact me if you want the personal neighborly service.  I also provide bike pickup/drop-off, within a 5 mile radius, for $20.",
+  "site_description": "Welcome to the Basement Bike Mechanic, a boutique bike repair shop based in Atlanta!  Feel free to contact me through text or phone call and I'll be happy to help you with your bike repair needs.  My bike repair \"shop\" is in the Atlanta area, but I'm happy to service and maintain your bike if you are outside the Atlanta area.  Contact me if you want the personal neighborly service.  I also provide bike pickup/drop-off, within a 5 mile radius, for $10.",
   "service_header": "Tune Ups",
   "services": [
     {
@@ -157,29 +157,6 @@
         }
       ],
       "price": 150
-    },
-    {
-      "id": 3,
-      "service": "50 Hr Shock Service",
-      "list": [
-        {
-          "id": 0,
-          "task": "Tear down of shock"
-        },
-        {
-          "id": 1,
-          "task": "Cleaning of shock"
-        },
-        {
-          "id": 2,
-          "task": "Adding oil to shock"
-        },
-        {
-          "id": 3,
-          "task": "Reassembly of shock"
-        }
-      ],
-      "price": 75
     }
   ],
   "additional_services": "Services",
@@ -208,6 +185,11 @@
       "id": 4,
       "service": "Brake Bleed (per brake)",
       "price": 45
+    },
+    {
+      "id": 5,
+      "service": "Hanger alignment",
+      "price": 35
     },
     {
       "id": 5,
