@@ -16,26 +16,30 @@
         },
         {
           "id": 1,
-          "task": "Chain clean/lubed"
+          "task": "Cassette/Freewheel cleaning"
         },
         {
           "id": 2,
-          "task": "Cables lubed (+15 for drop bar)"
+          "task": "Chain clean/lubed"
         },
         {
           "id": 3,
-          "task": "Gear indexing"
+          "task": "Cables lubed (+15 for drop bar)"
         },
         {
           "id": 4,
-          "task": "Brakes cleaned"
+          "task": "Gear indexing"
         },
         {
           "id": 5,
-          "task": "Wheel cleaning/truing"
+          "task": "Brakes cleaned"
         },
         {
           "id": 6,
+          "task": "Wheel cleaning/truing"
+        },
+        {
+          "id": 7,
           "task": "Saddle greased"
         }
       ],
@@ -51,23 +55,19 @@
         },
         {
           "id": 1,
-          "task": "Cassette/Freewheel cleaning"
-        },
-        {
-          "id": 2,
           "task": "Derailleurs cleaned and lubed"
         },
         {
+          "id": 2,
+          "task": "Wheel hub bearings cleaned or replaced pending condition (+15 for closed bearings)"
+        },
+        {
           "id": 3,
-          "task": "Wheel hub bearings cleaned and/or replaced"
+          "task": "Bottom bracket bearings cleaned or replaced pending condition (+15 for closed bearings)"
         },
         {
           "id": 4,
-          "task": "Bottom bracket removed and cleaned"
-        },
-        {
-          "id": 5,
-          "task": "Headset removed and cleaned"
+          "task": "Headset bearings cleaned or replaced pending condition (+15 for closed bearings)"
         }
       ],
       "price": 120
