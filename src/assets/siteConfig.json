@@ -28,18 +28,22 @@
         },
         {
           "id": 4,
-          "task": "Gear indexing"
+          "task": "Cables replaced if frayed"
         },
         {
           "id": 5,
-          "task": "Brakes cleaned"
+          "task": "Gear indexing"
         },
         {
           "id": 6,
-          "task": "Wheel cleaning/truing"
+          "task": "Brakes cleaned (if glazed, a sanding is needed followed by bed in time)"
         },
         {
           "id": 7,
+          "task": "Wheel cleaning/truing"
+        },
+        {
+          "id": 8,
           "task": "Saddle greased"
         }
       ],
@@ -59,18 +63,18 @@
         },
         {
           "id": 2,
-          "task": "Wheel hub bearings cleaned or replaced pending condition \n(+15 for closed bearings)"
+          "task": "Wheel hub bearings cleaned or replaced pending condition (+15 for closed bearings)"
         },
         {
           "id": 3,
-          "task": "Bottom bracket bearings cleaned or replaced pending condition \n(+15 for closed bearings)"
+          "task": "Bottom bracket bearings cleaned or replaced pending condition (+15 for closed bearings)"
         },
         {
           "id": 4,
-          "task": "Headset bearings cleaned or replaced pending condition \n(+15 for closed bearings)"
+          "task": "Headset bearings cleaned or replaced pending condition (+15 for closed bearings)"
         }
       ],
-      "price": 120
+      "price": 135
     },
     {
       "id": 2,
