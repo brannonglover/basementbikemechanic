@@ -3,7 +3,7 @@
   "tagline": "Pedal with Confidence, Repair with Care",
   "phone": "404.809.7225",
   "email": "brannonglover@gmail.com",
-  "site_description": "Welcome to the Basement Bike Mechanic, a boutique bike repair shop based in Atlanta!  Feel free to contact me through text or phone call and I'll be happy to help you with your bike repair needs.  My bike repair \"shop\" is in the Atlanta area, but I'm happy to service and maintain your bike if you are outside the Atlanta area.  Contact me if you want the personal neighborly service.  I also provide bike pickup/drop-off, within a 5 mile radius, for $10.",
+  "site_description": "Welcome to the Basement Bike Mechanic, a boutique bike repair shop based in Atlanta!  Feel free to contact me through text or phone call and I'll be happy to help you with your bike repair needs.  My bike repair \"shop\" is in the Atlanta area, but I'm happy to service and maintain your bike if you are outside the Atlanta area.  Contact me if you want the personal neighborly service.  I also provide bike pickup/drop-off, within a 5 mile radius, for $20.",
   "service_header": "Tune Ups",
   "services": [
     {
@@ -68,10 +68,6 @@
         {
           "id": 3,
           "task": "Bottom bracket bearings cleaned or replaced pending condition (+15 for closed bearings)"
-        },
-        {
-          "id": 4,
-          "task": "Headset bearings cleaned or replaced pending condition (+15 for closed bearings)"
         }
       ],
       "price": 135
@@ -86,26 +82,26 @@
         },
         {
           "id": 1,
-          "task": "Cleaning of lower cylinders"
-        },
-        {
-          "id": 1,
-          "task": "Remove, clean and install foam rings"
-        },
-        {
-          "id": 1,
-          "task": "Cleaning of upper tubes"
-        },
-        {
-          "id": 1,
-          "task": "New grease added to seals"
-        },
-        {
-          "id": 3,
-          "task": "Reassembly of lowers"
+          "task": "Cleaning of lowers"
         },
         {
           "id": 2,
+          "task": "Remove and clean (replace, if needed) foam rings"
+        },
+        {
+          "id": 3,
+          "task": "Cleaning of upper stanchions (outter)"
+        },
+        {
+          "id": 4,
+          "task": "New grease added to seals"
+        },
+        {
+          "id": 5,
+          "task": "Reassembly of lowers"
+        },
+        {
+          "id": 6,
           "task": "New oil added to lowers (if needed)"
         }
       ],
@@ -124,7 +120,7 @@
           "task": "Cleaning of lower cylinders"
         },
         {
-          "id": 1,
+          "id": 2,
           "task": "Remove, clean and install foam rings"
         },
         {
@@ -132,35 +128,105 @@
           "task": "Remove, clean and install wiper seals"
         },
         {
-          "id": 3,
+          "id": 4,
           "task": "Tear down of uppers"
         },
         {
-          "id": 3,
+          "id": 5,
           "task": "Clean/lube/install (or replace) all o-rings"
         },
         {
-          "id": 3,
+          "id": 6,
           "task": "Reassemble upper tubes"
         },
         {
-          "id": 1,
+          "id": 7,
           "task": "Cleaning of upper tubes (outter)"
         },
         {
-          "id": 1,
+          "id": 8,
           "task": "New grease added to seals"
         },
         {
-          "id": 3,
+          "id": 9,
           "task": "Reassembly of lowers"
         },
         {
-          "id": 2,
+          "id": 10,
           "task": "New oil added to uppers"
         }
       ],
       "price": 150
+    },
+    {
+      "id": 2,
+      "service": "50 Hr Shock Service",
+      "list": [
+        {
+          "id": 0,
+          "task": "Tear down shock"
+        },
+        {
+          "id": 1,
+          "task": "Cleaning of air can"
+        },
+        {
+          "id": 2,
+          "task": "Remove, clean and lube o-rings (replace if needed)"
+        },
+        {
+          "id": 3,
+          "task": "Add fresh oil to air can for smooth compression"
+        },
+        {
+          "id": 4,
+          "task": "Reassemble shock"
+        }
+      ],
+      "price": 75
+    },
+    {
+      "id": 2,
+      "service": "200 Hr Shock Service",
+      "list": [
+        {
+          "id": 0,
+          "task": "Tear down shock"
+        },
+        {
+          "id": 1,
+          "task": "Cleaning of air can"
+        },
+        {
+          "id": 2,
+          "task": "Remove, clean and lube o-rings (replace if needed)"
+        },
+        {
+          "id": 3,
+          "task": "Remove, clean and grease oil reservoir"
+        },
+        {
+          "id": 4,
+          "task": "Remove, clean and grease IFP"
+        },
+        {
+          "id": 5,
+          "task": "Install IFP at proper depth for compression"
+        },
+        {
+          "id": 6,
+          "task": "Fill lower chamber with appropriate air pressure"
+        },
+        {
+          "id": 7,
+          "task": "Add fresh oil to air can for smooth compression"
+        },
+        {
+          "id": 8,
+          "task": "Reassemble shock"
+        }
+      ],
+      "price": 75
     }
   ],
   "additional_services": "Services",
