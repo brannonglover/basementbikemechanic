@@ -50,6 +50,33 @@
       "price": 75
     },
     {
+      "id": 2,
+      "service": "Kid's Bike Tune-Up (Up to 16\")",
+      "list": [
+        {
+          "id": 0,
+          "task": "Complete bike wash"
+        },
+        {
+          "id": 2,
+          "task": "Chain clean/lubed"
+        },
+        {
+          "id": 3,
+          "task": "Cables lubed (+15 for drop bar)"
+        },
+        {
+          "id": 4,
+          "task": "Cables replaced if frayed"
+        },
+        {
+          "id": 8,
+          "task": "Saddle greased"
+        }
+      ],
+      "price": 45
+    },
+    {
       "id": 1,
       "service": "Deep Clean Tune-Up",
       "list": [
