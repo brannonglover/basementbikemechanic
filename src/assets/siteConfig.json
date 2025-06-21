@@ -8,6 +8,33 @@
   "services": [
     {
       "id": 0,
+      "service": "Basic Tune-Up",
+      "list": [
+        {
+          "id": 0,
+          "task": "Complete bike wash"
+        },
+        {
+          "id": 1,
+          "task": "Chain clean/lubed"
+        },
+        {
+          "id": 2,
+          "task": "Cables lubed (+15 for drop bar)"
+        },
+        {
+          "id": 3,
+          "task": "Gear indexing"
+        },
+        {
+          "id": 4,
+          "task": "Brakes cleaned"
+        }
+      ],
+      "price": 75
+    },
+    {
+      "id": 0,
       "service": "Standard Tune-Up",
       "list": [
         {
@@ -36,7 +63,7 @@
         },
         {
           "id": 6,
-          "task": "Brakes cleaned (if glazed, a sanding is needed followed by bed in time)"
+          "task": "Brakes cleaned"
         },
         {
           "id": 7,
@@ -58,19 +85,19 @@
           "task": "Complete bike wash"
         },
         {
-          "id": 2,
+          "id": 1,
           "task": "Chain clean/lubed"
         },
         {
-          "id": 3,
+          "id": 2,
           "task": "Cables lubed (+15 for drop bar)"
         },
         {
-          "id": 4,
+          "id": 3,
           "task": "Cables replaced if frayed"
         },
         {
-          "id": 8,
+          "id": 4,
           "task": "Saddle greased"
         }
       ],
@@ -86,14 +113,10 @@
         },
         {
           "id": 1,
-          "task": "Derailleurs cleaned and lubed"
-        },
-        {
-          "id": 2,
           "task": "Wheel hub bearings cleaned or replaced pending condition (+15 for closed bearings)"
         },
         {
-          "id": 3,
+          "id": 2,
           "task": "Bottom bracket bearings cleaned or replaced pending condition (+15 for closed bearings)"
         }
       ],
