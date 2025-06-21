@@ -47,7 +47,7 @@
           "task": "Saddle greased"
         }
       ],
-      "price": 75
+      "price": 120
     },
     {
       "id": 2,
@@ -74,7 +74,7 @@
           "task": "Saddle greased"
         }
       ],
-      "price": 45
+      "price": 50
     },
     {
       "id": 1,
@@ -97,7 +97,7 @@
           "task": "Bottom bracket bearings cleaned or replaced pending condition (+15 for closed bearings)"
         }
       ],
-      "price": 135
+      "price": 175
     },
     {
       "id": 2,
