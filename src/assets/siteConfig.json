@@ -28,7 +28,7 @@
         },
         {
           "id": 4,
-          "task": "Brakes cleaned"
+          "task": "Brake pads cleaned"
         }
       ],
       "price": 75
@@ -55,7 +55,7 @@
         },
         {
           "id": 4,
-          "task": "Brakes cleaned"
+          "task": "Brake pads cleaned"
         }
       ],
       "price": 110
@@ -90,7 +90,7 @@
         },
         {
           "id": 6,
-          "task": "Brakes cleaned"
+          "task": "Brake pads cleaned"
         },
         {
           "id": 7,
@@ -133,7 +133,7 @@
         },
         {
           "id": 6,
-          "task": "Brakes cleaned"
+          "task": "Brake pads cleaned"
         },
         {
           "id": 7,
