@@ -35,6 +35,33 @@
     },
     {
       "id": 0,
+      "service": "Basic Tune-Up eBike",
+      "list": [
+        {
+          "id": 0,
+          "task": "Complete bike wash"
+        },
+        {
+          "id": 1,
+          "task": "Chain clean/lubed"
+        },
+        {
+          "id": 2,
+          "task": "Cables lubed (+15 for drop bar)"
+        },
+        {
+          "id": 3,
+          "task": "Gear indexing"
+        },
+        {
+          "id": 4,
+          "task": "Brakes cleaned"
+        }
+      ],
+      "price": 110
+    },
+    {
+      "id": 0,
       "service": "Standard Tune-Up",
       "list": [
         {
@@ -75,6 +102,49 @@
         }
       ],
       "price": 120
+    },
+    {
+      "id": 0,
+      "service": "Standard Tune-Up eBike",
+      "list": [
+        {
+          "id": 0,
+          "task": "Complete bike wash"
+        },
+        {
+          "id": 1,
+          "task": "Cassette/Freewheel cleaning"
+        },
+        {
+          "id": 2,
+          "task": "Chain clean/lubed"
+        },
+        {
+          "id": 3,
+          "task": "Cables lubed"
+        },
+        {
+          "id": 4,
+          "task": "Cables replaced if frayed"
+        },
+        {
+          "id": 5,
+          "task": "Gear indexing"
+        },
+        {
+          "id": 6,
+          "task": "Brakes cleaned"
+        },
+        {
+          "id": 7,
+          "task": "Wheel cleaning/truing"
+        },
+        {
+          "id": 8,
+          "task": "Saddle greased"
+        }
+      ],
+      "price": 155
     },
     {
       "id": 2,
