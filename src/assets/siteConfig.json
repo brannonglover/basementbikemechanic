@@ -422,6 +422,11 @@
       "price": 30
     },
     {
+      "id": 13,
+      "service": "Brake Pad Cleaning and Bedding (per brake) eBike",
+      "price": 40
+    },
+    {
       "id": 14,
       "service": "Drop Bar Wrap",
       "price": 35
