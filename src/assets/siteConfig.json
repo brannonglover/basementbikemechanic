@@ -392,6 +392,11 @@
       "price": 45
     },
     {
+      "id": 7,
+      "service": "Brake Bleed (per brake) eBike",
+      "price": 65
+    },
+    {
       "id": 8,
       "service": "Hanger alignment",
       "price": 35
