@@ -28,7 +28,7 @@
         },
         {
           "id": 4,
-          "task": "Brake pads cleaned"
+          "task": "Brakes cleaned"
         }
       ],
       "price": 75
@@ -55,7 +55,7 @@
         },
         {
           "id": 4,
-          "task": "Brake pads cleaned"
+          "task": "Brakes cleaned"
         }
       ],
       "price": 110
@@ -70,7 +70,7 @@
         },
         {
           "id": 1,
-          "task": "Cassette/Freewheel cleaning"
+          "task": "Cassette/Freewheel cleaning (ultrasonic)"
         },
         {
           "id": 2,
@@ -90,7 +90,7 @@
         },
         {
           "id": 6,
-          "task": "Brake pads cleaned"
+          "task": "Brakes cleaned"
         },
         {
           "id": 7,
@@ -133,7 +133,7 @@
         },
         {
           "id": 6,
-          "task": "Brake pads cleaned"
+          "task": "Brakes cleaned"
         },
         {
           "id": 7,
