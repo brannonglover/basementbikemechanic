@@ -3,7 +3,7 @@
   "tagline": "Pedal with Confidence, Repair with Care",
   "phone": "404.809.7225",
   "email": "brannonglover@gmail.com",
-  "site_description": "Welcome to the Basement Bike Mechanic, a boutique bike repair shop based in Atlanta!  Feel free to contact me through text or phone call and I'll be happy to help you with your bike repair needs.  My bike repair \"shop\" is in the Atlanta area, but I'm happy to service and maintain your bike if you are outside the Atlanta area.  Contact me if you want the personal neighborly service.  I also provide bike pickup/drop-off, within a 5 mile radius, for $20.",
+  "site_description": "Basement Bike Mechanic is Atlanta's trusted neighborhood shop, offering expert bicycle repair with reliable service and a welcoming touch. From tune-ups to custom builds, I take pride in quality craftsmanship, clear communication, and building lasting relationships with every rider.",
   "service_header": "Tune Ups",
   "services": [
     {
@@ -304,101 +304,106 @@
     },
     {
       "id": 1,
+      "service": "Bike Pick Up/Drop Off e-bike",
+      "price": 30
+    },
+    {
+      "id": 2,
       "service": "Wheel Cleaning/Truing (per tire)",
       "price": 25
     },
     {
-      "id": 2,
+      "id": 3,
       "service": "Tube Replacement (per tire)",
       "price": 15
     },
     {
-      "id": 3,
+      "id": 4,
       "service": "Tube Replacement eBike (per tire)",
       "price": 35
     },
     {
-      "id": 4,
+      "id": 5,
       "service": "Tube and Tire Replacement (per tire)",
       "price": 20
     },
     {
-      "id": 5,
+      "id": 6,
       "service": "Tube and Tire Replacement eBike (per tire)",
       "price": 30
     },
     {
-      "id": 6,
+      "id": 7,
       "service": "Tire Replacement tubeless (per tire)",
       "price": 35
     },
     {
-      "id": 7,
+      "id": 8,
       "service": "Brake Bleed (per brake)",
       "price": 45
     },
     {
-      "id": 7,
+      "id": 9,
       "service": "Brake Bleed (per brake) eBike",
       "price": 65
     },
     {
-      "id": 8,
+      "id": 10,
       "service": "Hanger alignment",
       "price": 35
     },
     {
-      "id": 9,
+      "id": 11,
       "service": "Cable Replacement (per cable)",
       "price": 15
     },
     {
-      "id": 10,
+      "id": 12,
       "service": "Cable and Housing Replacement (per cable)",
       "price": 35
     },
     {
-      "id": 11,
+      "id": 13,
       "service": "Gear Indexing",
       "price": 25
     },
     {
-      "id": 12,
+      "id": 14,
       "service": "Chain Replacement",
       "price": 10
     },
     {
-      "id": 13,
+      "id": 15,
       "service": "Brake Pad Cleaning and Bedding (per brake)",
       "price": 30
     },
     {
-      "id": 13,
+      "id": 16,
       "service": "Brake Pad Cleaning and Bedding (per brake) eBike",
       "price": 40
     },
     {
-      "id": 14,
+      "id": 17,
       "service": "Drop Bar Wrap",
       "price": 35
     },
     {
-      "id": 15,
+      "id": 18,
       "service": "Pedals installalation",
       "price": 8
     },
     {
-      "id": 16,
+      "id": 19,
       "service": "Wheel hub bearings replaced",
       "price": 35
     },
     {
-      "id": 17,
+      "id": 20,
       "service": "Complete bike build (kids)",
       "price": 45
     },
     {
-      "id": 18,
+      "id": 21,
       "service": "Complete bike build (adult)",
       "price": 250
     }
