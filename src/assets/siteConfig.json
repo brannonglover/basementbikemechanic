@@ -298,16 +298,6 @@
   "additional_services": "Services",
   "individual_services": [
     {
-      "id": 0,
-      "service": "Bike Pick Up/Drop Off",
-      "price": 20
-    },
-    {
-      "id": 1,
-      "service": "Bike Pick Up/Drop Off e-bike",
-      "price": 30
-    },
-    {
       "id": 2,
       "service": "Wheel Cleaning/Truing (per tire)",
       "price": 25
