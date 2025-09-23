@@ -305,22 +305,12 @@
     {
       "id": 3,
       "service": "Tube Replacement (per tire)",
-      "price": 15
+      "price": 20
     },
     {
       "id": 4,
       "service": "Tube Replacement eBike (per tire)",
-      "price": 35
-    },
-    {
-      "id": 5,
-      "service": "Tube and Tire Replacement (per tire)",
-      "price": 20
-    },
-    {
-      "id": 6,
-      "service": "Tube and Tire Replacement eBike (per tire)",
-      "price": 30
+      "price": 40
     },
     {
       "id": 7,
