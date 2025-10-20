@@ -379,13 +379,18 @@
     },
     {
       "id": 20,
-      "service": "Complete bike build (kids)",
+      "service": "New bike build (kids)",
       "price": 45
     },
     {
       "id": 21,
-      "service": "Complete bike build (adult)",
-      "price": 250
+      "service": "New bike build (adult)",
+      "price": 100
+    },
+    {
+      "id": 22,
+      "service": "New bike build (adult) (e-bike)",
+      "price": 150
     }
   ],
   "bikes": [
