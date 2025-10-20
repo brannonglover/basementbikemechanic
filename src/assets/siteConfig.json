@@ -391,6 +391,11 @@
       "id": 22,
       "service": "New bike build (adult) (e-bike)",
       "price": 150
+    },
+    {
+      "id": 23,
+      "service": "Bike assembly from traveling",
+      "price": 75
     }
   ],
   "bikes": [
