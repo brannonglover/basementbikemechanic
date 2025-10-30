@@ -230,7 +230,7 @@ const App = () => {
     <PageWrapper>
       <PageHeader>
         <Logo src={BikeLogo} alt={config.title} />
-        <div className={{display: 'flex', flex: '1', flexDirection: 'column'}}>
+        <div style={{display: 'flex', flex: '1', flexDirection: 'column'}}>
           <Title>{config.title} {width < 1000 && <a href={`tel:${config.phone}`}>{config.phone}</a>}</Title>
           <Tagline>{config.tagline}</Tagline>
         </div>
