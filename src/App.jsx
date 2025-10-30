@@ -164,6 +164,28 @@ const ViewButton = styled.div`
   }
 `;
 
+const BookButton = styled.a`
+  background-color: #fecf11;
+  border: none;
+  color: #000;
+  text-transform: uppercase;
+  text-decoration: none;
+  font-family: Helvetica;
+  letter-spacing: 1px;
+  padding: .5rem 1rem;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
+  display: block;
+  width: fit-content;
+  margin: 1rem auto;
+
+  @media screen and (min-width: 1000px) {
+    margin: .5rem 0;
+  }
+`;
+
 const App = () => {
   const [width, setWidth] = useState(window.innerWidth);
   const [view, setView] = useState('tuneup');
@@ -208,9 +230,12 @@ const App = () => {
     <PageWrapper>
       <PageHeader>
         <Logo src={BikeLogo} alt={config.title} />
-        <div>
+        <div className={{display: 'flex', flex: '1', flexDirection: 'column'}}>
           <Title>{config.title} {width < 1000 && <a href={`tel:${config.phone}`}>{config.phone}</a>}</Title>
           <Tagline>{config.tagline}</Tagline>
+        </div>
+        <div>
+          <BookButton target="_top" href="https://app.squareup.com/appointments/book/co6ki51af3tlib/CG8TB6AZ54M0E/start" rel="nofollow">Book now</BookButton>
         </div>
       </PageHeader>
       <SiteDescription>
