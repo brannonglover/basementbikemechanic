@@ -235,7 +235,7 @@ const App = () => {
           <Tagline>{config.tagline}</Tagline>
         </div>
         <div>
-          <BookButton target="_top" href="https://app.squareup.com/appointments/book/co6ki51af3tlib/CG8TB6AZ54M0E/start" rel="nofollow">Book now</BookButton>
+          <BookButton target="_top" href="https://bookings.hubtiger.com/bikes?shop=HUB.B6C2AD05A76D4BC0AC6658BE86139A54CED6598205274ED09BBFFBB95E1CF59B.TIGER&lang=en" rel="nofollow">Book now</BookButton>
         </div>
       </PageHeader>
       <SiteDescription>
