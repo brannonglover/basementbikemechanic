@@ -5,6 +5,7 @@ import IndividualBox from "./components/individual-box";
 import config from './assets/siteConfig.json';
 import BikeLogo from './images/logo192.png';
 import HeaderImage from './images/header-image.jpeg';
+import TuneUp from './images/close-up-hand-repairing-bike.jpg';
 
 const PageWrapper = styled.div`
   margin: 0 auto;
@@ -23,6 +24,20 @@ const SiteDescription = styled.section`
     padding-top: 2rem; 
   }
 `;
+
+const RegularMaintenance = styled.section`
+  display: flex;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1.1rem;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  line-height: 25px;
+
+  img {
+    padding-right: 4rem;
+  }
+`
 
 const PageHeader = styled.section`
   background-color: #000;
@@ -241,6 +256,13 @@ const App = () => {
       <SiteDescription>
         {config.site_description}
       </SiteDescription>
+      <RegularMaintenance>
+        <img src={TuneUp} alt="Regular Maintenance" />
+        <div>
+          <p>{config.regular_maintenance_first}</p>
+          <p>{config.regular_maintenance_second}</p>
+        </div>
+      </RegularMaintenance>
       {width <= 1000 ? (
         <>
           <ViewButton>
