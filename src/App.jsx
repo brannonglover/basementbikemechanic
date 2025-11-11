@@ -20,19 +20,43 @@ const SiteDescription = styled.section`
   padding: 2rem;
   line-height: 25px;
 
+  h1 {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+
   @media screen and (min-width: 1350px) {
     padding-top: 2rem; 
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
   }
 `;
 
 const RegularMaintenance = styled.section`
   display: flex;
+  flex-direction: column;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 1.1rem;
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   line-height: 25px;
+
+  h2 {
+    margin-top: 3rem;
+  }
+  
+  @media screen and (min-width: 1100px) {
+    flex-direction: row;
+
+    h2 {
+      margin-top: 0;
+    }
+  }
+
 
   img {
     padding-right: 4rem;
@@ -254,11 +278,13 @@ const App = () => {
         </div>
       </PageHeader>
       <SiteDescription>
+        <h1>Welcome to Basement Bike Mechanic!</h1>
         {config.site_description}
       </SiteDescription>
       <RegularMaintenance>
         <img src={TuneUp} alt="Regular Maintenance" />
         <div>
+          <h2>Regular Maintenance</h2>
           <p>{config.regular_maintenance_first}</p>
           <p>{config.regular_maintenance_second}</p>
         </div>
