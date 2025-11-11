@@ -48,7 +48,7 @@ const RegularMaintenance = styled.section`
   h2 {
     margin-top: 3rem;
   }
-  
+
   @media screen and (min-width: 1100px) {
     flex-direction: row;
 
@@ -75,7 +75,7 @@ const PageHeader = styled.section`
     text-align: center;
   }
 
-  @media screen and (min-width: 1000px) {
+  @media screen and (min-width: 1100px) {
     display: flex;
     flex-direction: row;
     padding: 5rem 1rem 1rem;
