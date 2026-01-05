@@ -274,7 +274,7 @@ const App = () => {
           <Tagline>{config.tagline}</Tagline>
         </div>
         <div>
-          <BookButton target="_top" href="https://bookings.hubtiger.com/bikes?shop=HUB.B6C2AD05A76D4BC0AC6658BE86139A54CED6598205274ED09BBFFBB95E1CF59B.TIGER&lang=en" rel="nofollow">Book now</BookButton>
+          <BookButton target="_top" onClick={() => window.Workshop?.SetupPopupWidget({ mechanicId: "org_36FeYJJNtZLXtzKEq7r8IrsgsCl", frameColour: "#ff7a59" }) }>Book now</BookButton>
         </div>
       </PageHeader>
       <SiteDescription>
