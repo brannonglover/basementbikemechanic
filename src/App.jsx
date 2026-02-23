@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { styled } from 'styled-components';
 import ServiceBox from "./components/service-box";
 import IndividualBox from "./components/individual-box";
@@ -225,6 +225,26 @@ const BookButton = styled.a`
   }
 `;
 
+function ReviewWidget({ token }) {
+  const scriptLoaded = useRef(false);
+
+  useEffect(() => {
+    if (scriptLoaded.current) return;
+    const script = document.createElement("script");
+    script.src = "https://localimpact.com/js/v2/embed.js?id=4a24b3ba631386ba5f4ec3ef018ac9ca";
+    script.type = "text/javascript";
+    script.async = true;
+    document.body.appendChild(script);
+    scriptLoaded.current = true;
+    return () => {
+      if (script.parentNode) {
+        script.parentNode.removeChild(script);
+      }
+    };
+  }, []);
+  return <div data-romw-token={token} />;
+}
+
 const App = () => {
   const [width, setWidth] = useState(window.innerWidth);
   const [view, setView] = useState('tuneup');
@@ -289,8 +309,7 @@ const App = () => {
           <p>{config.regular_maintenance_second}</p>
         </div>
       </RegularMaintenance>
-      <div data-romw-token="bSpwsMrwg8NYUbvrGcAohM5Yqk7y5RfZ3dTI2ec6PDt9hESskv" data-romw-lazy></div>
-      <script src="https://localimpact.com/js/v2/embed.js?id=b8f5b4fd2464663219f4d9b7ec62f159" type="text/javascript" defer></script>
+      <ReviewWidget token="4a24b3ba631386ba5f4ec3ef018ac9ca" />
       {width <= 1000 ? (
         <>
           <ViewButton>
