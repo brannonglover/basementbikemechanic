@@ -225,13 +225,19 @@ const BookButton = styled.a`
   }
 `;
 
+const ReviewWidgetWrapper = styled.div`
+  margin: 0 auto;
+  padding: 2rem;
+  max-width: 1280px;
+`;
+
 function ReviewWidget({ token }) {
   const scriptLoaded = useRef(false);
 
   useEffect(() => {
     if (scriptLoaded.current) return;
     const script = document.createElement("script");
-    script.src = "https://localimpact.com/js/v2/embed.js?id=4a24b3ba631386ba5f4ec3ef018ac9ca";
+    script.src = "https://localimpact.com/js/v2/embed.js?id=b8f5b4fd2464663219f4d9b7ec62f159";
     script.type = "text/javascript";
     script.async = true;
     document.body.appendChild(script);
@@ -301,6 +307,9 @@ const App = () => {
         <h1>Welcome to Basement Bike Mechanic!</h1>
         {config.site_description}
       </SiteDescription>
+      <ReviewWidgetWrapper>
+        <ReviewWidget token="bSpwsMrwg8NYUbvrGcAohM5Yqk7y5RfZ3dTI2ec6PDt9hESskv" />
+      </ReviewWidgetWrapper>
       <RegularMaintenance>
         <img src={TuneUp} alt="Regular Maintenance" />
         <div>
@@ -309,7 +318,6 @@ const App = () => {
           <p>{config.regular_maintenance_second}</p>
         </div>
       </RegularMaintenance>
-      <ReviewWidget token="4a24b3ba631386ba5f4ec3ef018ac9ca" />
       {width <= 1000 ? (
         <>
           <ViewButton>
