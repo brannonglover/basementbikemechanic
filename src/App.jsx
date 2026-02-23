@@ -289,6 +289,8 @@ const App = () => {
           <p>{config.regular_maintenance_second}</p>
         </div>
       </RegularMaintenance>
+      <div data-romw-token="bSpwsMrwg8NYUbvrGcAohM5Yqk7y5RfZ3dTI2ec6PDt9hESskv" data-romw-lazy></div>
+      <script src="https://localimpact.com/js/v2/embed.js?id=b8f5b4fd2464663219f4d9b7ec62f159" type="text/javascript" defer></script>
       {width <= 1000 ? (
         <>
           <ViewButton>
