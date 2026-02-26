@@ -183,6 +183,21 @@ const MyEmail = styled.div`
   }
 `;
 
+// footer that appears at the bottom of every page
+const Footer = styled.footer`
+  background-color: #f9f9f9;
+  padding: 1rem 0;
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.9rem;
+  border-top: 1px solid #ddd;
+
+  a {
+    color: #0077cc;
+    text-decoration: none;
+  }
+`;
+
 const ViewButton = styled.div`
   display: flex;
   justify-content: center;
@@ -358,6 +373,9 @@ const App = () => {
         Email: <a href={`mailto:${config.email}`}>{config.email}</a><br />
         Location: <a href="https://maps.app.goo.gl/dPsymJhVVwD5ymha6">Melinda Dr NE, Atlanta GA 30345</a>
       </MyEmail>
+      <Footer>
+        <a href="/privacy.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
+      </Footer>
     </PageWrapper>
   )
 }
