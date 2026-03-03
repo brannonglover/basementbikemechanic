@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from 'styled-components';
 import ServiceBox from "./components/service-box";
 import IndividualBox from "./components/individual-box";
