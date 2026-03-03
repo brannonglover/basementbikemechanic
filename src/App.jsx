@@ -156,46 +156,6 @@ const ViewButton = styled.div`
 
 
 
-const ReviewWidgetWrapper = styled.div`
-  margin: 0 auto;
-  padding: 2rem;
-  max-width: 1280px;
-`;
-
-function ReviewWidget({ token }) {
-  const containerRef = useRef(null);
-  const scriptLoaded = useRef(false);
-
-  useEffect(() => {
-    if (scriptLoaded.current || !containerRef.current) return;
-    try {
-      const script = document.createElement("script");
-      script.src = "https://localimpact.com/js/v2/embed.js?id=b8f5b4fd2464663219f4d9b7ec62f159";
-      script.type = "text/javascript";
-      script.async = true;
-      script.onload = () => {
-        // Trigger widget initialization after script loads
-        if (window.ROMW) {
-          window.ROMW.reload && window.ROMW.reload();
-        }
-      };
-      script.onerror = () => {
-        console.warn('ReviewWidget script failed to load');
-      };
-      document.body.appendChild(script);
-      scriptLoaded.current = true;
-      return () => {
-        if (script.parentNode) {
-          script.parentNode.removeChild(script);
-        }
-      };
-    } catch (error) {
-      console.error('Error loading ReviewWidget:', error);
-    }
-  }, []);
-  return <div ref={containerRef} data-romw-token={token} data-romw-index="0" />;
-}
-
 const App = () => {
   const [width, setWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1024);
   const [view, setView] = useState('tuneup');

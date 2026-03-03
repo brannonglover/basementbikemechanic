@@ -9,9 +9,15 @@ const FooterStyled = styled.footer`
   font-size: 0.9rem;
   border-top: 1px solid #ddd;
 
-  a {
+  a, button {
     color: #0077cc;
     text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
+    padding: 0;
 
     &:hover {
       text-decoration: underline;
@@ -33,7 +39,7 @@ function Footer({ onNavigatePrivacy, onBack }) {
 
   return (
     <FooterStyled>
-      <a href="#" onClick={handleClick}>{linkText}</a>
+      <button onClick={handleClick}>{linkText}</button>
     </FooterStyled>
   );
 }
