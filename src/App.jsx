@@ -1,10 +1,11 @@
 import React, { useRef, useEffect, useState } from "react";
-import { styled } from 'styled-components';
+import styled from 'styled-components';
 import ServiceBox from "./components/service-box";
 import IndividualBox from "./components/individual-box";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import Privacy from "./Privacy";
 import config from './assets/siteConfig.json';
-import BikeLogo from './images/logo192.png';
-import HeaderImage from './images/header-image.jpeg';
 import TuneUp from './images/close-up-hand-repairing-bike.jpg';
 
 const PageWrapper = styled.div`
@@ -57,73 +58,21 @@ const RegularMaintenance = styled.section`
     }
   }
 
-
   img {
-    padding-right: 4rem;
-  }
-`
+    width: calc(100% + 4rem);
+    margin-left: -2rem;
+    margin-right: -2rem;
+    object-fit: cover;
 
-const PageHeader = styled.section`
-  background-color: #000;
-  padding: 1rem;
-  border-bottom: 2px solid #E1AE8B;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  h1 {
-    text-align: center;
-  }
-
-  @media screen and (min-width: 1100px) {
-    display: flex;
-    flex-direction: row;
-    padding: 5rem 1rem 1rem;
-    background-color: unset;
-    background-image: url(${HeaderImage});
-    background-size: cover;
-    background-position: 0 -10rem;
-    background-repeat: no-repeat;
-
-    h1 {
-      text-align: left;
+    @media screen and (min-width: 1100px) {
+      width: auto;
+      margin: 0;
+      padding-right: 4rem;
     }
   }
-`;
-
-
-const Title = styled.h1`
-  width: 16rem;
-  font-size: 1.3rem;
-  font-family: Arial, Helvetica, sans-serif;
-  color: #fff;
-  margin: 0 auto;
-  padding-top: .5rem;
-
-  a {
-    color: #fff;
-    text-decoration: none;
-  }
-
-  @media screen and (min-width: 1000px) {
-    font-size: 2rem;
-    font-weight: bold;
-    text-align: center;
-    margin: 0;
-    width: auto;
-  }
-`;
-
-const Tagline = styled.span`
-  font-size: 1rem;
-  font-family: Arial, Helvetica, sans-serif;
-  color: #8bbe45;
 `
 
-const Logo = styled.img`
-  width: 5rem;
-  padding-right: 1rem;
-`;
+
 
 const ServiceHeader = styled.h2`
   margin: 0;
@@ -183,20 +132,7 @@ const MyEmail = styled.div`
   }
 `;
 
-// footer that appears at the bottom of every page
-const Footer = styled.footer`
-  background-color: #f9f9f9;
-  padding: 1rem 0;
-  text-align: center;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 0.9rem;
-  border-top: 1px solid #ddd;
 
-  a {
-    color: #0077cc;
-    text-decoration: none;
-  }
-`;
 
 const ViewButton = styled.div`
   display: flex;
@@ -218,27 +154,7 @@ const ViewButton = styled.div`
   }
 `;
 
-const BookButton = styled.a`
-  background-color: #fecf11;
-  border: none;
-  color: #000;
-  text-transform: uppercase;
-  text-decoration: none;
-  font-family: Helvetica;
-  letter-spacing: 1px;
-  padding: .5rem 1rem;
-  border-radius: 8px;
-  font-weight: 500;
-  font-size: 1rem;
-  cursor: pointer;
-  display: block;
-  width: fit-content;
-  margin: 1rem auto;
 
-  @media screen and (min-width: 1000px) {
-    margin: .5rem 0;
-  }
-`;
 
 const ReviewWidgetWrapper = styled.div`
   margin: 0 auto;
@@ -247,28 +163,43 @@ const ReviewWidgetWrapper = styled.div`
 `;
 
 function ReviewWidget({ token }) {
+  const containerRef = useRef(null);
   const scriptLoaded = useRef(false);
 
   useEffect(() => {
-    if (scriptLoaded.current) return;
-    const script = document.createElement("script");
-    script.src = "https://localimpact.com/js/v2/embed.js?id=b8f5b4fd2464663219f4d9b7ec62f159";
-    script.type = "text/javascript";
-    script.async = true;
-    document.body.appendChild(script);
-    scriptLoaded.current = true;
-    return () => {
-      if (script.parentNode) {
-        script.parentNode.removeChild(script);
-      }
-    };
+    if (scriptLoaded.current || !containerRef.current) return;
+    try {
+      const script = document.createElement("script");
+      script.src = "https://localimpact.com/js/v2/embed.js?id=b8f5b4fd2464663219f4d9b7ec62f159";
+      script.type = "text/javascript";
+      script.async = true;
+      script.onload = () => {
+        // Trigger widget initialization after script loads
+        if (window.ROMW) {
+          window.ROMW.reload && window.ROMW.reload();
+        }
+      };
+      script.onerror = () => {
+        console.warn('ReviewWidget script failed to load');
+      };
+      document.body.appendChild(script);
+      scriptLoaded.current = true;
+      return () => {
+        if (script.parentNode) {
+          script.parentNode.removeChild(script);
+        }
+      };
+    } catch (error) {
+      console.error('Error loading ReviewWidget:', error);
+    }
   }, []);
-  return <div data-romw-token={token} />;
+  return <div ref={containerRef} data-romw-token={token} data-romw-index="0" />;
 }
 
 const App = () => {
-  const [width, setWidth] = useState(window.innerWidth);
+  const [width, setWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1024);
   const [view, setView] = useState('tuneup');
+  const [currentPage, setCurrentPage] = useState('home');
 
   useEffect(() => {
     const handleResize = () => {
@@ -306,25 +237,21 @@ const App = () => {
   //   return false;
   // }
 
+  if (currentPage === 'privacy') {
+    return <Privacy onBack={() => setCurrentPage('home')} />;
+  }
+
   return (
     <PageWrapper>
-      <PageHeader>
-        <Logo src={BikeLogo} alt={config.title} />
-        <div style={{display: 'flex', flex: '1', flexDirection: 'column'}}>
-          <Title>{config.title} {width < 1000 && <a href={`tel:${config.phone}`}>{config.phone}</a>}</Title>
-          <Tagline>{config.tagline}</Tagline>
-        </div>
-        <div>
-          <BookButton target="_top" onClick={() => window.Workshop?.SetupPopupWidget({ mechanicId: "org_36FeYJJNtZLXtzKEq7r8IrsgsCl", frameColour: "#ff7a59" }) }>Book now</BookButton>
-        </div>
-      </PageHeader>
+      <Header onHome={() => setCurrentPage('home')} />
       <SiteDescription>
         <h1>Welcome to Basement Bike Mechanic!</h1>
         {config.site_description}
       </SiteDescription>
-      <ReviewWidgetWrapper>
+      {/* ReviewWidget disabled due to script conflicts */}
+      {/* <ReviewWidgetWrapper>
         <ReviewWidget token="bSpwsMrwg8NYUbvrGcAohM5Yqk7y5RfZ3dTI2ec6PDt9hESskv" />
-      </ReviewWidgetWrapper>
+      </ReviewWidgetWrapper> */}
       <RegularMaintenance>
         <img src={TuneUp} alt="Regular Maintenance" />
         <div>
@@ -336,7 +263,7 @@ const App = () => {
       {width <= 1000 ? (
         <>
           <ViewButton>
-            <button onClick={() => switchViews('tuneup')} className={view === 'tuneup' && 'active'}>Tune Ups</button><button onClick={() => switchViews('service')} className={view === 'service' && 'active'}>Services</button>
+            <button onClick={() => switchViews('tuneup')} className={view === 'tuneup' ? 'active' : undefined}>Tune Ups</button><button onClick={() => switchViews('service')} className={view === 'service' ? 'active' : undefined}>Services</button>
           </ViewButton>
           {view === 'tuneup' && (
             <>
@@ -373,9 +300,7 @@ const App = () => {
         Email: <a href={`mailto:${config.email}`}>{config.email}</a><br />
         Location: <a href="https://maps.app.goo.gl/dPsymJhVVwD5ymha6">Melinda Dr NE, Atlanta GA 30345</a>
       </MyEmail>
-      <Footer>
-        <a href="/privacy.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
-      </Footer>
+      <Footer onNavigatePrivacy={() => setCurrentPage('privacy')} />
     </PageWrapper>
   )
 }
