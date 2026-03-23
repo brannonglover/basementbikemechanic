@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import styled from 'styled-components';
 
 const FooterStyled = styled.footer`
@@ -23,23 +24,52 @@ const FooterStyled = styled.footer`
       text-decoration: underline;
     }
   }
+
 `;
 
-function Footer({ onNavigatePrivacy, onBack }) {
-  const handleClick = (e) => {
+function Footer({ onNavigatePrivacy, onNavigateTerms, onBack }) {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const isBackPage = location.pathname === '/privacy' || location.pathname === '/terms' || location.pathname === '/admin';
+
+  const handleBackClick = (e) => {
     e.preventDefault();
     if (onBack) {
       onBack();
-    } else if (onNavigatePrivacy) {
-      onNavigatePrivacy();
+    } else {
+      navigate('/');
     }
   };
 
-  const linkText = onBack ? "Back to home" : "Privacy Policy";
+  const handlePrivacyClick = (e) => {
+    e.preventDefault();
+    if (onNavigatePrivacy) {
+      onNavigatePrivacy();
+    } else {
+      navigate('/privacy');
+    }
+  };
+
+  const handleTermsClick = (e) => {
+    e.preventDefault();
+    if (onNavigateTerms) {
+      onNavigateTerms();
+    } else {
+      navigate('/terms');
+    }
+  };
 
   return (
     <FooterStyled>
-      <button onClick={handleClick}>{linkText}</button>
+      {isBackPage ? (
+        <button onClick={handleBackClick}>Back to home</button>
+      ) : (
+        <>
+          <button onClick={handlePrivacyClick}>Privacy Policy</button>
+          {' · '}
+          <button onClick={handleTermsClick}>Terms & Conditions</button>
+        </>
+      )}
     </FooterStyled>
   );
 }

@@ -1,2 +1,6 @@
 node_modules/*
 node_modules/cache
+
+# Local env (contains admin password - do not commit)
+.env
+.env.local

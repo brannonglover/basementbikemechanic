@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import styled from 'styled-components';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -50,10 +51,11 @@ const PrivacyContent = styled.section`
   }
 `;
 
-function Privacy({ onBack }) {
+function Privacy() {
+  const navigate = useNavigate();
   return (
     <PageWrapper>
-      <Header onHome={onBack} />
+      <Header />
       <PrivacyContent>
         <h1>Privacy Policy</h1>
         <p>At <strong>Basement Bike Mechanic</strong>, your privacy matters. We only collect contact information that you voluntarily provide when seeking bicycle repair services. This page describes how we handle your phone number and ensure your data stays secure.</p>
@@ -85,7 +87,7 @@ function Privacy({ onBack }) {
         
         <p>If you have questions about this policy, please <a href="mailto:support@basementbikemechanic.com">email us</a>.</p>
       </PrivacyContent>
-      <Footer onBack={onBack} />
+      <Footer onBack={() => navigate('/')} />
     </PageWrapper>
   );
 }

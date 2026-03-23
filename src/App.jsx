@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import styled from 'styled-components';
 import ServiceBox from "./components/service-box";
 import IndividualBox from "./components/individual-box";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Privacy from "./Privacy";
+import Terms from "./Terms";
+import BikesForSale from "./pages/BikesForSale";
+import Admin from "./pages/Admin";
 import config from './assets/siteConfig.json';
 import TuneUp from './images/close-up-hand-repairing-bike.jpg';
 
@@ -154,12 +158,71 @@ const ViewButton = styled.div`
   }
 `;
 
-
+function HomePage({ width, view, switchViews }) {
+  const navigate = useNavigate();
+  return (
+    <PageWrapper>
+      <Header />
+      <SiteDescription>
+        <h1>Welcome to Basement Bike Mechanic!</h1>
+        {config.site_description}
+      </SiteDescription>
+      <RegularMaintenance>
+        <img src={TuneUp} alt="Regular Maintenance" />
+        <div>
+          <h2>Regular Maintenance</h2>
+          <p>{config.regular_maintenance_first}</p>
+          <p>{config.regular_maintenance_second}</p>
+        </div>
+      </RegularMaintenance>
+      {width <= 1000 ? (
+        <>
+          <ViewButton>
+            <button onClick={() => switchViews('tuneup')} className={view === 'tuneup' ? 'active' : undefined}>Tune Ups</button><button onClick={() => switchViews('service')} className={view === 'service' ? 'active' : undefined}>Services</button>
+          </ViewButton>
+          {view === 'tuneup' && (
+            <>
+              <ServiceHeader>{ config.service_header }</ServiceHeader>
+              <MyServices>
+                {config.services.map(item => <ServiceBox services={item} key={item.id} />)}
+              </MyServices>
+            </>
+          )}
+          {view === 'service' && (
+          <>
+            <ServiceHeader>{ config.additional_services }</ServiceHeader>
+            <IndividualServices>
+              {config.individual_services.map(item => <IndividualBox services={item} key={item.id} />)}
+            </IndividualServices>
+          </>
+          )}
+        </>
+      ) : (
+        <>
+          <ServiceHeader>{ config.service_header }</ServiceHeader>
+          <MyServices>
+            {config.services.map(item => <ServiceBox services={item} key={item.id} />)}
+          </MyServices>
+          <BreakLine/>
+          <ServiceHeader>{ config.additional_services }</ServiceHeader>
+          <IndividualServices>
+            {config.individual_services.map(item => <IndividualBox services={item} key={item.id} />)}
+          </IndividualServices>
+        </>
+      )}
+      <MyEmail>
+        Text: <a href={`tel:${config.phone}`}>{config.phone}</a><br />
+        Email: <a href={`mailto:${config.email}`}>{config.email}</a><br />
+        Location: <a href="https://maps.app.goo.gl/dPsymJhVVwD5ymha6">Melinda Dr NE, Atlanta GA 30345</a>
+      </MyEmail>
+      <Footer onNavigatePrivacy={() => navigate('/privacy')} onNavigateTerms={() => navigate('/terms')} />
+    </PageWrapper>
+  );
+}
 
 const App = () => {
   const [width, setWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1024);
   const [view, setView] = useState('tuneup');
-  const [currentPage, setCurrentPage] = useState('home');
 
   useEffect(() => {
     const handleResize = () => {
@@ -197,71 +260,14 @@ const App = () => {
   //   return false;
   // }
 
-  if (currentPage === 'privacy') {
-    return <Privacy onBack={() => setCurrentPage('home')} />;
-  }
-
   return (
-    <PageWrapper>
-      <Header onHome={() => setCurrentPage('home')} />
-      <SiteDescription>
-        <h1>Welcome to Basement Bike Mechanic!</h1>
-        {config.site_description}
-      </SiteDescription>
-      {/* ReviewWidget disabled due to script conflicts */}
-      {/* <ReviewWidgetWrapper>
-        <ReviewWidget token="bSpwsMrwg8NYUbvrGcAohM5Yqk7y5RfZ3dTI2ec6PDt9hESskv" />
-      </ReviewWidgetWrapper> */}
-      <RegularMaintenance>
-        <img src={TuneUp} alt="Regular Maintenance" />
-        <div>
-          <h2>Regular Maintenance</h2>
-          <p>{config.regular_maintenance_first}</p>
-          <p>{config.regular_maintenance_second}</p>
-        </div>
-      </RegularMaintenance>
-      {width <= 1000 ? (
-        <>
-          <ViewButton>
-            <button onClick={() => switchViews('tuneup')} className={view === 'tuneup' ? 'active' : undefined}>Tune Ups</button><button onClick={() => switchViews('service')} className={view === 'service' ? 'active' : undefined}>Services</button>
-          </ViewButton>
-          {view === 'tuneup' && (
-            <>
-              <ServiceHeader>{ config.service_header }</ServiceHeader>
-              <MyServices>
-                {config.services.map(item => <ServiceBox services={item} key={item.id} />)}
-              </MyServices>
-            </>
-          )}
-          {view === 'service' && (
-          <>
-            <ServiceHeader>{ config.additional_services }</ServiceHeader>
-            <IndividualServices>
-              {config.individual_services.map(item => <IndividualBox services={item} key={item.id} />)}
-            </IndividualServices>
-          </>
-          )}
-        </>  
-      ) : (
-        <>
-          <ServiceHeader>{ config.service_header }</ServiceHeader>
-          <MyServices>
-            {config.services.map(item => <ServiceBox services={item} key={item.id} />)}
-          </MyServices>
-          <BreakLine/>
-          <ServiceHeader>{ config.additional_services }</ServiceHeader>
-          <IndividualServices>
-            {config.individual_services.map(item => <IndividualBox services={item} key={item.id} />)}
-          </IndividualServices>
-        </>
-      )}
-      <MyEmail>
-        Text: <a href={`tel:${config.phone}`}>{config.phone}</a><br />
-        Email: <a href={`mailto:${config.email}`}>{config.email}</a><br />
-        Location: <a href="https://maps.app.goo.gl/dPsymJhVVwD5ymha6">Melinda Dr NE, Atlanta GA 30345</a>
-      </MyEmail>
-      <Footer onNavigatePrivacy={() => setCurrentPage('privacy')} />
-    </PageWrapper>
+    <Routes>
+      <Route path="/admin" element={<Admin />} />
+      <Route path="/bikes-for-sale" element={<BikesForSale />} />
+      <Route path="/privacy" element={<Privacy />} />
+      <Route path="/terms" element={<Terms />} />
+      <Route path="/" element={<HomePage width={width} view={view} switchViews={switchViews} />} />
+    </Routes>
   )
 }
 

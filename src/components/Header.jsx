@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from 'styled-components';
 import config from '../assets/siteConfig.json';
 import BikeLogo from '../images/logo192.png';
@@ -85,6 +86,7 @@ const MobileBookButtonContainer = styled.div`
 const Logo = styled.img`
   width: 5rem;
   padding-right: 1rem;
+  cursor: pointer;
 `;
 
 const HeaderContent = styled.div`
@@ -204,7 +206,8 @@ const BookButton = styled.a`
   }
 `;
 
-function Header({ onHome }) {
+function Header() {
+  const navigate = useNavigate();
   const [width, setWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1024);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -218,11 +221,9 @@ function Header({ onHome }) {
     };
   }, []);
 
-  const handleHomeClick = (e) => {
+  const handleNav = (e, path) => {
     e.preventDefault();
-    if (onHome) {
-      onHome();
-    }
+    navigate(path);
     setMenuOpen(false);
   };
 
@@ -242,7 +243,7 @@ function Header({ onHome }) {
 
   return (
     <PageHeader>
-      <Logo src={BikeLogo} alt={config.title} />
+      <Logo src={BikeLogo} alt={config.title} onClick={() => navigate('/')} role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && navigate('/')} />
       <HeaderContent>
         <Title>{config.title} {width < 1000 && <a href={`tel:${config.phone}`}>{config.phone}</a>}</Title>
         <Tagline>{config.tagline}</Tagline>
@@ -254,13 +255,16 @@ function Header({ onHome }) {
         ☰
       </HamburgerButton>
       <NavContainer>
-        <HomeLink href="#" onClick={handleHomeClick}>Home</HomeLink>
+        <HomeLink href="/" onClick={(e) => handleNav(e, '/')}>Home</HomeLink>
+        <span style={{color: '#fff', display: 'inline'}}>|</span>
+        <HomeLink href="/bikes-for-sale" onClick={(e) => handleNav(e, '/bikes-for-sale')}>Bikes for Sale</HomeLink>
         <span style={{color: '#fff', display: 'inline'}}>|</span>
         <BookButton href="#" onClick={handleBookClick}>Book now</BookButton>
       </NavContainer>
       <MenuBackdrop $isOpen={menuOpen} onClick={() => setMenuOpen(false)} />
       <MobileMenu $isOpen={menuOpen}>
-        <MobileMenuHomeLink href="#" onClick={handleHomeClick}>Home</MobileMenuHomeLink>
+        <MobileMenuHomeLink href="/" onClick={(e) => handleNav(e, '/')}>Home</MobileMenuHomeLink>
+        <MobileMenuHomeLink href="/bikes-for-sale" onClick={(e) => handleNav(e, '/bikes-for-sale')}>Bikes for Sale</MobileMenuHomeLink>
       </MobileMenu>
     </PageHeader>
   );
