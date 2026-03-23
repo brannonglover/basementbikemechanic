@@ -227,20 +227,6 @@ function Header() {
     setMenuOpen(false);
   };
 
-  const handleBookClick = (e) => {
-    e.preventDefault();
-    try {
-      if (window.Workshop && typeof window.Workshop.SetupPopupWidget === 'function') {
-        window.Workshop.SetupPopupWidget({ mechanicId: "org_36FeYJJNtZLXtzKEq7r8IrsgsCl", frameColour: "#ff7a59" });
-      } else {
-        console.warn('Workshop widget not ready yet');
-      }
-    } catch (error) {
-      console.error('Error opening Workshop widget:', error);
-    }
-    setMenuOpen(false);
-  };
-
   return (
     <PageHeader>
       <Logo src={BikeLogo} alt={config.title} onClick={() => navigate('/')} role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && navigate('/')} />
@@ -248,7 +234,7 @@ function Header() {
         <Title>{config.title} {width < 1000 && <a href={`tel:${config.phone}`}>{config.phone}</a>}</Title>
         <Tagline>{config.tagline}</Tagline>
         <MobileBookButtonContainer>
-          <BookButton href="#" onClick={handleBookClick}>Book now</BookButton>
+          <BookButton href="#" data-bikeops-book>Book now</BookButton>
         </MobileBookButtonContainer>
       </HeaderContent>
       <HamburgerButton onClick={() => setMenuOpen(!menuOpen)}>
@@ -259,7 +245,7 @@ function Header() {
         <span style={{color: '#fff', display: 'inline'}}>|</span>
         <HomeLink href="/bikes-for-sale" onClick={(e) => handleNav(e, '/bikes-for-sale')}>Bikes for Sale</HomeLink>
         <span style={{color: '#fff', display: 'inline'}}>|</span>
-        <BookButton href="#" onClick={handleBookClick}>Book now</BookButton>
+        <BookButton href="#" data-bikeops-book>Book now</BookButton>
       </NavContainer>
       <MenuBackdrop $isOpen={menuOpen} onClick={() => setMenuOpen(false)} />
       <MobileMenu $isOpen={menuOpen}>
