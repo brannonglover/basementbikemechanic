@@ -234,7 +234,7 @@ function Header() {
         <Title>{config.title} {width < 1000 && <a href={`tel:${config.phone}`}>{config.phone}</a>}</Title>
         <Tagline>{config.tagline}</Tagline>
         <MobileBookButtonContainer>
-          <BookButton href="#" data-bikeops-book>Book now</BookButton>
+          <BookButton href="#" onClick={(e) => { e.preventDefault(); document.getElementById('bikeops-book-trigger')?.click(); }}>Book now</BookButton>
         </MobileBookButtonContainer>
       </HeaderContent>
       <HamburgerButton onClick={() => setMenuOpen(!menuOpen)}>
@@ -245,7 +245,7 @@ function Header() {
         <span style={{color: '#fff', display: 'inline'}}>|</span>
         <HomeLink href="/bikes-for-sale" onClick={(e) => handleNav(e, '/bikes-for-sale')}>Bikes for Sale</HomeLink>
         <span style={{color: '#fff', display: 'inline'}}>|</span>
-        <BookButton href="#" data-bikeops-book>Book now</BookButton>
+        <BookButton href="#" onClick={(e) => { e.preventDefault(); document.getElementById('bikeops-book-trigger')?.click(); }}>Book now</BookButton>
       </NavContainer>
       <MenuBackdrop $isOpen={menuOpen} onClick={() => setMenuOpen(false)} />
       <MobileMenu $isOpen={menuOpen}>

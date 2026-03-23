@@ -33,6 +33,8 @@
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
+    <!-- Hidden trigger for BikeOps widget - must exist at load so widget binds to it (React renders after DOMContentLoaded) -->
+    <a href="#" data-bikeops-book id="bikeops-book-trigger" style="display:none;position:absolute;left:-9999px" aria-hidden="true"></a>
     <div id="root"></div>
   </body>
 </html>
