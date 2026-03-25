@@ -10,22 +10,26 @@ const PageWrapper = styled.div`
 `;
 
 const TermsContent = styled.section`
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 1.1rem;
-  max-width: 800px;
+  font-size: 1.0625rem;
+  max-width: ${({ theme }) => theme.maxWidth.prose};
   margin: 0 auto;
-  padding: 2rem;
-  line-height: 1.6;
+  padding: 2rem 1.5rem 3rem;
+  line-height: 1.65;
+  color: ${({ theme }) => theme.colors.text};
 
   h1 {
     text-align: center;
     margin-bottom: 1.5rem;
+    font-size: clamp(1.5rem, 3vw, 1.85rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
   }
 
   h2 {
-    margin-top: 1.5rem;
-    margin-bottom: 1rem;
-    font-size: 1.3rem;
+    margin-top: 1.75rem;
+    margin-bottom: 0.75rem;
+    font-size: 1.2rem;
+    font-weight: 600;
   }
 
   p {
@@ -42,11 +46,13 @@ const TermsContent = styled.section`
   }
 
   a {
-    color: #0077cc;
+    color: ${({ theme }) => theme.colors.footerLink};
     text-decoration: none;
+    font-weight: 500;
 
     &:hover {
       text-decoration: underline;
+      text-underline-offset: 3px;
     }
   }
 `;

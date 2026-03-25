@@ -12,23 +12,26 @@ const PageWrapper = styled.div`
 `;
 
 const AdminContent = styled.section`
-  font-family: Arial, Helvetica, sans-serif;
-  max-width: 800px;
+  max-width: ${({ theme }) => theme.maxWidth.prose};
   margin: 0 auto;
-  padding: 2rem;
+  padding: 2rem 1.5rem;
+  color: ${({ theme }) => theme.colors.text};
 `;
 
 const PageTitle = styled.h1`
-  font-size: 1.8rem;
+  font-size: clamp(1.5rem, 2.5vw, 1.85rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
   margin-bottom: 1.5rem;
 `;
 
 const BikeForm = styled.form`
-  background: #faf7f7;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
+  background: ${({ theme }) => theme.colors.bgMuted};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  border-radius: ${({ theme }) => theme.radius.md};
   padding: 1.5rem;
   margin-bottom: 2rem;
+  box-shadow: ${({ theme }) => theme.shadow.sm};
 `;
 
 const FormGroup = styled.div`
@@ -44,12 +47,19 @@ const FormGroup = styled.div`
   input,
   textarea {
     width: 100%;
-    padding: 0.5rem 0.75rem;
+    padding: 0.55rem 0.75rem;
     font-size: 1rem;
-    font-family: Arial, Helvetica, sans-serif;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    font-family: inherit;
+    border: 1px solid ${({ theme }) => theme.colors.borderStrong};
+    border-radius: ${({ theme }) => theme.radius.sm};
     box-sizing: border-box;
+    background: ${({ theme }) => theme.colors.surface};
+    transition: border-color ${({ theme }) => theme.transition};
+
+    &:focus {
+      outline: none;
+      border-color: ${({ theme }) => theme.colors.primary};
+    }
   }
 
   textarea {
@@ -60,7 +70,7 @@ const FormGroup = styled.div`
   small {
     display: block;
     margin-top: 0.25rem;
-    color: #666;
+    color: ${({ theme }) => theme.colors.textMuted};
     font-size: 0.85rem;
   }
 `;
@@ -69,35 +79,38 @@ const ButtonRow = styled.div`
   display: flex;
   gap: 1rem;
   margin-top: 1rem;
+  flex-wrap: wrap;
 `;
 
 const Button = styled.button`
-  background-color: #3A8BC5;
+  background-color: ${({ theme }) => theme.colors.primary};
   border: none;
   color: #fff;
   padding: 0.6rem 1.2rem;
   font-size: 1rem;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: inherit;
+  font-weight: 600;
   cursor: pointer;
-  border-radius: 4px;
+  border-radius: ${({ theme }) => theme.radius.sm};
+  transition: background ${({ theme }) => theme.transition};
 
   &:hover {
-    background-color: #2d6fa3;
+    background-color: ${({ theme }) => theme.colors.primaryDark};
   }
 
   &.secondary {
-    background-color: #7a7979;
+    background-color: ${({ theme }) => theme.colors.textMuted};
 
     &:hover {
-      background-color: #5c5b5b;
+      background-color: ${({ theme }) => theme.colors.text};
     }
   }
 
   &.danger {
-    background-color: #b90000;
+    background-color: #b42318;
 
     &:hover {
-      background-color: #8f0000;
+      background-color: #8a1c12;
     }
   }
 `;
@@ -113,10 +126,11 @@ const BikeListItem = styled.li`
   align-items: center;
   justify-content: space-between;
   padding: 1rem;
-  background: #fff;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
+  background: ${({ theme }) => theme.colors.surface};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  border-radius: ${({ theme }) => theme.radius.md};
   margin-bottom: 0.5rem;
+  box-shadow: ${({ theme }) => theme.shadow.sm};
 
   .bike-info {
     flex: 1;
@@ -128,7 +142,7 @@ const BikeListItem = styled.li`
   }
 
   .bike-price {
-    color: #3A8BC5;
+    color: ${({ theme }) => theme.colors.primary};
     font-size: 0.95rem;
   }
 
@@ -139,12 +153,13 @@ const BikeListItem = styled.li`
 `;
 
 const SectionTitle = styled.h2`
-  font-size: 1.3rem;
+  font-size: 1.25rem;
+  font-weight: 600;
   margin: 2rem 0 1rem;
 `;
 
 const EmptyBikes = styled.p`
-  color: #666;
+  color: ${({ theme }) => theme.colors.textMuted};
   font-style: italic;
   padding: 1rem 0;
 `;
@@ -153,9 +168,10 @@ const LoginForm = styled.form`
   max-width: 320px;
   margin: 3rem auto;
   padding: 2rem;
-  background: #faf7f7;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
+  background: ${({ theme }) => theme.colors.bgMuted};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  border-radius: ${({ theme }) => theme.radius.md};
+  box-shadow: ${({ theme }) => theme.shadow.md};
 
   label {
     display: block;
@@ -166,17 +182,23 @@ const LoginForm = styled.form`
 
   input {
     width: 100%;
-    padding: 0.5rem 0.75rem;
+    padding: 0.55rem 0.75rem;
     font-size: 1rem;
-    font-family: Arial, Helvetica, sans-serif;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    font-family: inherit;
+    border: 1px solid ${({ theme }) => theme.colors.borderStrong};
+    border-radius: ${({ theme }) => theme.radius.sm};
     box-sizing: border-box;
     margin-bottom: 1rem;
+    background: ${({ theme }) => theme.colors.surface};
+
+    &:focus {
+      outline: none;
+      border-color: ${({ theme }) => theme.colors.primary};
+    }
   }
 
   .error {
-    color: #b90000;
+    color: #b42318;
     font-size: 0.9rem;
     margin-bottom: 1rem;
   }
@@ -188,17 +210,19 @@ const ImagePickerButton = styled.label`
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background-color: #3A8BC5;
+  background-color: ${({ theme }) => theme.colors.primary};
   color: #fff;
   padding: 0.6rem 1.2rem;
   font-size: 1rem;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: inherit;
+  font-weight: 600;
   cursor: pointer;
-  border-radius: 4px;
+  border-radius: ${({ theme }) => theme.radius.sm};
   border: none;
+  transition: background ${({ theme }) => theme.transition};
 
   &:hover {
-    background-color: #2d6fa3;
+    background-color: ${({ theme }) => theme.colors.primaryDark};
   }
 
   input {
@@ -217,9 +241,9 @@ const ImagePreview = styled.div`
   position: relative;
   width: 80px;
   height: 80px;
-  border-radius: 4px;
+  border-radius: ${({ theme }) => theme.radius.sm};
   overflow: hidden;
-  border: 1px solid #ccc;
+  border: 1px solid ${({ theme }) => theme.colors.borderStrong};
 
   img {
     width: 100%;
@@ -236,17 +260,17 @@ const ImagePreview = styled.div`
     padding: 0;
     font-size: 16px;
     line-height: 1;
-    background: rgba(0,0,0,0.6);
+    background: rgba(0, 0, 0, 0.6);
     color: #fff;
     border: none;
-    border-radius: 4px;
+    border-radius: ${({ theme }) => theme.radius.sm};
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
 
     &:hover {
-      background: #b90000;
+      background: #8a1c12;
     }
   }
 `;

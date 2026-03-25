@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.js": "/static/js/main.dea79094.js",
+    "static/media/header-image.jpeg": "/static/media/header-image.e4ed5d67e9518069f323.jpeg",
+    "static/media/close-up-hand-repairing-bike.jpg": "/static/media/close-up-hand-repairing-bike.def281f9985425aee7b7.jpg",
+    "static/media/logo192.png": "/static/media/logo192.635856a2fd4faced107f.png",
+    "index.html": "/index.html",
+    "main.dea79094.js.map": "/static/js/main.dea79094.js.map"
+  },
+  "entrypoints": [
+    "static/js/main.dea79094.js"
+  ]
+}

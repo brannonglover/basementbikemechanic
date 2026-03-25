@@ -12,77 +12,85 @@ const PageWrapper = styled.div`
 `;
 
 const PageTitle = styled.h1`
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 2rem;
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
   text-align: center;
   margin: 2rem 0 1rem;
-  max-width: 1280px;
+  max-width: ${({ theme }) => theme.maxWidth.content};
   margin-left: auto;
   margin-right: auto;
-  padding: 0 2rem;
+  padding: 0 1.5rem;
+  color: ${({ theme }) => theme.colors.text};
 `;
 
 const BikesGrid = styled.section`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 1.5rem;
-  max-width: 1280px;
+  max-width: ${({ theme }) => theme.maxWidth.content};
   margin: 0 auto 3rem;
-  padding: 2rem;
+  padding: 1.5rem;
 `;
 
 const BikeTile = styled.button`
-  background: #fff;
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
+  background: ${({ theme }) => theme.colors.surface};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  border-radius: ${({ theme }) => theme.radius.md};
   overflow: hidden;
   cursor: pointer;
   padding: 0;
   text-align: left;
-  transition: transform 0.2s, box-shadow 0.2s;
-  font-family: Arial, Helvetica, sans-serif;
+  transition: transform ${({ theme }) => theme.transition}, box-shadow ${({ theme }) => theme.transition},
+    border-color ${({ theme }) => theme.transition};
+  font-family: inherit;
 
   &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-    border-color: #3A8BC5;
+    transform: translateY(-3px);
+    box-shadow: ${({ theme }) => theme.shadow.lg};
+    border-color: ${({ theme }) => theme.colors.primary};
   }
 `;
 
 const TileImage = styled.div`
   width: 100%;
   aspect-ratio: 4/3;
-  background-color: #cee3f0;
+  background-color: ${({ theme }) => theme.colors.primarySoft};
   background-size: cover;
   background-position: center;
   background-image: ${(p) => (p.$src ? `url("${p.$src}")` : "none")};
 `;
 
 const TileContent = styled.div`
-  padding: 1rem;
+  padding: 1rem 1.1rem;
 `;
 
 const TileName = styled.h3`
   margin: 0 0 0.5rem;
-  font-size: 1.2rem;
-  color: #333;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.text};
 `;
 
 const TilePrice = styled.div`
-  font-size: 1.3rem;
+  font-size: 1.25rem;
   font-weight: 700;
-  color: #3A8BC5;
+  color: ${({ theme }) => theme.colors.primary};
 `;
 
 const EmptyState = styled.p`
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 1.1rem;
+  font-size: 1.0625rem;
   text-align: center;
   max-width: 600px;
   margin: 2rem auto 3rem;
-  padding: 0 2rem;
-  line-height: 1.6;
-  color: #666;
+  padding: 0 1.5rem;
+  line-height: 1.65;
+  color: ${({ theme }) => theme.colors.textMuted};
+
+  a {
+    color: ${({ theme }) => theme.colors.footerLink};
+    font-weight: 500;
+  }
 `;
 
 const ModalOverlay = styled.div`
@@ -123,63 +131,62 @@ const SlideshowNav = styled.div`
   margin-bottom: 1.5rem;
 
   button {
-    background: #fecf11;
-    border: 1px solid #b90000;
-    color: #000;
+    background: ${({ theme }) => theme.colors.accent};
+    border: none;
+    color: ${({ theme }) => theme.colors.text};
     padding: 0.5rem 1rem;
-    font-size: 1rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    font-family: inherit;
     cursor: pointer;
-    font-family: Arial, Helvetica, sans-serif;
-    border-radius: 4px;
+    border-radius: ${({ theme }) => theme.radius.sm};
+    transition: background ${({ theme }) => theme.transition};
 
     &:hover {
-      background: #f9a61c;
+      background: ${({ theme }) => theme.colors.accentHover};
     }
 
     &:disabled {
-      opacity: 0.5;
+      opacity: 0.45;
       cursor: not-allowed;
     }
   }
 
   span {
     color: #fff;
-    font-family: Arial, Helvetica, sans-serif;
     font-size: 0.95rem;
   }
 `;
 
 const ModalTitle = styled.h2`
   color: #fff;
-  font-family: Arial, Helvetica, sans-serif;
   font-size: 1.5rem;
+  font-weight: 600;
   margin: 0 0 0.5rem;
 `;
 
 const ModalPrice = styled.div`
-  color: #8bbe45;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 1.3rem;
+  color: ${({ theme }) => theme.colors.brandGreen};
+  font-size: 1.25rem;
   font-weight: 700;
   margin-bottom: 1.5rem;
 `;
 
 const ContactButton = styled.a`
   display: inline-block;
-  background-color: #fecf11;
-  border: 1px solid #b90000;
-  color: #000;
+  background-color: ${({ theme }) => theme.colors.accent};
+  border: none;
+  color: ${({ theme }) => theme.colors.text};
   text-decoration: none;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   font-weight: 600;
   padding: 0.75rem 2rem;
-  border-radius: 8px;
+  border-radius: ${({ theme }) => theme.radius.md};
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background ${({ theme }) => theme.transition};
 
   &:hover {
-    background-color: #f9a61c;
+    background-color: ${({ theme }) => theme.colors.accentHover};
   }
 `;
 
@@ -187,17 +194,18 @@ const CloseButton = styled.button`
   position: absolute;
   top: 1rem;
   right: 1rem;
-  background: rgba(255, 255, 255, 0.2);
-  border: none;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   color: #fff;
   font-size: 1.5rem;
   cursor: pointer;
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
+  padding: 0.35rem 0.6rem;
+  border-radius: ${({ theme }) => theme.radius.sm};
   line-height: 1;
+  transition: background ${({ theme }) => theme.transition};
 
   &:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.22);
   }
 `;
 
