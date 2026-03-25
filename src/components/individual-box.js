@@ -38,8 +38,8 @@ const ServicePrice = styled.span`
   font-size: 1.125rem;
   font-weight: 700;
   padding: 1rem 0.75rem;
-  background-color: ${({ theme }) => theme.colors.primarySoft};
-  color: ${({ theme }) => theme.colors.primaryDark};
+  background-color: ${({ theme }) => theme.colors.servicePriceBg};
+  color: ${({ theme }) => theme.colors.servicePriceText};
   align-items: center;
 `;
 

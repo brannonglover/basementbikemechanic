@@ -20,8 +20,8 @@ const ServiceBoxName = styled.h3`
   text-align: center;
   background: linear-gradient(
     135deg,
-    ${({ theme }) => theme.colors.primary} 0%,
-    ${({ theme }) => theme.colors.primaryDark} 100%
+    ${({ theme }) => theme.colors.serviceHeader} 0%,
+    ${({ theme }) => theme.colors.serviceHeaderDark} 100%
   );
   border-radius: ${({ theme }) => theme.radius.md} ${({ theme }) => theme.radius.md} 0 0;
 `;
@@ -30,10 +30,10 @@ const ServicePrice = styled.div`
   text-align: center;
   font-size: 1.25rem;
   font-weight: 700;
-  background-color: ${({ theme }) => theme.colors.primarySoft};
+  background-color: ${({ theme }) => theme.colors.servicePriceBg};
   margin: 0;
   padding: 0.65rem 0;
-  color: ${({ theme }) => theme.colors.primaryDark};
+  color: ${({ theme }) => theme.colors.servicePriceText};
 `;
 
 const ServiceList = styled.div`

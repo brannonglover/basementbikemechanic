@@ -29,22 +29,25 @@ const PageHeader = styled.header`
     padding: 1.5rem 2rem 1.5rem;
     min-height: 12rem;
     background-color: ${({ theme }) => theme.colors.headerBg};
-    background-image: url(${HeaderImage});
-    background-size: cover;
-    background-position: center 35%;
-    background-repeat: no-repeat;
 
     &::before {
       content: "";
       position: absolute;
+      /* Cover padding box and bottom border so the tint reaches the full header */
       inset: 0;
-      background: linear-gradient(
-        105deg,
-        rgba(10, 10, 10, 0.88) 0%,
-        rgba(10, 10, 10, 0.55) 45%,
-        rgba(10, 10, 10, 0.25) 100%
-      );
+      bottom: -1px;
       z-index: 0;
+      pointer-events: none;
+      background-image: linear-gradient(
+          105deg,
+          rgba(10, 10, 10, 0.88) 0%,
+          rgba(10, 10, 10, 0.55) 45%,
+          rgba(10, 10, 10, 0.25) 100%
+        ),
+        url(${HeaderImage});
+      background-size: cover;
+      background-position: center 35%;
+      background-repeat: no-repeat, no-repeat;
     }
 
     h1 {
