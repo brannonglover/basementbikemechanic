@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styled from 'styled-components';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import PageSeo from './components/PageSeo';
 
 const PageWrapper = styled.div`
   margin: 0 auto;
@@ -61,6 +62,11 @@ function Privacy() {
   const navigate = useNavigate();
   return (
     <PageWrapper>
+      <PageSeo
+        title="Privacy Policy | Basement Bike Mechanic"
+        description="How Basement Bike Mechanic collects and uses contact information for bicycle repair services. No spam; we never sell your data."
+        path="/privacy"
+      />
       <Header />
       <PrivacyContent>
         <h1>Privacy Policy</h1>

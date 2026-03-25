@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import PageSeo from "../components/PageSeo";
 import config from "../assets/siteConfig.json";
 import { getAllBikesForAdmin, saveBikes } from "../utils/bikesStorage";
 
@@ -319,6 +320,12 @@ function Admin() {
   if (!isAuthenticated) {
     return (
       <PageWrapper>
+        <PageSeo
+          title="Admin | Basement Bike Mechanic"
+          description="Staff login for Basement Bike Mechanic."
+          path="/admin"
+          noindex
+        />
         <Header />
         <AdminContent>
           <PageTitle>Admin Login</PageTitle>
@@ -433,6 +440,12 @@ function Admin() {
 
   return (
     <PageWrapper>
+      <PageSeo
+        title="Admin – Bikes for Sale | Basement Bike Mechanic"
+        description="Manage used bike listings for Basement Bike Mechanic."
+        path="/admin"
+        noindex
+      />
       <Header />
       <AdminContent>
         <PageTitle>Admin – Bikes for Sale</PageTitle>

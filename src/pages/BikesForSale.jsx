@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import PageSeo from "../components/PageSeo";
 import config from "../assets/siteConfig.json";
 import { getBikes } from "../utils/bikesStorage";
 
@@ -133,7 +134,7 @@ const SlideshowNav = styled.div`
   button {
     background: ${({ theme }) => theme.colors.accent};
     border: none;
-    color: ${({ theme }) => theme.colors.text};
+    color: ${({ theme }) => theme.colors.textOnAccent};
     padding: 0.5rem 1rem;
     font-size: 0.95rem;
     font-weight: 600;
@@ -176,7 +177,7 @@ const ContactButton = styled.a`
   display: inline-block;
   background-color: ${({ theme }) => theme.colors.accent};
   border: none;
-  color: ${({ theme }) => theme.colors.text};
+  color: ${({ theme }) => theme.colors.textOnAccent};
   text-decoration: none;
   font-size: 1.05rem;
   font-weight: 600;
@@ -244,8 +245,13 @@ function BikesForSale() {
 
   return (
     <PageWrapper>
+      <PageSeo
+        title="Used Bikes for Sale in Atlanta | Basement Bike Mechanic"
+        description="Browse quality used bicycles for sale from Basement Bike Mechanic in Atlanta. Contact us about availability and pricing."
+        path="/bikes-for-sale"
+      />
       <Header />
-      <PageTitle>Bikes for Sale</PageTitle>
+      <PageTitle>Used Bikes for Sale</PageTitle>
       {bikes.length === 0 ? (
         <EmptyState>
           No bikes are currently listed for sale. Check back soon or contact us at{" "}

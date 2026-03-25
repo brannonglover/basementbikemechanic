@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
+import { useThemeMode } from "../ThemeModeContext";
 import config from "../assets/siteConfig.json";
 import BikeLogo from "../images/logo192.png";
 import HeaderImage from "../images/header-image.jpeg";
@@ -164,6 +165,47 @@ const NavContainer = styled.nav`
   }
 `;
 
+const themeToggleShared = css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid ${({ theme }) => theme.colors.borderStrong};
+  color: ${({ theme }) => theme.colors.textInverse};
+  cursor: pointer;
+  border-radius: ${({ theme }) => theme.radius.sm};
+  transition: background ${({ theme }) => theme.transition};
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.14);
+  }
+`;
+
+const ThemeToggleMobile = styled.button`
+  ${themeToggleShared}
+  position: absolute;
+  top: 1rem;
+  right: 3.75rem;
+  z-index: 1002;
+
+  @media screen and (min-width: 1000px) {
+    display: none;
+  }
+`;
+
+const ThemeToggleDesktop = styled.button`
+  ${themeToggleShared}
+  display: none;
+  margin-left: 0.25rem;
+
+  @media screen and (min-width: 1000px) {
+    display: flex;
+  }
+`;
+
 const HamburgerButton = styled.button`
   position: absolute;
   top: 1rem;
@@ -244,7 +286,7 @@ const MenuBackdrop = styled.div`
 const BookButton = styled.a`
   background-color: ${({ theme }) => theme.colors.accent};
   border: none;
-  color: ${({ theme }) => theme.colors.text};
+  color: ${({ theme }) => theme.colors.textOnAccent};
   text-transform: none;
   letter-spacing: 0.02em;
   text-decoration: none;
@@ -274,6 +316,22 @@ const NavBookButton = styled(BookButton)`
   }
 `;
 
+function ThemeIcon({ mode }) {
+  if (mode === "dark") {
+    return (
+      <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+      </svg>
+    );
+  }
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+    </svg>
+  );
+}
+
 function MenuIcon({ open }) {
   return (
     <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
@@ -292,6 +350,7 @@ function MenuIcon({ open }) {
 
 function Header() {
   const navigate = useNavigate();
+  const { mode, toggleTheme } = useThemeMode();
   const [width, setWidth] = useState(typeof window !== "undefined" ? window.innerWidth : 1024);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -348,6 +407,14 @@ function Header() {
             </BookButton>
           </MobileBookButtonContainer>
         </HeaderContent>
+        <ThemeToggleMobile
+          type="button"
+          onClick={toggleTheme}
+          aria-label={mode === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+          title={mode === "dark" ? "Light mode" : "Dark mode"}
+        >
+          <ThemeIcon mode={mode} />
+        </ThemeToggleMobile>
         <HamburgerButton
           type="button"
           onClick={() => setMenuOpen(!menuOpen)}
@@ -367,6 +434,14 @@ function Header() {
           <NavBookButton href="#" onClick={triggerBook}>
             Book now
           </NavBookButton>
+          <ThemeToggleDesktop
+            type="button"
+            onClick={toggleTheme}
+            aria-label={mode === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+            title={mode === "dark" ? "Light mode" : "Dark mode"}
+          >
+            <ThemeIcon mode={mode} />
+          </ThemeToggleDesktop>
         </NavContainer>
       </HeaderInner>
       <MenuBackdrop $isOpen={menuOpen} onClick={() => setMenuOpen(false)} aria-hidden="true" />

@@ -10,6 +10,7 @@ const GlobalStyle = createGlobalStyle`
   html {
     -webkit-text-size-adjust: 100%;
     scroll-behavior: smooth;
+    color-scheme: ${({ theme }) => (theme.mode === "dark" ? "dark" : "light")};
   }
 
   @media (prefers-reduced-motion: reduce) {

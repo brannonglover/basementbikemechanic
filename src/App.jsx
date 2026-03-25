@@ -10,6 +10,8 @@ import Terms from "./Terms";
 import BikesForSale from "./pages/BikesForSale";
 import Admin from "./pages/Admin";
 import config from './assets/siteConfig.json';
+import PageSeo from './components/PageSeo';
+import { DEFAULT_DESCRIPTION, DEFAULT_TITLE } from './seoConstants';
 import TuneUp from './images/close-up-hand-repairing-bike.jpg';
 
 const PageWrapper = styled.div`
@@ -71,14 +73,16 @@ const RegularMaintenance = styled.section`
     margin-left: -1.5rem;
     margin-right: -1.5rem;
     object-fit: cover;
-    border-radius: ${({ theme }) => theme.radius.md};
-    box-shadow: ${({ theme }) => theme.shadow.md};
+    border-radius: 0;
+    box-shadow: none;
 
     @media screen and (min-width: 1100px) {
       flex: 0 0 min(42%, 480px);
       width: 100%;
       margin: 0;
       padding-right: 0;
+      border-radius: ${({ theme }) => theme.radius.md};
+      box-shadow: ${({ theme }) => theme.shadow.md};
     }
   }
 `;
@@ -197,13 +201,17 @@ function HomePage({ width, view, switchViews }) {
   const navigate = useNavigate();
   return (
     <PageWrapper>
+      <PageSeo title={DEFAULT_TITLE} description={DEFAULT_DESCRIPTION} path="" />
       <Header />
       <SiteDescription>
-        <h1>Welcome to Basement Bike Mechanic!</h1>
+        <h1>Atlanta Bike Repair &amp; Bicycle Tune-Ups</h1>
         {config.site_description}
       </SiteDescription>
       <RegularMaintenance>
-        <img src={TuneUp} alt="Regular Maintenance" />
+        <img
+          src={TuneUp}
+          alt="Mechanic performing bicycle tune-up and bike repair service in Atlanta"
+        />
         <div>
           <h2>Regular Maintenance</h2>
           <p>{config.regular_maintenance_first}</p>

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styled from 'styled-components';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import PageSeo from './components/PageSeo';
 
 const PageWrapper = styled.div`
   margin: 0 auto;
@@ -61,6 +62,11 @@ function Terms() {
   const navigate = useNavigate();
   return (
     <PageWrapper>
+      <PageSeo
+        title="Terms of Service | Basement Bike Mechanic"
+        description="Terms for SMS messaging, bicycle repair services, estimates, and liability at Basement Bike Mechanic in Atlanta."
+        path="/terms"
+      />
       <Header />
       <TermsContent>
         <h1>Terms and Conditions</h1>
