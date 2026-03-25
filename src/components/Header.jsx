@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
 import { useThemeMode } from "../ThemeModeContext";
 import config from "../assets/siteConfig.json";
-import BikeLogo from "../images/logo192.png";
 import HeaderImage from "../images/header-image.jpeg";
 
 const PageHeader = styled.header`
@@ -135,6 +134,10 @@ const Logo = styled.img`
 
   &:hover {
     opacity: 0.92;
+  }
+
+  @media screen and (min-width: 1000px) {
+    width: 6.5rem;
   }
 `;
 
@@ -389,7 +392,7 @@ function Header() {
     <PageHeader>
       <HeaderInner>
         <Logo
-          src={BikeLogo}
+          src={`${process.env.PUBLIC_URL || ""}/bbm-logo-wo.png`}
           alt={config.title}
           onClick={() => navigate("/")}
           role="button"

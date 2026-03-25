@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import styled from 'styled-components';
 import ServiceBox from "./components/service-box";
+import MobileTuneUpsSelect from "./components/MobileTuneUpsSelect";
 import IndividualBox from "./components/individual-box";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -226,9 +227,7 @@ function HomePage({ width, view, switchViews }) {
           {view === 'tuneup' && (
             <>
               <ServiceHeader>{ config.service_header }</ServiceHeader>
-              <MyServices>
-                {config.services.map(item => <ServiceBox services={item} key={item.id} />)}
-              </MyServices>
+              <MobileTuneUpsSelect services={config.services} />
             </>
           )}
           {view === 'service' && (
