@@ -165,7 +165,7 @@ const ReviewsSection = styled.section`
     border: none;
     border-radius: 16px;
     width: 100%;
-    max-width: 420px;
+    height: 300px;
   }
 `;
 
