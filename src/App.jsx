@@ -144,6 +144,31 @@ const BreakLine = styled.div`
   margin: 4rem auto 0.5rem;
 `;
 
+const ReviewsSection = styled.section`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3rem 1.5rem 1rem;
+  max-width: ${({ theme }) => theme.maxWidth.content};
+  margin: 0 auto;
+
+  h2 {
+    font-size: clamp(1.35rem, 2.5vw, 1.85rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0 0 1.5rem;
+    color: ${({ theme }) => theme.colors.text};
+    text-align: center;
+  }
+
+  iframe {
+    border: none;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 420px;
+  }
+`;
+
 const MyEmail = styled.div`
   padding: 3rem 1.5rem 2rem;
   font-size: 1.125rem;
@@ -253,6 +278,16 @@ function HomePage({ width, view, switchViews }) {
           </IndividualServices>
         </>
       )}
+      <BreakLine />
+      <ReviewsSection>
+        <h2>What Customers Are Saying</h2>
+        <iframe
+          src="https://www.bikeops.co/widget/reviews"
+          height="auto"
+          frameBorder="0"
+          title="Customer Reviews"
+        />
+      </ReviewsSection>
       <MyEmail>
         Text: <a href={`tel:${config.phone}`}>{config.phone}</a><br />
         Email: <a href={`mailto:${config.email}`}>{config.email}</a><br />
