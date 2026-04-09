@@ -170,7 +170,7 @@ const ReviewWidgetWrapper = styled.div`
 `;
 
 function ReviewWidget({ token }) {
-  return <div data-romw-token={token} data-romw-lazy />;
+  return <div data-romw-token={token} />;
 }
 
 const ViewButton = styled.div`
