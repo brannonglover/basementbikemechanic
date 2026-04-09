@@ -163,15 +163,6 @@ const MyEmail = styled.div`
   }
 `;
 
-const ReviewWidgetWrapper = styled.div`
-  margin: 0 auto;
-  padding: 2rem;
-  max-width: 1280px;
-`;
-
-function ReviewWidget({ token }) {
-  return <div data-romw-token={token} />;
-}
 
 const ViewButton = styled.div`
   display: flex;
@@ -262,9 +253,6 @@ function HomePage({ width, view, switchViews }) {
           </IndividualServices>
         </>
       )}
-      <ReviewWidgetWrapper>
-        <ReviewWidget token="bSpwsMrwg8NYUbvrGcAohM5Yqk7y5RfZ3dTI2ec6PDt9hESskv" />
-      </ReviewWidgetWrapper>
       <MyEmail>
         Text: <a href={`tel:${config.phone}`}>{config.phone}</a><br />
         Email: <a href={`mailto:${config.email}`}>{config.email}</a><br />
