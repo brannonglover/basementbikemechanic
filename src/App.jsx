@@ -234,6 +234,16 @@ function HomePage({ width, view, switchViews }) {
         <h1>Atlanta Bike Repair &amp; Bicycle Tune-Ups</h1>
         {config.site_description}
       </SiteDescription>
+      <BreakLine />
+      <ReviewsSection>
+        <h2>What Customers Are Saying</h2>
+        <iframe
+          src="https://www.bikeops.co/widget/reviews"
+          height="auto"
+          frameBorder="0"
+          title="Customer Reviews"
+        />
+      </ReviewsSection>
       <RegularMaintenance>
         <img
           src={TuneUp}
@@ -278,16 +288,6 @@ function HomePage({ width, view, switchViews }) {
           </IndividualServices>
         </>
       )}
-      <BreakLine />
-      <ReviewsSection>
-        <h2>What Customers Are Saying</h2>
-        <iframe
-          src="https://www.bikeops.co/widget/reviews"
-          height="auto"
-          frameBorder="0"
-          title="Customer Reviews"
-        />
-      </ReviewsSection>
       <MyEmail>
         Text: <a href={`tel:${config.phone}`}>{config.phone}</a><br />
         Email: <a href={`mailto:${config.email}`}>{config.email}</a><br />
