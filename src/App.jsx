@@ -238,7 +238,7 @@ function HomePage({ width, view, switchViews }) {
       <ReviewsSection>
         <h2>What Customers Are Saying</h2>
         <iframe
-          src="https://www.bikeops.co/widget/reviews"
+          src="https://www.bikeops.co/widget/reviews?theme=dark"
           height="auto"
           frameBorder="0"
           title="Customer Reviews"
