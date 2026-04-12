@@ -183,6 +183,11 @@ const HeaderSmsBar = styled.p`
   text-align: center;
   line-height: 1.45;
 
+  strong {
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
   a {
     color: rgba(255, 255, 255, 0.65);
     text-decoration: underline;
@@ -485,10 +490,12 @@ function Header() {
           </ThemeToggleDesktop>
         </NavContainer>
         <HeaderSmsBar>
-          By booking, you agree to receive SMS updates about your repair.{' '}
+          By booking, you agree to receive SMS updates from Basement Bike Mechanic about your repair.
+          <br />
+          Msg frequency varies &middot; Msg &amp; data rates may apply &middot; Reply <strong>STOP</strong> to opt out &middot;{' '}
           <a href="/privacy" onClick={(e) => { e.preventDefault(); navigate('/privacy'); }}>Privacy Policy</a>
-          {' '}&amp;{' '}
-          <a href="/terms" onClick={(e) => { e.preventDefault(); navigate('/terms'); }}>Terms</a>.
+          {' '}&middot;{' '}
+          <a href="/terms" onClick={(e) => { e.preventDefault(); navigate('/terms'); }}>Terms</a>
         </HeaderSmsBar>
       </HeaderInner>
       <MenuBackdrop $isOpen={menuOpen} onClick={() => setMenuOpen(false)} aria-hidden="true" />
