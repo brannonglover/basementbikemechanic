@@ -188,6 +188,36 @@ const MyEmail = styled.div`
   }
 `;
 
+const SmsDisclosure = styled.section`
+  max-width: ${({ theme }) => theme.maxWidth.prose};
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  border-top: 1px solid ${({ theme }) => theme.colors.border};
+  font-size: 0.9rem;
+  line-height: 1.65;
+  color: ${({ theme }) => theme.colors.textMuted};
+
+  h2 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin: 0 0 0.65rem;
+    color: ${({ theme }) => theme.colors.textMuted};
+  }
+
+  a {
+    color: ${({ theme }) => theme.colors.footerLink};
+    text-decoration: none;
+    font-weight: 500;
+
+    &:hover {
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+  }
+`;
+
 
 const ViewButton = styled.div`
   display: flex;
@@ -293,6 +323,19 @@ function HomePage({ width, view, switchViews }) {
         Email: <a href={`mailto:${config.email}`}>{config.email}</a><br />
         Location: <a href="https://maps.app.goo.gl/dPsymJhVVwD5ymha6">Melinda Dr NE, Atlanta GA 30345</a>
       </MyEmail>
+      <SmsDisclosure>
+        <h2>SMS Communication</h2>
+        <p>
+          We send SMS updates related to active bike repairs, including booking confirmations,
+          service progress, and pickup notifications. Customers opt in by submitting a repair
+          request form and checking a required consent checkbox. No marketing messages are sent.
+          Message frequency varies. Message &amp; data rates may apply. Reply <strong>STOP</strong> to
+          opt out, <strong>HELP</strong> for help. View our{' '}
+          <a href="/privacy" onClick={(e) => { e.preventDefault(); navigate('/privacy'); }}>Privacy Policy</a>
+          {' '}and{' '}
+          <a href="/terms" onClick={(e) => { e.preventDefault(); navigate('/terms'); }}>Terms of Service</a>.
+        </p>
+      </SmsDisclosure>
       <Footer onNavigatePrivacy={() => navigate('/privacy')} onNavigateTerms={() => navigate('/terms')} />
     </PageWrapper>
   );

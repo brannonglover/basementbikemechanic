@@ -72,13 +72,14 @@ function Privacy() {
         <h1>Privacy Policy</h1>
         <p>At <strong>Basement Bike Mechanic</strong>, your privacy matters. We only collect contact information that you voluntarily provide when seeking bicycle repair services. This page describes how we handle your phone number and ensure your data stays secure.</p>
 
-        <h2>1. Opting In</h2>
-        <p>We will only contact you if you initiate communication. Consent is granted when you:</p>
+        <h2>1. Opting In to SMS</h2>
+        <p>SMS consent is collected through the repair request booking form on our website. To opt in, you must:</p>
         <ul>
-          <li>Send us a text message or call directly.</li>
-          <li>Click the "Text Us" button on our website.</li>
+          <li>Enter your phone number in the booking form.</li>
+          <li>Check the required SMS consent checkbox before submitting.</li>
         </ul>
-        <p>By reaching out first, you authorize <strong>Basement Bike Mechanic</strong> to respond regarding your bicycle repair needs.</p>
+        <p>The checkbox reads: <em>"I agree to receive SMS messages from Basement Bike Mechanic regarding my repair, including status updates and service-related notifications. Message frequency varies. Message &amp; data rates may apply. Reply STOP to opt out, HELP for help. No marketing messages."</em></p>
+        <p>You cannot submit the booking form without checking this box. By doing so, you authorize <strong>Basement Bike Mechanic</strong> to send you SMS updates related to your bicycle repair.</p>
 
         <h2>2. Use of Your Contact Information</h2>
         <p>Your phone number is used solely for operational purposes related to bicycle repair:</p>
@@ -89,7 +90,10 @@ function Privacy() {
           <li>Discussing parts, estimates, and technical issues discovered during service.</li>
         </ul>
 
-        <h2>3. No-Spam and Data Sharing Policy</h2>
+        <h2>3. SMS Opt-Out</h2>
+        <p>You may opt out of SMS messages at any time by replying <strong>STOP</strong> to any message. Reply <strong>HELP</strong> for assistance. After opting out, you will no longer receive SMS updates from us. Standard message and data rates may apply.</p>
+
+        <h2>4. No-Spam and Data Sharing Policy</h2>
         <p>We respect your inbox and will never:</p>
         <ul>
           <li>Send marketing messages, newsletters, or promotional blasts.</li>
