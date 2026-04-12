@@ -171,6 +171,25 @@ const NavContainer = styled.nav`
   }
 `;
 
+const HeaderSmsBar = styled.p`
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  margin: 0.75rem 0 0;
+  padding-top: 0.6rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.5);
+  text-align: center;
+  line-height: 1.45;
+
+  a {
+    color: rgba(255, 255, 255, 0.65);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+`;
+
 const themeToggleShared = css`
   display: flex;
   align-items: center;
@@ -388,6 +407,19 @@ function Header() {
     document.getElementById("bikeops-book-trigger")?.click();
   };
 
+  const handleAboutNav = (e) => {
+    e.preventDefault();
+    setMenuOpen(false);
+    if (window.location.pathname !== "/") {
+      navigate("/");
+      setTimeout(() => {
+        document.getElementById("about")?.scrollIntoView({ behavior: "smooth" });
+      }, 150);
+    } else {
+      document.getElementById("about")?.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <PageHeader>
       <HeaderInner>
@@ -434,6 +466,9 @@ function Header() {
           <HomeLink href="/" onClick={(e) => handleNav(e, "/")}>
             Home
           </HomeLink>
+          <HomeLink href="/#about" onClick={handleAboutNav}>
+            About
+          </HomeLink>
           <HomeLink href="/bikes-for-sale" onClick={(e) => handleNav(e, "/bikes-for-sale")}>
             Bikes for Sale
           </HomeLink>
@@ -449,11 +484,20 @@ function Header() {
             <ThemeIcon mode={mode} />
           </ThemeToggleDesktop>
         </NavContainer>
+        <HeaderSmsBar>
+          By booking, you agree to receive SMS updates about your repair.{' '}
+          <a href="/privacy" onClick={(e) => { e.preventDefault(); navigate('/privacy'); }}>Privacy Policy</a>
+          {' '}&amp;{' '}
+          <a href="/terms" onClick={(e) => { e.preventDefault(); navigate('/terms'); }}>Terms</a>.
+        </HeaderSmsBar>
       </HeaderInner>
       <MenuBackdrop $isOpen={menuOpen} onClick={() => setMenuOpen(false)} aria-hidden="true" />
       <MobileMenu id="site-mobile-menu" $isOpen={menuOpen} role="dialog" aria-modal="true" aria-label="Menu">
         <MobileMenuLink href="/" onClick={(e) => handleNav(e, "/")}>
           Home
+        </MobileMenuLink>
+        <MobileMenuLink href="/#about" onClick={handleAboutNav}>
+          About
         </MobileMenuLink>
         <MobileMenuLink href="/bikes-for-sale" onClick={(e) => handleNav(e, "/bikes-for-sale")}>
           Bikes for Sale

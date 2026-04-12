@@ -188,6 +188,31 @@ const MyEmail = styled.div`
   }
 `;
 
+const AboutSection = styled.section`
+  max-width: ${({ theme }) => theme.maxWidth.content};
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  line-height: 1.65;
+  color: ${({ theme }) => theme.colors.text};
+  font-size: 1.0625rem;
+
+  h2 {
+    font-size: clamp(1.35rem, 2vw, 1.75rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0 0 1rem;
+    color: ${({ theme }) => theme.colors.text};
+  }
+
+  p {
+    margin: 0 0 1rem;
+  }
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+`;
+
 const SmsDisclosure = styled.section`
   max-width: ${({ theme }) => theme.maxWidth.prose};
   margin: 0 auto;
@@ -274,6 +299,28 @@ function HomePage({ width, view, switchViews }) {
           title="Customer Reviews"
         />
       </ReviewsSection>
+      <BreakLine />
+      <AboutSection id="about">
+        <h2>About</h2>
+        <p>
+          I grew up in Roswell, GA where bikes were just part of life — riding
+          everywhere, taking things apart to see how they worked, and putting
+          them back together. That curiosity never went away.
+        </p>
+        <p>
+          A couple years ago I turned that lifelong passion into Basement Bike
+          Mechanic. The name is literal: I work out of my basement in Atlanta,
+          one appointment at a time. Working by reservation isn't just a
+          scheduling preference — it means every bike gets real, focused
+          attention instead of being rushed through a shop queue.
+        </p>
+        <p>
+          When you drop your bike off with me, I'm the one working on it, start
+          to finish. No handoffs, no shortcuts. Just an Atlanta cyclist who
+          takes care of other people's bikes the same way he takes care of his
+          own.
+        </p>
+      </AboutSection>
       <RegularMaintenance>
         <img
           src={TuneUp}
@@ -325,12 +372,11 @@ function HomePage({ width, view, switchViews }) {
       </MyEmail>
       <SmsDisclosure>
         <h2>SMS Communication</h2>
+        <p>We send SMS updates related to active bike repairs, including booking confirmations, service progress, and pickup notifications.</p>
+        <p>Customers opt in by submitting a repair request form on our website and checking a required SMS consent checkbox before submission. This checkbox is displayed during the booking process and must be selected to receive messages.</p>
+        <p>Message frequency varies. Message &amp; data rates may apply. Reply <strong>STOP</strong> to opt out, <strong>HELP</strong> for help. No marketing messages are sent.</p>
         <p>
-          We send SMS updates related to active bike repairs, including booking confirmations,
-          service progress, and pickup notifications. Customers opt in by submitting a repair
-          request form and checking a required consent checkbox. No marketing messages are sent.
-          Message frequency varies. Message &amp; data rates may apply. Reply <strong>STOP</strong> to
-          opt out, <strong>HELP</strong> for help. View our{' '}
+          View our{' '}
           <a href="/privacy" onClick={(e) => { e.preventDefault(); navigate('/privacy'); }}>Privacy Policy</a>
           {' '}and{' '}
           <a href="/terms" onClick={(e) => { e.preventDefault(); navigate('/terms'); }}>Terms of Service</a>.
