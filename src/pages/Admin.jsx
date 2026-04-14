@@ -207,23 +207,38 @@ const LoginForm = styled.form`
 
 const ADMIN_AUTH_KEY = 'basementbikemechanic_admin_auth';
 
-const ImagePickerButton = styled.label`
-  display: inline-flex;
+const DropZone = styled.label`
+  display: flex;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
-  background-color: ${({ theme }) => theme.colors.primary};
-  color: #fff;
-  padding: 0.6rem 1.2rem;
-  font-size: 1rem;
-  font-family: inherit;
-  font-weight: 600;
+  width: 100%;
+  min-height: 120px;
+  padding: 1.5rem;
+  box-sizing: border-box;
+  border: 2px dashed ${({ theme, $dragging }) => $dragging ? theme.colors.primary : theme.colors.borderStrong};
+  border-radius: ${({ theme }) => theme.radius.md};
+  background: ${({ theme, $dragging }) => $dragging ? theme.colors.accentMuted : theme.colors.surface};
+  color: ${({ theme }) => theme.colors.textMuted};
   cursor: pointer;
-  border-radius: ${({ theme }) => theme.radius.sm};
-  border: none;
-  transition: background ${({ theme }) => theme.transition};
+  transition: border-color ${({ theme }) => theme.transition}, background ${({ theme }) => theme.transition};
+  text-align: center;
+  font-size: 0.95rem;
 
   &:hover {
-    background-color: ${({ theme }) => theme.colors.primaryDark};
+    border-color: ${({ theme }) => theme.colors.primary};
+    background: ${({ theme }) => theme.colors.accentMuted};
+  }
+
+  .drop-icon {
+    font-size: 2rem;
+    line-height: 1;
+    color: ${({ theme }) => theme.colors.textMuted};
+  }
+
+  strong {
+    color: ${({ theme }) => theme.colors.primary};
   }
 
   input {
@@ -297,6 +312,7 @@ function Admin() {
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState({ name: "", images: [], price: "" });
   const [imageError, setImageError] = useState("");
+  const [isDragging, setIsDragging] = useState(false);
 
   useEffect(() => {
     setBikes(getAllBikesForAdmin(config.bikes));
@@ -386,23 +402,43 @@ function Admin() {
     }
   };
 
-  const handleFileSelect = async (e) => {
-    const files = Array.from(e.target.files || []);
-    e.target.value = "";
+  const processFiles = async (files) => {
     if (files.length === 0) return;
-
     setImageError("");
     const imageFiles = files.filter((f) => f.type.startsWith("image/"));
     if (imageFiles.length < files.length) {
       setImageError("Some files were skipped (not images).");
     }
-
     try {
       const dataUrls = await Promise.all(imageFiles.map(fileToDataUrl));
       setForm((f) => ({ ...f, images: [...f.images, ...dataUrls] }));
     } catch (err) {
       setImageError("Failed to read one or more images.");
     }
+  };
+
+  const handleFileSelect = async (e) => {
+    const files = Array.from(e.target.files || []);
+    e.target.value = "";
+    await processFiles(files);
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e) => {
+    if (!e.currentTarget.contains(e.relatedTarget)) {
+      setIsDragging(false);
+    }
+  };
+
+  const handleDrop = async (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const files = Array.from(e.dataTransfer.files || []);
+    await processFiles(files);
   };
 
   const removeImage = (index) => {
@@ -463,15 +499,24 @@ function Admin() {
           </FormGroup>
           <FormGroup>
             <label>Images</label>
-            <ImagePickerButton>
+            <DropZone
+              $dragging={isDragging}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+            >
               <input
                 type="file"
                 accept="image/*"
                 multiple
                 onChange={handleFileSelect}
               />
-              Choose images…
-            </ImagePickerButton>
+              <span className="drop-icon">📷</span>
+              <span>
+                <strong>Click to browse</strong> or drag &amp; drop images here
+              </span>
+              <span style={{ fontSize: "0.8rem" }}>Keep file sizes reasonable to avoid storage limits.</span>
+            </DropZone>
             {form.images.length > 0 && (
               <ImagePreviews>
                 {form.images.map((src, i) => (
@@ -485,7 +530,6 @@ function Admin() {
               </ImagePreviews>
             )}
             {imageError && <small style={{ color: "#b90000" }}>{imageError}</small>}
-            <small>Select multiple images from your computer. Keep file sizes reasonable to avoid storage limits.</small>
           </FormGroup>
           <FormGroup>
             <label htmlFor="bike-price">Price ($)</label>
