@@ -251,7 +251,7 @@ function BikesForSale() {
         path="/bikes-for-sale"
       />
       <Header />
-      <PageTitle>Used Bikes for Sale</PageTitle>
+      <PageTitle>Bikes for Sale</PageTitle>
       {bikes.length === 0 ? (
         <EmptyState>
           No bikes are currently listed for sale. Check back soon or contact us at{" "}
