@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
-import { usePostHog } from 'posthog-js/react';
+import { usePostHog } from '@posthog/react';
 import { useThemeMode } from "../ThemeModeContext";
 import config from "../assets/siteConfig.json";
 import HeaderImage from "../images/header-image.jpeg";

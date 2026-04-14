@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
-import { usePostHog } from 'posthog-js/react';
+import { usePostHog } from '@posthog/react';
 import styled from 'styled-components';
 import ServiceBox from "./components/service-box";
 import MobileTuneUpsSelect from "./components/MobileTuneUpsSelect";
