@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
+import { usePostHog } from 'posthog-js/react';
 import { useThemeMode } from "../ThemeModeContext";
 import config from "../assets/siteConfig.json";
 import HeaderImage from "../images/header-image.jpeg";
@@ -380,6 +381,7 @@ function MenuIcon({ open }) {
 
 function Header() {
   const navigate = useNavigate();
+  const posthog = usePostHog();
   const { mode, toggleTheme } = useThemeMode();
   const [width, setWidth] = useState(typeof window !== "undefined" ? window.innerWidth : 1024);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -403,17 +405,20 @@ function Header() {
 
   const handleNav = (e, path) => {
     e.preventDefault();
+    posthog.capture('nav_clicked', { destination: path });
     navigate(path);
     setMenuOpen(false);
   };
 
   const triggerBook = (e) => {
     e.preventDefault();
+    posthog.capture('book_now_clicked');
     document.getElementById("bikeops-book-trigger")?.click();
   };
 
   const handleAboutNav = (e) => {
     e.preventDefault();
+    posthog.capture('nav_clicked', { destination: '/#about' });
     setMenuOpen(false);
     if (window.location.pathname !== "/") {
       navigate("/");

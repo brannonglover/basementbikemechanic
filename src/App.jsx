@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
+import { usePostHog } from 'posthog-js/react';
 import styled from 'styled-components';
 import ServiceBox from "./components/service-box";
 import MobileTuneUpsSelect from "./components/MobileTuneUpsSelect";
@@ -279,8 +280,20 @@ const ViewButton = styled.div`
   }
 `;
 
+function PageViewTracker() {
+  const location = useLocation();
+  const posthog = usePostHog();
+
+  useEffect(() => {
+    posthog.capture('$pageview', { $current_url: window.location.href });
+  }, [location, posthog]);
+
+  return null;
+}
+
 function HomePage({ width, view, switchViews }) {
   const navigate = useNavigate();
+  const posthog = usePostHog();
   return (
     <PageWrapper>
       <PageSeo title={DEFAULT_TITLE} description={DEFAULT_DESCRIPTION} path="" />
@@ -335,7 +348,7 @@ function HomePage({ width, view, switchViews }) {
       {width <= 1000 ? (
         <>
           <ViewButton>
-            <button onClick={() => switchViews('tuneup')} className={view === 'tuneup' ? 'active' : undefined}>Tune Ups</button><button onClick={() => switchViews('service')} className={view === 'service' ? 'active' : undefined}>Services</button>
+            <button onClick={() => { posthog.capture('service_tab_switched', { tab: 'tuneup' }); switchViews('tuneup'); }} className={view === 'tuneup' ? 'active' : undefined}>Tune Ups</button><button onClick={() => { posthog.capture('service_tab_switched', { tab: 'service' }); switchViews('service'); }} className={view === 'service' ? 'active' : undefined}>Services</button>
           </ViewButton>
           {view === 'tuneup' && (
             <>
@@ -366,9 +379,9 @@ function HomePage({ width, view, switchViews }) {
         </>
       )}
       <MyEmail>
-        Text: <a href={`tel:${config.phone}`}>{config.phone}</a><br />
-        Email: <a href={`mailto:${config.email}`}>{config.email}</a><br />
-        Location: <a href="https://maps.app.goo.gl/dPsymJhVVwD5ymha6">Melinda Dr NE, Atlanta GA 30345</a>
+        Text: <a href={`tel:${config.phone}`} onClick={() => posthog.capture('contact_clicked', { method: 'phone' })}>{config.phone}</a><br />
+        Email: <a href={`mailto:${config.email}`} onClick={() => posthog.capture('contact_clicked', { method: 'email' })}>{config.email}</a><br />
+        Location: <a href="https://maps.app.goo.gl/dPsymJhVVwD5ymha6" onClick={() => posthog.capture('contact_clicked', { method: 'maps' })}>Melinda Dr NE, Atlanta GA 30345</a>
       </MyEmail>
       <SmsDisclosure>
         <h2>SMS Communication</h2>
@@ -403,8 +416,8 @@ const App = () => {
     }
   }, []);
 
-  function switchViews(view) {
-    if (view === 'tuneup') {
+  function switchViews(newView) {
+    if (newView === 'tuneup') {
       setView('tuneup');
     } else {
       setView('service');
@@ -428,13 +441,16 @@ const App = () => {
   // }
 
   return (
-    <Routes>
-      <Route path="/admin" element={<Admin />} />
-      <Route path="/bikes-for-sale" element={<BikesForSale />} />
-      <Route path="/privacy" element={<Privacy />} />
-      <Route path="/terms" element={<Terms />} />
-      <Route path="/" element={<HomePage width={width} view={view} switchViews={switchViews} />} />
-    </Routes>
+    <>
+      <PageViewTracker />
+      <Routes>
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/bikes-for-sale" element={<BikesForSale />} />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/terms" element={<Terms />} />
+        <Route path="/" element={<HomePage width={width} view={view} switchViews={switchViews} />} />
+      </Routes>
+    </>
   )
 }
 
