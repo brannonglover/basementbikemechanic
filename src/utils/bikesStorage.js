@@ -29,5 +29,6 @@ export function saveBikes(bikes) {
     localStorage.setItem(BIKES_STORAGE_KEY, JSON.stringify(bikes));
   } catch (e) {
     console.error('Failed to save bikes to localStorage', e);
+    throw e;
   }
 }
