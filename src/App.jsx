@@ -11,6 +11,7 @@ import Privacy from "./Privacy";
 import Terms from "./Terms";
 import BikesForSale from "./pages/BikesForSale";
 import Admin from "./pages/Admin";
+import Book from "./pages/Book";
 import config from './assets/siteConfig.json';
 import PageSeo from './components/PageSeo';
 import { DEFAULT_DESCRIPTION, DEFAULT_TITLE } from './seoConstants';
@@ -444,8 +445,9 @@ const App = () => {
     <>
       <PageViewTracker />
       <Routes>
-        <Route path="/admin" element={<Admin />} />
-        <Route path="/bikes-for-sale" element={<BikesForSale />} />
+      <Route path="/admin" element={<Admin />} />
+      <Route path="/book" element={<Book />} />
+      <Route path="/bikes-for-sale" element={<BikesForSale />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/terms" element={<Terms />} />
         <Route path="/" element={<HomePage width={width} view={view} switchViews={switchViews} />} />

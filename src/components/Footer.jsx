@@ -37,7 +37,7 @@ const FooterStyled = styled.footer`
 function Footer({ onNavigatePrivacy, onNavigateTerms, onBack }) {
   const navigate = useNavigate();
   const location = useLocation();
-  const isBackPage = location.pathname === "/privacy" || location.pathname === "/terms" || location.pathname === "/admin";
+  const isBackPage = location.pathname === "/privacy" || location.pathname === "/terms" || location.pathname === "/admin" || location.pathname === "/book";
 
   const handleBackClick = (e) => {
     e.preventDefault();

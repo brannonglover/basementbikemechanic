@@ -172,29 +172,6 @@ const NavContainer = styled.nav`
   }
 `;
 
-const HeaderSmsBar = styled.p`
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  margin: 0.75rem 0 0;
-  padding-top: 0.6rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
-  font-size: 0.7rem;
-  color: rgba(255, 255, 255, 0.5);
-  text-align: center;
-  line-height: 1.45;
-
-  strong {
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.7);
-  }
-
-  a {
-    color: rgba(255, 255, 255, 0.65);
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
-`;
 
 const themeToggleShared = css`
   display: flex;
@@ -410,12 +387,6 @@ function Header() {
     setMenuOpen(false);
   };
 
-  const triggerBook = (e) => {
-    e.preventDefault();
-    posthog.capture('book_now_clicked');
-    document.getElementById("bikeops-book-trigger")?.click();
-  };
-
   const handleAboutNav = (e) => {
     e.preventDefault();
     posthog.capture('nav_clicked', { destination: '/#about' });
@@ -450,7 +421,7 @@ function Header() {
           </Title>
           <Tagline>{config.tagline}</Tagline>
           <MobileBookButtonContainer>
-            <BookButton href="#" onClick={triggerBook}>
+            <BookButton href="/book" onClick={(e) => { e.preventDefault(); navigate("/book"); }}>
               Book now
             </BookButton>
           </MobileBookButtonContainer>
@@ -482,7 +453,7 @@ function Header() {
           <HomeLink href="/bikes-for-sale" onClick={(e) => handleNav(e, "/bikes-for-sale")}>
             Bikes for Sale
           </HomeLink>
-          <NavBookButton href="#" onClick={triggerBook}>
+          <NavBookButton href="/book" onClick={(e) => handleNav(e, "/book")}>
             Book now
           </NavBookButton>
           <ThemeToggleDesktop
@@ -494,14 +465,6 @@ function Header() {
             <ThemeIcon mode={mode} />
           </ThemeToggleDesktop>
         </NavContainer>
-        <HeaderSmsBar>
-          By booking, you agree to receive SMS updates from Basement Bike Mechanic about your repair.
-          <br />
-          Msg frequency varies &middot; Msg &amp; data rates may apply &middot; Reply <strong>STOP</strong> to opt out &middot;{' '}
-          <a href="/privacy" onClick={(e) => { e.preventDefault(); navigate('/privacy'); }}>Privacy Policy</a>
-          {' '}&middot;{' '}
-          <a href="/terms" onClick={(e) => { e.preventDefault(); navigate('/terms'); }}>Terms</a>
-        </HeaderSmsBar>
       </HeaderInner>
       <MenuBackdrop $isOpen={menuOpen} onClick={() => setMenuOpen(false)} aria-hidden="true" />
       <MobileMenu id="site-mobile-menu" $isOpen={menuOpen} role="dialog" aria-modal="true" aria-label="Menu">
@@ -514,7 +477,7 @@ function Header() {
         <MobileMenuLink href="/bikes-for-sale" onClick={(e) => handleNav(e, "/bikes-for-sale")}>
           Bikes for Sale
         </MobileMenuLink>
-        <BookButton href="#" onClick={(e) => { triggerBook(e); setMenuOpen(false); }} style={{ marginTop: "0.5rem", textAlign: "center" }}>
+        <BookButton href="/book" onClick={(e) => { e.preventDefault(); navigate("/book"); setMenuOpen(false); }} style={{ marginTop: "0.5rem", textAlign: "center" }}>
           Book now
         </BookButton>
       </MobileMenu>
