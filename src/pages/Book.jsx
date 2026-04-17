@@ -353,11 +353,39 @@ const Checkbox = styled.input`
   accent-color: ${({ theme }) => theme.colors.accent};
 `;
 
-const ConsentText = styled.span`
+const ConsentText = styled.div`
   font-size: 0.92rem;
   line-height: 1.55;
   color: ${({ theme }) =>
     theme.colors.bg === "#1a1a1e" ? "#cbd5e1" : theme.colors.text};
+`;
+
+const ConsentTopLine = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.35rem;
+`;
+
+const RequiredBadge = styled.span`
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px;
+  padding: 0.15rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  border: 1px solid
+    ${({ theme }) =>
+      theme.colors.bg === "#1a1a1e" ? "rgba(248, 113, 113, 0.35)" : "rgba(220, 38, 38, 0.28)"};
+  background: ${({ theme }) =>
+    theme.colors.bg === "#1a1a1e" ? "rgba(127, 29, 29, 0.25)" : "rgba(220, 38, 38, 0.08)"};
+  color: ${({ theme }) => (theme.colors.bg === "#1a1a1e" ? "#fecaca" : "#991b1b")};
+`;
+
+const ConsentRequiredNote = styled.span`
+  font-size: 0.85rem;
+  color: ${({ theme }) => theme.colors.textMuted};
 `;
 
 const HelperText = styled.p`
@@ -409,6 +437,17 @@ const SavedBikeButton = styled.button`
     border-color: ${({ theme }) => theme.colors.accent};
     background: ${({ theme }) => theme.colors.bgMuted};
   }
+
+  ${({ $selected, theme }) =>
+    $selected &&
+    css`
+      border-color: ${theme.colors.accent};
+      background: ${theme.colors.accentMuted};
+      box-shadow: inset 0 0 0 1px
+        ${theme.colors.bg === "#1a1a1e"
+          ? "rgba(245, 158, 11, 0.18)"
+          : "rgba(245, 158, 11, 0.12)"};
+    `}
 `;
 
 const SavedBikeName = styled.div`
@@ -651,6 +690,7 @@ function Book() {
   const [savedBikes, setSavedBikes] = useState([]);
   const [savedBikeCustomer, setSavedBikeCustomer] = useState(null);
   const [lookingUpBikes, setLookingUpBikes] = useState(false);
+  const [selectedSavedBikeId, setSelectedSavedBikeId] = useState(null);
   const [shouldLookupSavedBikes, setShouldLookupSavedBikes] = useState(false);
   const [attemptedSubmit, setAttemptedSubmit] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -815,6 +855,8 @@ function Book() {
   }, [form.firstName, form.lastName, form.email, shouldLookupSavedBikes, lookupSavedBikes]);
 
   const applySavedBike = (savedBike) => {
+    setSelectedSavedBikeId(savedBike?.id ?? null);
+
     const nextBike = {
       make: savedBike.make || "",
       model: savedBike.model || "",
@@ -840,6 +882,12 @@ function Book() {
       return [...previous, nextBike];
     });
   };
+
+  useEffect(() => {
+    if (!selectedSavedBikeId) return;
+    if (savedBikes.some((b) => b.id === selectedSavedBikeId)) return;
+    setSelectedSavedBikeId(null);
+  }, [savedBikes, selectedSavedBikeId]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -1038,6 +1086,10 @@ function Book() {
                 required
               />
               <ConsentText>
+                <ConsentTopLine>
+                  <RequiredBadge>Required</RequiredBadge>
+                  <ConsentRequiredNote>You must check this box to submit.</ConsentRequiredNote>
+                </ConsentTopLine>
                 I agree to receive SMS from <strong>{SHOP_DISPLAY_NAME}</strong> about
                 my repair, including booking confirmations, service updates, and
                 pickup notifications. No marketing texts. Message frequency varies.
@@ -1068,6 +1120,7 @@ function Book() {
                           key={bike.id}
                           type="button"
                           onClick={() => applySavedBike(bike)}
+                          $selected={bike.id === selectedSavedBikeId}
                         >
                           <SavedBikeName>
                             {[bike.nickname, bike.make, bike.model].filter(Boolean).join(" · ")}
