@@ -5,13 +5,31 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import PageSeo from "../components/PageSeo";
 
-const BIKEOPS_BASE_URL = process.env.REACT_APP_BIKEOPS_URL || "https://www.bikeops.co";
+function normalizeBikeOpsOrigin(value) {
+  if (!value) return "";
+  try {
+    const url = new URL(value);
+    const host = url.hostname.toLowerCase();
+    if (host === "bikeops.co") {
+      url.hostname = "www.bikeops.co";
+    }
+    return url.origin;
+  } catch {
+    return value;
+  }
+}
+
+const BIKEOPS_BASE_URL =
+  normalizeBikeOpsOrigin(process.env.REACT_APP_BIKEOPS_URL) || "https://www.bikeops.co";
 
 const BIKEOPS_BASE_CANDIDATES = [
-  process.env.REACT_APP_BIKEOPS_URL,
   "https://www.bikeops.co",
-  "https://bikeops.co",
-].filter(Boolean);
+  process.env.REACT_APP_BIKEOPS_URL,
+]
+  .map(normalizeBikeOpsOrigin)
+  .filter(Boolean)
+  // De-dupe while preserving order.
+  .filter((v, i, arr) => arr.indexOf(v) === i);
 
 const SHOP_DISPLAY_NAME = "Basement Bike Mechanic";
 
