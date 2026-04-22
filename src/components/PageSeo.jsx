@@ -17,11 +17,14 @@ export default function PageSeo({
   path = "",
   noindex = false,
   ogImage = DEFAULT_OG_IMAGE,
+  jsonLd,
 }) {
   const canonical = path
     ? `${SITE_URL}${path.startsWith("/") ? path : `/${path}`}`
     : SITE_URL;
   const robots = noindex ? "noindex, nofollow" : "index, follow";
+  const jsonLdItems = Array.isArray(jsonLd) ? jsonLd : jsonLd ? [jsonLd] : [];
+  const serializeJsonLd = (data) => JSON.stringify(data).replace(/</g, "\\u003c");
 
   return (
     <Helmet htmlAttributes={{ lang: "en" }}>
@@ -42,6 +45,12 @@ export default function PageSeo({
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={ogImage} />
+
+      {jsonLdItems.map((data, i) => (
+        <script key={`jsonld-${i}`} type="application/ld+json">
+          {serializeJsonLd(data)}
+        </script>
+      ))}
     </Helmet>
   );
 }

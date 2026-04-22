@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import PageSeo from "../components/PageSeo";
 import config from "../assets/siteConfig.json";
 import { getBikes } from "../utils/bikesStorage";
+import { SITE_URL } from "../seoConstants";
 
 const PageWrapper = styled.div`
   margin: 0 auto;
@@ -34,6 +35,34 @@ const BikesGrid = styled.section`
   padding: 1.5rem;
 `;
 
+const Intro = styled.section`
+  max-width: ${({ theme }) => theme.maxWidth.content};
+  margin: 0 auto 1.5rem;
+  padding: 0 1.5rem;
+  color: ${({ theme }) => theme.colors.text};
+  font-size: 1.0625rem;
+  line-height: 1.65;
+
+  p {
+    margin: 0 0 0.85rem;
+  }
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+
+  a {
+    color: ${({ theme }) => theme.colors.footerLink};
+    font-weight: 500;
+    text-decoration: none;
+    text-underline-offset: 3px;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+`;
+
 const BikeTile = styled.button`
   background: ${({ theme }) => theme.colors.surface};
   border: 1px solid ${({ theme }) => theme.colors.border};
@@ -53,13 +82,12 @@ const BikeTile = styled.button`
   }
 `;
 
-const TileImage = styled.div`
+const TileImage = styled.img`
   width: 100%;
   aspect-ratio: 4/3;
   background-color: ${({ theme }) => theme.colors.primarySoft};
-  background-size: cover;
-  background-position: center;
-  background-image: ${(p) => (p.$src ? `url("${p.$src}")` : "none")};
+  object-fit: cover;
+  display: block;
 `;
 
 const TileContent = styled.div`
@@ -210,13 +238,31 @@ const CloseButton = styled.button`
   }
 `;
 
-const CONTACT_EMAIL = "support@basementbikemechanic.com";
+const CONTACT_EMAIL = config.email || "support@basementbikemechanic.com";
+
+function getBikeIdFromHash(hash) {
+  const value = (hash || "").replace(/^#/, "");
+  const match = value.match(/^bike-(\d+)$/);
+  if (!match) return null;
+  return parseInt(match[1], 10);
+}
+
+function toAbsoluteUrl(src) {
+  if (!src || typeof src !== "string") return null;
+  if (src.startsWith("https://") || src.startsWith("http://")) return src;
+  if (src.startsWith("data:")) return null;
+  if (src.startsWith("/")) return `${SITE_URL}${src}`;
+  return `${SITE_URL}/${src}`;
+}
 
 function BikesForSale() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [bikes, setBikes] = useState([]);
   const [selectedBike, setSelectedBike] = useState(null);
   const [slideIndex, setSlideIndex] = useState(0);
+  const bikesPageUrl = `${SITE_URL}/bikes-for-sale`;
+  const bikesListJsonLdId = `${bikesPageUrl}#itemlist`;
 
   useEffect(() => {
     setBikes(getBikes(config.bikes));
@@ -225,10 +271,15 @@ function BikesForSale() {
   const handleTileClick = (bike) => {
     setSelectedBike(bike);
     setSlideIndex(0);
+    navigate(
+      { pathname: location.pathname, search: location.search, hash: `#bike-${bike.id}` },
+      { replace: true }
+    );
   };
 
   const handleClose = () => {
     setSelectedBike(null);
+    navigate({ pathname: location.pathname, search: location.search, hash: "" }, { replace: true });
   };
 
   const nextSlide = () => {
@@ -243,15 +294,83 @@ function BikesForSale() {
     if (e.target === e.currentTarget) handleClose();
   };
 
+  useEffect(() => {
+    const id = getBikeIdFromHash(location.hash);
+    if (id === null) return;
+    const bike = bikes.find((b) => b.id === id);
+    if (bike) {
+      setSelectedBike(bike);
+      setSlideIndex(0);
+    }
+  }, [location.hash, bikes]);
+
   return (
     <PageWrapper>
       <PageSeo
         title="Used Bikes for Sale in Atlanta | Basement Bike Mechanic"
         description="Browse quality used bicycles for sale from Basement Bike Mechanic in Atlanta. Contact us about availability and pricing."
         path="/bikes-for-sale"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "CollectionPage",
+              "@id": `${bikesPageUrl}#webpage`,
+              url: bikesPageUrl,
+              name: "Used Bikes for Sale in Atlanta",
+              description:
+                "Browse quality used bicycles for sale from Basement Bike Mechanic in Atlanta. Contact us about availability and pricing.",
+              about: { "@id": `${SITE_URL}/#business` },
+              mainEntity: { "@id": bikesListJsonLdId },
+            },
+            {
+              "@type": "ItemList",
+              "@id": bikesListJsonLdId,
+              name: "Used bikes for sale in Atlanta",
+              url: bikesPageUrl,
+              itemListOrder: "https://schema.org/ItemListOrderAscending",
+              numberOfItems: bikes.length,
+              itemListElement: bikes.map((bike, index) => {
+                const images = (bike.images || []).map(toAbsoluteUrl).filter(Boolean);
+                return {
+                  "@type": "ListItem",
+                  position: index + 1,
+                  url: `${bikesPageUrl}#bike-${bike.id}`,
+                  item: {
+                    "@type": "Product",
+                    "@id": `${bikesPageUrl}#product-${bike.id}`,
+                    name: bike.name,
+                    ...(images.length ? { image: images } : {}),
+                    category: "Bicycle",
+                    offers: {
+                      "@type": "Offer",
+                      url: `${bikesPageUrl}#bike-${bike.id}`,
+                      priceCurrency: "USD",
+                      price: bike.price,
+                      availability: "https://schema.org/InStock",
+                      itemCondition: "https://schema.org/UsedCondition",
+                      seller: { "@id": `${SITE_URL}/#business` },
+                    },
+                  },
+                };
+              }),
+            },
+          ],
+        }}
       />
       <Header />
-      <PageTitle>Bikes for Sale</PageTitle>
+      <PageTitle>Used Bikes for Sale in Atlanta</PageTitle>
+      <Intro>
+        <p>
+          Browse our current used bike listings. Availability can change quickly — for the most up-to-date info, text{" "}
+          <a href={`tel:${config.phone}`}>{config.phone}</a> or email{" "}
+          <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
+        </p>
+        <p>
+          Looking for something specific (road, commuter, mountain, or e-bike)? Reach out and we’ll help you find a good
+          fit.
+        </p>
+      </Intro>
       {bikes.length === 0 ? (
         <EmptyState>
           No bikes are currently listed for sale. Check back soon or contact us at{" "}
@@ -260,8 +379,13 @@ function BikesForSale() {
       ) : (
         <BikesGrid>
           {bikes.map((bike) => (
-            <BikeTile key={bike.id} onClick={() => handleTileClick(bike)} type="button">
-              <TileImage $src={bike.images[0]} />
+            <BikeTile key={bike.id} id={`bike-${bike.id}`} onClick={() => handleTileClick(bike)} type="button">
+              <TileImage
+                src={bike.images[0]}
+                alt={`${bike.name} used bike for sale in Atlanta`}
+                loading="lazy"
+                decoding="async"
+              />
               <TileContent>
                 <TileName>{bike.name}</TileName>
                 <TilePrice>${bike.price}</TilePrice>
@@ -279,6 +403,7 @@ function BikesForSale() {
             <SlideshowImage
               src={selectedBike.images[slideIndex]}
               alt={`${selectedBike.name} - image ${slideIndex + 1}`}
+              loading="eager"
             />
           </SlideshowContainer>
           {selectedBike.images.length > 1 && (

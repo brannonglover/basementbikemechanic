@@ -31,6 +31,10 @@ const BIKEOPS_BASE_CANDIDATES = [
   // De-dupe while preserving order.
   .filter((v, i, arr) => arr.indexOf(v) === i);
 
+// Prefer non-widget endpoints first (desktop ad-blockers/privacy tools sometimes block "widget" URLs).
+// Fall back to /api/widget for older BikeOps deployments.
+const BIKEOPS_API_BASE_PATHS = ["/api/booking", "/api/widget"];
+
 const SHOP_DISPLAY_NAME = "Basement Bike Mechanic";
 
 function getDefaultDateTime() {
@@ -70,6 +74,11 @@ function getServiceDescriptionItems(description) {
 
 function isBikeEmpty(bike) {
   return !bike.make.trim() && !bike.model.trim() && bike.bikeType === "AUTO";
+}
+
+function formatMiles(value) {
+  if (typeof value !== "number" || !Number.isFinite(value)) return "";
+  return value < 10 ? value.toFixed(1) : Math.round(value).toString();
 }
 
 const PageWrapper = styled.div`
@@ -599,6 +608,22 @@ const ErrorAlert = styled(Alert)`
   color: ${({ theme }) => (theme.colors.bg === "#1a1a1e" ? "#fecaca" : "#991b1b")};
 `;
 
+const WarningAlert = styled(Alert)`
+  border: 1px solid ${({ theme }) =>
+    theme.colors.bg === "#1a1a1e" ? "rgba(251, 191, 36, 0.28)" : "rgba(245, 158, 11, 0.28)"};
+  background: ${({ theme }) =>
+    theme.colors.bg === "#1a1a1e" ? "rgba(120, 53, 15, 0.28)" : "rgba(245, 158, 11, 0.1)"};
+  color: ${({ theme }) => (theme.colors.bg === "#1a1a1e" ? "#fde68a" : "#92400e")};
+`;
+
+const SuccessAlert = styled(Alert)`
+  border: 1px solid ${({ theme }) =>
+    theme.colors.bg === "#1a1a1e" ? "rgba(52, 211, 153, 0.24)" : "rgba(16, 185, 129, 0.22)"};
+  background: ${({ theme }) =>
+    theme.colors.bg === "#1a1a1e" ? "rgba(6, 78, 59, 0.28)" : "rgba(16, 185, 129, 0.1)"};
+  color: ${({ theme }) => (theme.colors.bg === "#1a1a1e" ? "#a7f3d0" : "#065f46")};
+`;
+
 const SuccessCard = styled.div`
   display: grid;
   gap: 1rem;
@@ -697,6 +722,10 @@ function Book() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(null);
   const [resolvedApiBase, setResolvedApiBase] = useState(BIKEOPS_BASE_URL);
+  const [collectionEligibility, setCollectionEligibility] = useState({
+    status: "idle", // idle | checking | ok | error
+    result: null,
+  });
   const [bikes, setBikes] = useState([{ make: "", model: "", bikeType: "AUTO" }]);
   const [form, setForm] = useState({
     firstName: "",
@@ -719,30 +748,36 @@ function Book() {
     let cancelled = false;
 
     const loadServices = async () => {
+      const checked = [];
       for (const baseUrl of BIKEOPS_BASE_CANDIDATES) {
-        try {
-          const response = await fetch(`${baseUrl}/api/widget/services`);
-          if (!response.ok) {
-            continue;
+        for (const apiBasePath of BIKEOPS_API_BASE_PATHS) {
+          const url = `${baseUrl}${apiBasePath}/services`;
+          checked.push(url);
+          try {
+            const response = await fetch(url);
+            if (!response.ok) {
+              continue;
+            }
+            const data = await response.json().catch(() => null);
+            if (cancelled) return;
+            if (Array.isArray(data)) {
+              setServices(data);
+              setResolvedApiBase(baseUrl);
+              setServiceLoadError("");
+              setLoadingServices(false);
+              return;
+            }
+          } catch (fetchError) {
+            // Try the next configured BikeOps endpoint.
           }
-          const data = await response.json();
-          if (cancelled) return;
-          if (Array.isArray(data)) {
-            setServices(data);
-            setResolvedApiBase(baseUrl);
-            setServiceLoadError("");
-            setLoadingServices(false);
-            return;
-          }
-        } catch (fetchError) {
-          // Try the next configured BikeOps host.
         }
       }
 
       if (!cancelled) {
         setServices([]);
+        console.warn("[Book] Couldn't load services from BikeOps", { checked });
         setServiceLoadError(
-          `Couldn't load services from BikeOps. Checked: ${BIKEOPS_BASE_CANDIDATES.join(", ")}`
+          "Couldn't load services from BikeOps. Please refresh and try again. If you use an ad blocker or privacy tool, try disabling it for this site."
         );
         setLoadingServices(false);
       }
@@ -801,6 +836,50 @@ function Book() {
     }));
   };
 
+  const checkCollectionAddress = useCallback(async () => {
+    if (form.deliveryType !== "COLLECTION_SERVICE") {
+      setCollectionEligibility({ status: "idle", result: null });
+      return;
+    }
+
+    const address = form.collectionAddress.trim();
+    if (!address) {
+      setCollectionEligibility({ status: "idle", result: null });
+      return;
+    }
+
+    setCollectionEligibility((p) => ({ ...p, status: "checking" }));
+    for (const apiBasePath of BIKEOPS_API_BASE_PATHS) {
+      try {
+        const res = await fetch(
+          `${resolvedApiBase}${apiBasePath}/collection-eligibility?address=${encodeURIComponent(address)}`
+        );
+        const data = await res.json().catch(() => null);
+        if (!res.ok) {
+          continue;
+        }
+        setCollectionEligibility({ status: "ok", result: data });
+        return;
+      } catch {
+        // Try the next endpoint.
+      }
+    }
+    setCollectionEligibility({ status: "error", result: null });
+  }, [form.collectionAddress, form.deliveryType, resolvedApiBase]);
+
+  useEffect(() => {
+    if (form.deliveryType !== "COLLECTION_SERVICE") return undefined;
+    const address = form.collectionAddress.trim();
+    if (!address) {
+      setCollectionEligibility({ status: "idle", result: null });
+      return undefined;
+    }
+    const timer = setTimeout(() => {
+      checkCollectionAddress();
+    }, 450);
+    return () => clearTimeout(timer);
+  }, [form.collectionAddress, form.deliveryType, checkCollectionAddress]);
+
   const lookupSavedBikes = useCallback(async (identityOverride) => {
     const identity = identityOverride || {
       firstName: form.firstName,
@@ -826,14 +905,28 @@ function Book() {
       if (lastName) searchParams.set("lastName", lastName);
       if (email) searchParams.set("email", email);
 
-      const response = await fetch(
-        `${resolvedApiBase}/api/widget/customer-bikes?${searchParams.toString()}`
-      );
-      if (!response.ok) {
+      let data = null;
+      for (const apiBasePath of BIKEOPS_API_BASE_PATHS) {
+        try {
+          const response = await fetch(
+            `${resolvedApiBase}${apiBasePath}/customer-bikes?${searchParams.toString()}`
+          );
+          if (!response.ok) {
+            continue;
+          }
+          data = await response.json().catch(() => null);
+          if (data && typeof data === "object") {
+            break;
+          }
+        } catch (fetchError) {
+          // Try the next endpoint.
+        }
+      }
+
+      if (!data || typeof data !== "object") {
         throw new Error("Failed to fetch saved bikes");
       }
 
-      const data = await response.json();
       setSavedBikes(Array.isArray(data.bikes) ? data.bikes : []);
       setSavedBikeCustomer(data.customer ?? null);
     } catch (lookupError) {
@@ -894,6 +987,24 @@ function Book() {
     setError("");
     setAttemptedSubmit(true);
 
+    if (form.deliveryType === "COLLECTION_SERVICE") {
+      const r = collectionEligibility.result;
+      if (collectionEligibility.status === "checking") {
+        setError("Checking collection address… please try again in a moment.");
+        return;
+      }
+      if (r && r.enabled === true) {
+        if (r.ok === true && r.eligible === false) {
+          setError("That address is outside our 5-mile collection radius. Please choose drop-off instead.");
+          return;
+        }
+        if (r.ok === false) {
+          setError(r.error || "We couldn’t verify that collection address. Please double-check it.");
+          return;
+        }
+      }
+    }
+
     if (!form.smsConsent) {
       setError("SMS consent is required to receive booking and repair updates.");
       return;
@@ -902,55 +1013,72 @@ function Book() {
     setSubmitting(true);
 
     try {
-      const response = await fetch(`${resolvedApiBase}/api/widget/book`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          customerId: savedBikeCustomer?.id || null,
-          firstName: form.firstName.trim(),
-          lastName: form.lastName.trim(),
-          email: form.email.trim(),
-          phone: form.phone.trim(),
-          smsConsent: true,
-          address: form.address.trim() || null,
-          bikes: bikes.map((bike) => ({
-            make: bike.make.trim(),
-            model: bike.model.trim() || null,
-            bikeType: bike.bikeType === "AUTO" ? undefined : bike.bikeType,
-          })),
-          deliveryType: form.deliveryType,
-          dropOffDate: form.dropOffDate || null,
-          pickupDate: form.pickupDate || null,
-          collectionAddress:
-            form.deliveryType === "COLLECTION_SERVICE"
-              ? form.collectionAddress.trim() || null
-              : null,
-          collectionWindowStart:
-            form.deliveryType === "COLLECTION_SERVICE"
-              ? form.collectionWindowStart || null
-              : null,
-          collectionWindowEnd:
-            form.deliveryType === "COLLECTION_SERVICE"
-              ? form.collectionWindowEnd || null
-              : null,
-          customerNotes: form.customerNotes.trim() || null,
-          serviceIds: form.serviceIds,
-        }),
-      });
+      const payload = {
+        customerId: savedBikeCustomer?.id || null,
+        firstName: form.firstName.trim(),
+        lastName: form.lastName.trim(),
+        email: form.email.trim(),
+        phone: form.phone.trim(),
+        smsConsent: true,
+        address: form.address.trim() || null,
+        bikes: bikes.map((bike) => ({
+          make: bike.make.trim(),
+          model: bike.model.trim() || null,
+          bikeType: bike.bikeType === "AUTO" ? undefined : bike.bikeType,
+        })),
+        deliveryType: form.deliveryType,
+        dropOffDate: form.dropOffDate || null,
+        pickupDate: form.pickupDate || null,
+        collectionAddress:
+          form.deliveryType === "COLLECTION_SERVICE"
+            ? form.collectionAddress.trim() || null
+            : null,
+        collectionWindowStart:
+          form.deliveryType === "COLLECTION_SERVICE"
+            ? form.collectionWindowStart || null
+            : null,
+        collectionWindowEnd:
+          form.deliveryType === "COLLECTION_SERVICE"
+            ? form.collectionWindowEnd || null
+            : null,
+        customerNotes: form.customerNotes.trim() || null,
+        serviceIds: form.serviceIds,
+      };
 
-      const data = await response.json();
+      for (const apiBasePath of BIKEOPS_API_BASE_PATHS) {
+        try {
+          const response = await fetch(`${resolvedApiBase}${apiBasePath}/book`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+          });
 
-      if (!response.ok) {
-        setError(data.error || "Unable to submit booking. Please try again.");
-        return;
+          const data = await response.json().catch(() => ({}));
+
+          if (response.ok) {
+            setSuccess({
+              ...data,
+              statusUrl: data.statusUrl || `${resolvedApiBase}/status/${data.id}`,
+            });
+            return;
+          }
+
+          // Only fall back when the endpoint isn't available; avoid double-submitting
+          // when BikeOps is returning a real validation/error response.
+          if (response.status === 404 || response.status === 405) {
+            continue;
+          }
+
+          setError(data.error || "Unable to submit booking. Please try again.");
+          return;
+        } catch (submitError) {
+          // Try the next endpoint.
+        }
       }
 
-      setSuccess({
-        ...data,
-        statusUrl: data.statusUrl || `${resolvedApiBase}/status/${data.id}`,
-      });
+      setError("Unable to submit booking. Please check your connection and try again.");
     } catch (submitError) {
       setError("Unable to submit booking. Please check your connection and try again.");
     } finally {
@@ -1333,12 +1461,52 @@ function Book() {
                   <ValidatedInput
                     id="collectionAddress"
                     type="text"
+                    required
                     value={form.collectionAddress}
                     onChange={(event) =>
                       updateForm("collectionAddress", event.target.value)
                     }
+                    $invalid={
+                      attemptedSubmit &&
+                      (form.deliveryType === "COLLECTION_SERVICE" &&
+                        (!form.collectionAddress.trim() ||
+                          (collectionEligibility.result &&
+                            collectionEligibility.result.enabled === true &&
+                            collectionEligibility.result.ok === true &&
+                            collectionEligibility.result.eligible === false)))
+                    }
                     placeholder="Street, city, ZIP"
                   />
+                  {collectionEligibility.status === "checking" && (
+                    <HelperText>Checking whether this address is within our 5-mile collection area…</HelperText>
+                  )}
+                  {collectionEligibility.status === "error" && (
+                    <HelperText>
+                      We couldn&apos;t verify the address right now. Collection is only available within 5 miles.
+                    </HelperText>
+                  )}
+                  {collectionEligibility.status === "ok" &&
+                    collectionEligibility.result &&
+                    collectionEligibility.result.enabled === true &&
+                    collectionEligibility.result.ok === true &&
+                    collectionEligibility.result.eligible === false && (
+                      <WarningAlert>
+                        Collection isn&apos;t available for this address.
+                        {typeof collectionEligibility.result.distanceMiles === "number" && (
+                          <> It&apos;s about {formatMiles(collectionEligibility.result.distanceMiles)} mi away.</>
+                        )}{" "}
+                        We collect within {collectionEligibility.result.radiusMiles} mi of the shop.
+                      </WarningAlert>
+                    )}
+                  {collectionEligibility.status === "ok" &&
+                    collectionEligibility.result &&
+                    collectionEligibility.result.enabled === true &&
+                    collectionEligibility.result.ok === true &&
+                    collectionEligibility.result.eligible === true && (
+                      <SuccessAlert>
+                        Good news — this address is within our {collectionEligibility.result.radiusMiles}-mile collection area.
+                      </SuccessAlert>
+                    )}
                 </Field>
                 <Field>
                   <Label htmlFor="collectionWindowStart">Collection window start</Label>

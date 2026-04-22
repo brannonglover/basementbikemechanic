@@ -171,6 +171,45 @@ const ReviewsSection = styled.section`
   }
 `;
 
+const BikesForSaleSection = styled.section`
+  max-width: ${({ theme }) => theme.maxWidth.content};
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  line-height: 1.65;
+  color: ${({ theme }) => theme.colors.text};
+  font-size: 1.0625rem;
+  text-align: center;
+
+  h2 {
+    font-size: clamp(1.35rem, 2.5vw, 1.85rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0 0 0.75rem;
+    color: ${({ theme }) => theme.colors.text};
+  }
+
+  p {
+    margin: 0 auto 1.1rem;
+    max-width: ${({ theme }) => theme.maxWidth.prose};
+    color: ${({ theme }) => theme.colors.textMuted};
+  }
+`;
+
+const BikesForSaleButton = styled.a`
+  display: inline-block;
+  background-color: ${({ theme }) => theme.colors.accent};
+  color: ${({ theme }) => theme.colors.textOnAccent};
+  text-decoration: none;
+  font-weight: 650;
+  padding: 0.75rem 1.25rem;
+  border-radius: ${({ theme }) => theme.radius.md};
+  transition: background ${({ theme }) => theme.transition};
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.accentHover};
+  }
+`;
+
 const MyEmail = styled.div`
   padding: 3rem 1.5rem 2rem;
   font-size: 1.125rem;
@@ -303,6 +342,24 @@ function HomePage({ width, view, switchViews }) {
         <h1>Atlanta Bike Repair &amp; Bicycle Tune-Ups</h1>
         {config.site_description}
       </SiteDescription>
+      <BreakLine />
+      <BikesForSaleSection>
+        <h2>Used Bikes for Sale in Atlanta</h2>
+        <p>
+          Shopping for a quality used bicycle? Browse our current listings and contact us to confirm availability and
+          pricing.
+        </p>
+        <BikesForSaleButton
+          href="/bikes-for-sale"
+          onClick={(e) => {
+            e.preventDefault();
+            posthog.capture("bikes_for_sale_clicked", { source: "home" });
+            navigate("/bikes-for-sale");
+          }}
+        >
+          Browse bikes for sale
+        </BikesForSaleButton>
+      </BikesForSaleSection>
       <BreakLine />
       <ReviewsSection>
         <h2>What Customers Are Saying</h2>
