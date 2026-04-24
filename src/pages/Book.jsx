@@ -35,8 +35,6 @@ const BIKEOPS_BASE_CANDIDATES = [
 // Fall back to /api/widget for older BikeOps deployments.
 const BIKEOPS_API_BASE_PATHS = ["/api/booking", "/api/widget"];
 
-const SHOP_DISPLAY_NAME = "Basement Bike Mechanic";
-
 function getDefaultDateTime() {
   const date = new Date();
   date.setMinutes(0, 0, 0);
@@ -347,14 +345,6 @@ const ConsentCard = styled.label`
   cursor: pointer;
 `;
 
-const InvalidConsentCard = styled(ConsentCard)`
-  border-color: ${({ theme }) =>
-    theme.colors.bg === "#1a1a1e" ? "rgba(248, 113, 113, 0.55)" : "rgba(220, 38, 38, 0.5)"};
-  box-shadow: inset 0 0 0 1px
-    ${({ theme }) =>
-      theme.colors.bg === "#1a1a1e" ? "rgba(248, 113, 113, 0.15)" : "rgba(220, 38, 38, 0.1)"};
-`;
-
 const Checkbox = styled.input`
   margin-top: 0.2rem;
   width: 18px;
@@ -367,34 +357,6 @@ const ConsentText = styled.div`
   line-height: 1.55;
   color: ${({ theme }) =>
     theme.colors.bg === "#1a1a1e" ? "#cbd5e1" : theme.colors.text};
-`;
-
-const ConsentTopLine = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.35rem;
-`;
-
-const RequiredBadge = styled.span`
-  display: inline-flex;
-  align-items: center;
-  border-radius: 9999px;
-  padding: 0.15rem 0.5rem;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  border: 1px solid
-    ${({ theme }) =>
-      theme.colors.bg === "#1a1a1e" ? "rgba(248, 113, 113, 0.35)" : "rgba(220, 38, 38, 0.28)"};
-  background: ${({ theme }) =>
-    theme.colors.bg === "#1a1a1e" ? "rgba(127, 29, 29, 0.25)" : "rgba(220, 38, 38, 0.08)"};
-  color: ${({ theme }) => (theme.colors.bg === "#1a1a1e" ? "#fecaca" : "#991b1b")};
-`;
-
-const ConsentRequiredNote = styled.span`
-  font-size: 0.85rem;
-  color: ${({ theme }) => theme.colors.textMuted};
 `;
 
 const HelperText = styled.p`
@@ -1005,11 +967,6 @@ function Book() {
       }
     }
 
-    if (!form.smsConsent) {
-      setError("SMS consent is required to receive booking and repair updates.");
-      return;
-    }
-
     setSubmitting(true);
 
     try {
@@ -1019,7 +976,7 @@ function Book() {
         lastName: form.lastName.trim(),
         email: form.email.trim(),
         phone: form.phone.trim(),
-        smsConsent: true,
+        smsConsent: form.smsConsent,
         address: form.address.trim() || null,
         bikes: bikes.map((bike) => ({
           make: bike.make.trim(),
@@ -1115,8 +1072,6 @@ function Book() {
     );
   }
 
-  const ConsentWrapper = attemptedSubmit && !form.smsConsent ? InvalidConsentCard : ConsentCard;
-
   return (
     <PageWrapper>
       <PageSeo
@@ -1205,26 +1160,29 @@ function Book() {
               />
             </Field>
 
-            <ConsentWrapper htmlFor="smsConsent">
+            <ConsentCard htmlFor="smsConsent">
               <Checkbox
                 id="smsConsent"
                 type="checkbox"
                 checked={form.smsConsent}
                 onChange={(event) => updateForm("smsConsent", event.target.checked)}
-                required
               />
               <ConsentText>
-                <ConsentTopLine>
-                  <RequiredBadge>Required</RequiredBadge>
-                  <ConsentRequiredNote>You must check this box to submit.</ConsentRequiredNote>
-                </ConsentTopLine>
-                I agree to receive SMS from <strong>{SHOP_DISPLAY_NAME}</strong> about
-                my repair, including booking confirmations, service updates, and
-                pickup notifications. No marketing texts. Message frequency varies.
-                Message and data rates may apply. Reply <strong>STOP</strong> to opt
-                out and <strong>HELP</strong> for help.
+                I agree to receive SMS from Basement Bike Mechanic about my repair,
+                including booking confirmations, service updates, and pickup
+                notifications. No marketing texts. Message frequency varies. Message
+                and data rates may apply. Reply STOP to opt out and HELP for help.
+                View our Terms and Conditions at{" "}
+                <a href="https://basementbikemechanic.com/terms">
+                  https://basementbikemechanic.com/terms
+                </a>{" "}
+                and Privacy Policy at{" "}
+                <a href="https://basementbikemechanic.com/privacy">
+                  https://basementbikemechanic.com/privacy
+                </a>
+                .
               </ConsentText>
-            </ConsentWrapper>
+            </ConsentCard>
 
             <Section>
               <SectionTitle>Bike details</SectionTitle>
@@ -1552,7 +1510,7 @@ function Book() {
 
             {error && <ErrorAlert>{error}</ErrorAlert>}
 
-            <SubmitButton type="submit" disabled={submitting || !form.smsConsent}>
+            <SubmitButton type="submit" disabled={submitting}>
               {submitting ? "Submitting request..." : "Book now"}
             </SubmitButton>
           </Form>
