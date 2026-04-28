@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { usePostHog } from '@posthog/react';
 import styled from 'styled-components';
@@ -16,6 +16,7 @@ import config from './assets/siteConfig.json';
 import PageSeo from './components/PageSeo';
 import { DEFAULT_DESCRIPTION, DEFAULT_TITLE } from './seoConstants';
 import TuneUp from './images/close-up-hand-repairing-bike.jpg';
+import { useThemeMode } from "./ThemeModeContext";
 
 const PageWrapper = styled.div`
   margin: 0 auto;
@@ -163,11 +164,8 @@ const ReviewsSection = styled.section`
     text-align: center;
   }
 
-  iframe {
-    border: none;
-    border-radius: 16px;
+  [data-bikeops-reviews] {
     width: 100%;
-    height: 300px;
   }
 `;
 
@@ -292,6 +290,29 @@ function PageViewTracker() {
   return null;
 }
 
+function ReviewsWidget() {
+  const containerRef = useRef(null);
+  const { mode } = useThemeMode();
+
+  useEffect(() => {
+    if (!containerRef.current) return undefined;
+
+    const script = document.createElement("script");
+    script.src = "https://www.bikeops.co/reviews-widget.js";
+    script.async = true;
+    script.setAttribute("data-base-url", "https://www.bikeops.co");
+    script.setAttribute("data-theme", mode);
+
+    containerRef.current.insertAdjacentElement("afterend", script);
+
+    return () => {
+      script.remove();
+    };
+  }, [mode]);
+
+  return <div ref={containerRef} data-bikeops-reviews />;
+}
+
 function HomePage({ width, view, switchViews }) {
   const navigate = useNavigate();
   const posthog = usePostHog();
@@ -306,12 +327,7 @@ function HomePage({ width, view, switchViews }) {
       <BreakLine />
       <ReviewsSection>
         <h2>What Customers Are Saying</h2>
-        <iframe
-          src="https://www.bikeops.co/widget/reviews?theme=dark"
-          height="auto"
-          frameBorder="0"
-          title="Customer Reviews"
-        />
+        <ReviewsWidget />
       </ReviewsSection>
       <BreakLine />
       <AboutSection id="about">
