@@ -10,8 +10,8 @@ function normalizeBikeOpsOrigin(value) {
   try {
     const url = new URL(value);
     const host = url.hostname.toLowerCase();
-    if (host === "bikeops.co") {
-      url.hostname = "www.bikeops.co";
+    if (host === "bikeops.co" || host === "www.bikeops.co") {
+      url.hostname = "bbm.bikeops.co";
     }
     return url.origin;
   } catch {
@@ -20,11 +20,12 @@ function normalizeBikeOpsOrigin(value) {
 }
 
 const BIKEOPS_BASE_URL =
-  normalizeBikeOpsOrigin(process.env.REACT_APP_BIKEOPS_URL) || "https://www.bikeops.co";
+  normalizeBikeOpsOrigin(process.env.REACT_APP_BIKEOPS_URL) || "https://bbm.bikeops.co";
 
 const BIKEOPS_BASE_CANDIDATES = [
-  "https://www.bikeops.co",
+  "https://bbm.bikeops.co",
   process.env.REACT_APP_BIKEOPS_URL,
+  "https://www.bikeops.co",
 ]
   .map(normalizeBikeOpsOrigin)
   .filter(Boolean)

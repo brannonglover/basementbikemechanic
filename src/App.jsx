@@ -298,9 +298,9 @@ function ReviewsWidget() {
     if (!containerRef.current) return undefined;
 
     const script = document.createElement("script");
-    script.src = "https://www.bikeops.co/reviews-widget.js";
+    script.src = "https://bbm.bikeops.co/reviews-widget.js";
     script.async = true;
-    script.setAttribute("data-base-url", "https://www.bikeops.co");
+    script.setAttribute("data-base-url", "https://bbm.bikeops.co");
     script.setAttribute("data-theme", mode);
 
     containerRef.current.insertAdjacentElement("afterend", script);
