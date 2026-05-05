@@ -969,7 +969,7 @@ function Book() {
 
     if (!form.smsConsent) {
       setError(
-        "Please agree to receive repair-related SMS updates before submitting. You can opt out any time by replying STOP."
+        "Please acknowledge the repair-related SMS updates before submitting. You can opt out any time by replying STOP."
       );
       return;
     }
@@ -1198,17 +1198,17 @@ function Book() {
               />
               <ConsentText>
                 <RequiredBadge>Required</RequiredBadge>
-                I agree to receive SMS from Basement Bike Mechanic about my repair,
+                I acknowledge that Basement Bike Mechanic may send repair-related SMS messages,
                 including booking confirmations, service updates, and pickup
                 notifications. No marketing texts. Message frequency varies. Message
                 and data rates may apply. Reply STOP to opt out and HELP for help.
-                View our Terms and Conditions at{" "}
+                View our{" "}
                 <a href="https://basementbikemechanic.com/terms">
-                  https://basementbikemechanic.com/terms
+                  Terms and Conditions
                 </a>{" "}
-                and Privacy Policy at{" "}
+                and{" "}
                 <a href="https://basementbikemechanic.com/privacy">
-                  https://basementbikemechanic.com/privacy
+                  Privacy Policy
                 </a>
                 .
               </ConsentText>

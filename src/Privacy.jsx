@@ -76,10 +76,10 @@ function Privacy() {
         <p>SMS consent is collected through the repair request booking form on our website. To opt in, you must:</p>
         <ul>
           <li>Enter your phone number in the booking form.</li>
-          <li>Check the required SMS consent checkbox before submitting.</li>
+          <li>Check the required SMS acknowledgment checkbox before submitting.</li>
         </ul>
-        <p>The checkbox reads: <em>"I agree to receive SMS messages from Basement Bike Mechanic regarding my repair, including status updates and service-related notifications. Message frequency varies. Message &amp; data rates may apply. Reply STOP to opt out, HELP for help. No marketing messages."</em></p>
-        <p>You cannot submit the booking form without checking this box. By doing so, you authorize <strong>Basement Bike Mechanic</strong> to send you SMS updates related to your bicycle repair.</p>
+        <p>The checkbox reads: <em>"I acknowledge that Basement Bike Mechanic may send repair-related SMS messages, including booking confirmations, service updates, and pickup notifications. No marketing texts. Message frequency varies. Message &amp; data rates may apply. Reply STOP to opt out and HELP for help."</em></p>
+        <p>You cannot submit the booking form without checking this box. By doing so, you acknowledge that <strong>Basement Bike Mechanic</strong> may send SMS updates related to your bicycle repair.</p>
 
         <h2>2. Use of Your Contact Information</h2>
         <p>Your phone number is used solely for operational purposes related to bicycle repair:</p>

@@ -403,7 +403,7 @@ function HomePage({ width, view, switchViews }) {
       <SmsDisclosure>
         <h2>SMS Communication</h2>
         <p>We send SMS updates from Basement Bike Mechanic related to active bike repairs, including booking confirmations, service progress, and pickup notifications.</p>
-        <p>Customers opt in by submitting a repair request form on our website and checking a required SMS consent checkbox before submission. This checkbox is displayed during the booking process and must be selected to receive messages.</p>
+        <p>Customers opt in by submitting a repair request form on our website and checking a required SMS acknowledgment checkbox before submission. This checkbox is displayed during the booking process and must be selected to receive messages.</p>
         <p>Message frequency varies. Message &amp; data rates may apply. Reply <strong>STOP</strong> to opt out, <strong>HELP</strong> for help. No marketing messages are sent.</p>
         <p>
           View our{' '}

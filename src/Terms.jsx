@@ -73,7 +73,7 @@ function Terms() {
         <p>Welcome to <strong>Basement Bike Mechanic</strong>. By using our bicycle repair services and communication channels, you agree to the following terms. Please read them carefully.</p>
 
         <h2>1. SMS Messaging Terms</h2>
-        <p>By providing your mobile number and checking the SMS consent checkbox in our booking form, you agree to receive SMS updates from <strong>Basement Bike Mechanic</strong> regarding your bicycle repair. This includes:</p>
+        <p>By providing your mobile number and checking the SMS acknowledgment checkbox in our booking form, you acknowledge that <strong>Basement Bike Mechanic</strong> may send SMS updates regarding your bicycle repair. This includes:</p>
         <ul>
           <li>Booking confirmations and appointment reminders.</li>
           <li>Repair status updates and progress notifications.</li>
@@ -86,9 +86,9 @@ function Terms() {
         <p>SMS consent is collected via the repair request booking form at <a href="https://basementbikemechanic.com">basementbikemechanic.com</a>. When submitting a booking:</p>
         <ul>
           <li>You enter your phone number.</li>
-          <li>You must check a required consent checkbox before the form can be submitted.</li>
+          <li>You must check a required SMS acknowledgment checkbox before the form can be submitted.</li>
         </ul>
-        <p>The checkbox states: <em>"I agree to receive SMS messages from Basement Bike Mechanic regarding my repair, including status updates and service-related notifications. Message frequency varies. Message &amp; data rates may apply. Reply STOP to opt out, HELP for help. No marketing messages."</em></p>
+        <p>The checkbox states: <em>"I acknowledge that Basement Bike Mechanic may send repair-related SMS messages, including booking confirmations, service updates, and pickup notifications. No marketing texts. Message frequency varies. Message &amp; data rates may apply. Reply STOP to opt out and HELP for help."</em></p>
         <p>You cannot submit the booking form without checking this box. To opt out at any time, reply <strong>STOP</strong> to any message, text <strong>HELP</strong> for assistance, or contact us at <a href="mailto:support@basementbikemechanic.com">support@basementbikemechanic.com</a>. Carriers are not liable for delayed or undelivered messages.</p>
 
         <h2>3. Services and Estimates</h2>
