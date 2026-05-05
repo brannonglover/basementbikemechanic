@@ -1,12 +1,12 @@
 {
   "files": {
-    "main.js": "/static/js/main.b42b50bb.js",
+    "main.js": "/static/js/main.2a90cff5.js",
     "static/media/header-image.jpeg": "/static/media/header-image.e4ed5d67e9518069f323.jpeg",
     "static/media/close-up-hand-repairing-bike.jpg": "/static/media/close-up-hand-repairing-bike.def281f9985425aee7b7.jpg",
     "index.html": "/index.html",
-    "main.b42b50bb.js.map": "/static/js/main.b42b50bb.js.map"
+    "main.2a90cff5.js.map": "/static/js/main.2a90cff5.js.map"
   },
   "entrypoints": [
-    "static/js/main.b42b50bb.js"
+    "static/js/main.2a90cff5.js"
   ]
 }

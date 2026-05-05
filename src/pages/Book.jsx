@@ -344,6 +344,8 @@ const ConsentCard = styled.label`
   background: ${({ theme }) =>
     theme.colors.bg === "#1a1a1e" ? "rgba(51, 65, 85, 0.42)" : theme.colors.bgMuted};
   cursor: pointer;
+
+  ${({ $invalid }) => $invalid && invalidFieldStyles}
 `;
 
 const Checkbox = styled.input`
@@ -358,6 +360,21 @@ const ConsentText = styled.div`
   line-height: 1.55;
   color: ${({ theme }) =>
     theme.colors.bg === "#1a1a1e" ? "#cbd5e1" : theme.colors.text};
+`;
+
+const RequiredBadge = styled.span`
+  display: inline-flex;
+  align-items: center;
+  margin: 0 0.45rem 0.25rem 0;
+  border-radius: 999px;
+  background: ${({ theme }) =>
+    theme.colors.bg === "#1a1a1e" ? "rgba(245, 158, 11, 0.18)" : theme.colors.accentMuted};
+  color: ${({ theme }) => theme.colors.accentHover};
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1;
+  padding: 0.28rem 0.48rem;
+  vertical-align: text-top;
 `;
 
 const HelperText = styled.p`
@@ -950,6 +967,13 @@ function Book() {
     setError("");
     setAttemptedSubmit(true);
 
+    if (!form.smsConsent) {
+      setError(
+        "Please agree to receive repair-related SMS updates before submitting. You can opt out any time by replying STOP."
+      );
+      return;
+    }
+
     if (form.deliveryType === "COLLECTION_SERVICE") {
       const r = collectionEligibility.result;
       if (collectionEligibility.status === "checking") {
@@ -1161,14 +1185,19 @@ function Book() {
               />
             </Field>
 
-            <ConsentCard htmlFor="smsConsent">
+            <ConsentCard
+              htmlFor="smsConsent"
+              $invalid={attemptedSubmit && !form.smsConsent}
+            >
               <Checkbox
                 id="smsConsent"
                 type="checkbox"
+                required
                 checked={form.smsConsent}
                 onChange={(event) => updateForm("smsConsent", event.target.checked)}
               />
               <ConsentText>
+                <RequiredBadge>Required</RequiredBadge>
                 I agree to receive SMS from Basement Bike Mechanic about my repair,
                 including booking confirmations, service updates, and pickup
                 notifications. No marketing texts. Message frequency varies. Message
