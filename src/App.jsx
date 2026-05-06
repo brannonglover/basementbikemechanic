@@ -119,18 +119,13 @@ const IndividualServices = styled.section`
   margin: 0 auto;
   padding: 1rem 0.75rem 0;
   width: 100%;
-  max-width: 56rem;
+  max-width: 68rem;
   gap: 0.5rem;
 
   @media screen and (min-width: 1000px) {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     column-gap: 1rem;
     row-gap: 0.5rem;
-  }
-
-  @media screen and (min-width: 1450px) {
-    max-width: 86rem;
-    grid-template-columns: 1fr 1fr 1fr;
   }
 `;
 

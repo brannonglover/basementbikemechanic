@@ -5,7 +5,7 @@ import ServiceNameWithEmphasis from "./ServiceNameWithEmphasis";
 const IndividualBoxWrapper = styled.div`
   display: grid;
   align-items: stretch;
-  grid-template-columns: 1fr 5rem;
+  grid-template-columns: 1fr 4.5rem;
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.radius.sm};
   overflow: hidden;
@@ -18,7 +18,7 @@ const IndividualBoxWrapper = styled.div`
   }
 
   @media screen and (min-width: 1000px) {
-    grid-template-columns: minmax(0, 23rem) 5rem;
+    grid-template-columns: minmax(0, 1fr) 4.5rem;
     justify-content: center;
   }
 `;
@@ -31,6 +31,19 @@ const ServiceBoxName = styled.span`
   display: flex;
   align-items: center;
   color: ${({ theme }) => theme.colors.text};
+
+  @media screen and (min-width: 1000px) {
+    font-size: 0.95rem;
+    white-space: nowrap;
+
+    > span {
+      flex-wrap: nowrap;
+    }
+  }
+
+  @media screen and (min-width: 1200px) {
+    font-size: 1rem;
+  }
 `;
 
 const ServicePrice = styled.span`
