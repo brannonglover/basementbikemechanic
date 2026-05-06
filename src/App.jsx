@@ -308,11 +308,19 @@ function PageViewTracker() {
 }
 
 function ReviewsWidget() {
-  const containerRef = useRef(null);
+  const hostRef = useRef(null);
   const { mode } = useThemeMode();
 
   useEffect(() => {
-    if (!containerRef.current) return undefined;
+    const host = hostRef.current;
+
+    if (!host) return undefined;
+
+    host.replaceChildren();
+
+    const widgetMount = document.createElement("div");
+    widgetMount.setAttribute("data-bikeops-reviews", "");
+    host.appendChild(widgetMount);
 
     const script = document.createElement("script");
     script.src = "https://bbm.bikeops.co/reviews-widget.js";
@@ -320,14 +328,14 @@ function ReviewsWidget() {
     script.setAttribute("data-base-url", "https://bbm.bikeops.co");
     script.setAttribute("data-theme", mode);
 
-    containerRef.current.insertAdjacentElement("afterend", script);
+    host.appendChild(script);
 
     return () => {
-      script.remove();
+      host.replaceChildren();
     };
   }, [mode]);
 
-  return <div ref={containerRef} data-bikeops-reviews />;
+  return <div ref={hostRef} />;
 }
 
 function HomePage({ width, view, switchViews }) {
