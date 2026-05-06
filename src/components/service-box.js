@@ -1,5 +1,6 @@
 import React from "react";
 import { styled } from "styled-components";
+import ServiceNameWithEmphasis from "./ServiceNameWithEmphasis";
 
 const ServiceBoxWrapper = styled.div`
   width: 100%;
@@ -64,7 +65,9 @@ const ServiceList = styled.div`
 const ServiceBox = ({ services }) => {
   return (
     <ServiceBoxWrapper>
-      <ServiceBoxName>{services.service}</ServiceBoxName>
+      <ServiceBoxName>
+        <ServiceNameWithEmphasis>{services.service}</ServiceNameWithEmphasis>
+      </ServiceBoxName>
       <ServicePrice>${services.price}</ServicePrice>
       <ServiceList>
         <ul>

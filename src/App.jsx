@@ -188,6 +188,23 @@ const MyEmail = styled.div`
   }
 `;
 
+const LocationMap = styled.div`
+  width: min(100%, 42rem);
+  aspect-ratio: 16 / 9;
+  margin: 1.25rem auto 0;
+  overflow: hidden;
+  border: 1px solid ${({ theme }) => theme.colors.borderStrong};
+  border-radius: ${({ theme }) => theme.radius.sm};
+  box-shadow: ${({ theme }) => theme.shadow.md};
+
+  iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+`;
+
 const AboutSection = styled.section`
   max-width: ${({ theme }) => theme.maxWidth.content};
   margin: 0 auto;
@@ -316,6 +333,7 @@ function ReviewsWidget() {
 function HomePage({ width, view, switchViews }) {
   const navigate = useNavigate();
   const posthog = usePostHog();
+  const mapQuery = encodeURIComponent("2272 Melinda Dr NE, Atlanta GA 30345");
   return (
     <PageWrapper>
       <PageSeo title={DEFAULT_TITLE} description={DEFAULT_DESCRIPTION} path="" />
@@ -398,7 +416,15 @@ function HomePage({ width, view, switchViews }) {
       <MyEmail>
         Text: <a href={`tel:${config.phone}`} onClick={() => posthog.capture('contact_clicked', { method: 'phone' })}>{config.phone}</a><br />
         Email: <a href={`mailto:${config.email}`} onClick={() => posthog.capture('contact_clicked', { method: 'email' })}>{config.email}</a><br />
-        Location: <a href="https://maps.app.goo.gl/dPsymJhVVwD5ymha6" onClick={() => posthog.capture('contact_clicked', { method: 'maps' })}>Melinda Dr NE, Atlanta GA 30345</a>
+        Location: <a href="https://maps.app.goo.gl/dPsymJhVVwD5ymha6" onClick={() => posthog.capture('contact_clicked', { method: 'maps' })}>2272 Melinda Dr NE, Atlanta GA 30345</a>
+        <LocationMap>
+          <iframe
+            title="Map showing Basement Bike Mechanic location at 2272 Melinda Dr NE, Atlanta GA 30345"
+            src={`https://www.google.com/maps?q=${mapQuery}&output=embed`}
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          />
+        </LocationMap>
       </MyEmail>
       <SmsDisclosure>
         <h2>SMS Communication</h2>

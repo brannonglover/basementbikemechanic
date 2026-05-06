@@ -367,7 +367,7 @@ function BikesForSale() {
           <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
         </p>
         <p>
-          Looking for something specific (road, commuter, mountain, or e-bike)? Reach out and we’ll help you find a good
+          Looking for something specific (road, commuter, mountain, or ebike)? Reach out and we’ll help you find a good
           fit.
         </p>
       </Intro>

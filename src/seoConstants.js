@@ -7,4 +7,4 @@ export const DEFAULT_TITLE =
   "Bike Repair Atlanta | Tune-Ups & Bicycle Service | Basement Bike Mechanic";
 
 export const DEFAULT_DESCRIPTION =
-  "Atlanta bike repair, tune-ups, and maintenance by appointment. Expert bicycle repair for commuters and cyclists—brakes, gears, flat tires, e-bikes, and full overhauls. Text or book online.";
+  "Atlanta bike repair, tune-ups, and maintenance by appointment. Expert bicycle repair for commuters and cyclists—brakes, gears, flat tires, ebikes, and full overhauls. Text or book online.";

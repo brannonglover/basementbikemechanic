@@ -53,7 +53,7 @@
     },
     {
       "id": 1,
-      "service": "Standard Tune-Up eBike",
+      "service": "Standard Tune-Up ebike",
       "list": [
         {
           "id": 0,
@@ -311,7 +311,7 @@
     },
     {
       "id": 4,
-      "service": "Tube Replacement eBike (per tire)",
+      "service": "Tube Replacement ebike (per tire)",
       "price": 40
     },
     {
@@ -326,7 +326,7 @@
     },
     {
       "id": 9,
-      "service": "Brake Bleed (per brake) eBike",
+      "service": "Brake Bleed (per brake) ebike",
       "price": 65
     },
     {
@@ -361,7 +361,7 @@
     },
     {
       "id": 16,
-      "service": "Brake Pad Cleaning and Bedding (per brake) eBike",
+      "service": "Brake Pad Cleaning and Bedding (per brake) ebike",
       "price": 40
     },
     {
@@ -391,7 +391,7 @@
     },
     {
       "id": 22,
-      "service": "New bike build (adult) (e-bike)",
+      "service": "New bike build (adult) (ebike)",
       "price": 150
     },
     {

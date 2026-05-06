@@ -1,5 +1,6 @@
 import React from "react";
 import { styled } from "styled-components";
+import ServiceNameWithEmphasis from "./ServiceNameWithEmphasis";
 
 const IndividualBoxWrapper = styled.div`
   display: grid;
@@ -46,7 +47,9 @@ const ServicePrice = styled.span`
 const ServiceBox = ({ services }) => {
   return (
     <IndividualBoxWrapper>
-      <ServiceBoxName>{services.service}</ServiceBoxName>
+      <ServiceBoxName>
+        <ServiceNameWithEmphasis>{services.service}</ServiceNameWithEmphasis>
+      </ServiceBoxName>
       <ServicePrice>${services.price}</ServicePrice>
     </IndividualBoxWrapper>
   );
