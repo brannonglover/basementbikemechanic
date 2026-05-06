@@ -296,7 +296,10 @@ function PageViewTracker() {
   const posthog = usePostHog();
 
   useEffect(() => {
-    posthog.capture('$pageview', { $current_url: window.location.href });
+    posthog.capture('$pageview', {
+      $current_url: window.location.href,
+      site: 'basementbikemechanic',
+    });
   }, [location, posthog]);
 
   return null;

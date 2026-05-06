@@ -9,6 +9,9 @@ import GlobalStyle from './GlobalStyle';
 import { ThemeModeProvider } from './ThemeModeContext';
 
 const POSTHOG_OPT_OUT_KEY = 'bbm_posthog_opt_out';
+const POSTHOG_PROJECT_KEY = process.env.REACT_APP_PUBLIC_POSTHOG_KEY || 'phc_vKDFFaTih87w8hxDjhefDEiTtJBNdBqkKcB7Hc5SToT4';
+const POSTHOG_API_HOST = process.env.REACT_APP_PUBLIC_POSTHOG_HOST || 'https://us.i.posthog.com';
+const POSTHOG_SITE = 'basementbikemechanic';
 
 function shouldOptOutPostHog() {
   if (typeof window === 'undefined') {
@@ -35,11 +38,14 @@ function shouldOptOutPostHog() {
   }
 }
 
-posthog.init(process.env.REACT_APP_PUBLIC_POSTHOG_KEY, {
-  api_host: process.env.REACT_APP_PUBLIC_POSTHOG_HOST,
+posthog.init(POSTHOG_PROJECT_KEY, {
+  api_host: POSTHOG_API_HOST,
   person_profiles: 'identified_only',
+  capture_pageview: false,
   opt_out_capturing_by_default: shouldOptOutPostHog(),
 });
+
+posthog.register({ site: POSTHOG_SITE });
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
