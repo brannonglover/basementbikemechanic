@@ -1,6 +1,14 @@
 const BIKES_STORAGE_KEY = 'basementbikemechanic_bikes';
+const BIKES_API_URL = "/.netlify/functions/bikes";
+const ADMIN_AUTH_API_URL = "/.netlify/functions/admin-auth";
 
-function loadBikesFromStorage(configBikes) {
+function normalizeBikes(bikes) {
+  return (Array.isArray(bikes) ? bikes : []).filter(
+    (b) => b.name && b.name.trim() && Array.isArray(b.images) && b.images.length > 0
+  );
+}
+
+function loadStoredBikes() {
   try {
     const stored = localStorage.getItem(BIKES_STORAGE_KEY);
     if (stored) {
@@ -12,12 +20,20 @@ function loadBikesFromStorage(configBikes) {
   } catch (e) {
     console.warn('Failed to load bikes from localStorage', e);
   }
-  return configBikes || [];
+  return null;
+}
+
+function loadBikesFromStorage(configBikes) {
+  const stored = loadStoredBikes();
+  return stored || configBikes || [];
 }
 
 export function getBikes(configBikes) {
-  const all = loadBikesFromStorage(configBikes);
-  return all.filter((b) => b.name && b.name.trim() && Array.isArray(b.images) && b.images.length > 0);
+  const storedBikes = normalizeBikes(loadStoredBikes());
+  if (storedBikes.length > 0) {
+    return storedBikes;
+  }
+  return normalizeBikes(configBikes);
 }
 
 export function getAllBikesForAdmin(configBikes) {
@@ -31,4 +47,78 @@ export function saveBikes(bikes) {
     console.error('Failed to save bikes to localStorage', e);
     throw e;
   }
+}
+
+export async function fetchBikes(configBikes) {
+  try {
+    const response = await fetch(BIKES_API_URL);
+    if (!response.ok) {
+      throw new Error(`Bike listings request failed with ${response.status}`);
+    }
+    const data = await response.json();
+    const databaseBikes = normalizeBikes(data.bikes);
+    if (databaseBikes.length > 0) {
+      return databaseBikes;
+    }
+  } catch (e) {
+    console.warn('Failed to load bikes from database', e);
+  }
+  return getBikes(configBikes);
+}
+
+export async function fetchAllBikesForAdmin(configBikes) {
+  try {
+    const response = await fetch(BIKES_API_URL);
+    if (!response.ok) {
+      throw new Error(`Bike listings request failed with ${response.status}`);
+    }
+    const data = await response.json();
+    if (Array.isArray(data.bikes) && data.bikes.length > 0) {
+      return data.bikes;
+    }
+  } catch (e) {
+    console.warn('Failed to load admin bikes from database', e);
+  }
+  return getAllBikesForAdmin(configBikes);
+}
+
+export async function authenticateAdmin(password) {
+  try {
+    const response = await fetch(ADMIN_AUTH_API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ password }),
+    });
+    const data = await response.json();
+    return response.ok && data.ok === true;
+  } catch (e) {
+    console.warn('Failed to authenticate admin against database API', e);
+    return false;
+  }
+}
+
+export async function saveBikesToDatabase(bikes, adminPassword) {
+  const response = await fetch(BIKES_API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-admin-password": adminPassword || "",
+    },
+    body: JSON.stringify({ bikes }),
+  });
+
+  if (!response.ok) {
+    let message = `Bike listings save failed with ${response.status}`;
+    try {
+      const data = await response.json();
+      message = data.error || message;
+    } catch (e) {
+      // Keep the status-based message.
+    }
+    throw new Error(message);
+  }
+
+  const data = await response.json();
+  saveBikes(data.bikes || bikes);
+  return data.bikes || bikes;
 }

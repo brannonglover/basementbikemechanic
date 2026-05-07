@@ -1,11 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import PageSeo from "../components/PageSeo";
 import config from "../assets/siteConfig.json";
-import { getAllBikesForAdmin, saveBikes } from "../utils/bikesStorage";
+import {
+  authenticateAdmin,
+  fetchAllBikesForAdmin,
+  saveBikes,
+  saveBikesToDatabase,
+} from "../utils/bikesStorage";
 
 const PageWrapper = styled.div`
   margin: 0 auto;
@@ -81,6 +86,14 @@ const ButtonRow = styled.div`
   gap: 1rem;
   margin-top: 1rem;
   flex-wrap: wrap;
+`;
+
+const AdminTools = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin: 0 0 1rem;
 `;
 
 const Button = styled.button`
@@ -165,6 +178,17 @@ const EmptyBikes = styled.p`
   padding: 1rem 0;
 `;
 
+const ToolMessage = styled.p`
+  flex-basis: 100%;
+  margin: 0;
+  color: ${({ theme }) => theme.colors.textMuted};
+  font-size: 0.9rem;
+`;
+
+const HiddenFileInput = styled.input`
+  display: none;
+`;
+
 const LoginForm = styled.form`
   max-width: 320px;
   margin: 3rem auto;
@@ -206,6 +230,7 @@ const LoginForm = styled.form`
 `;
 
 const ADMIN_AUTH_KEY = 'basementbikemechanic_admin_auth';
+const ADMIN_PASSWORD_KEY = 'basementbikemechanic_admin_password';
 
 const DropZone = styled.label`
   display: flex;
@@ -326,7 +351,6 @@ function compressImage(file) {
 
 function Admin() {
   const navigate = useNavigate();
-  const expectedPassword = process.env.REACT_APP_ADMIN_PASSWORD || '';
   const [isAuthenticated, setIsAuthenticated] = useState(() =>
     sessionStorage.getItem(ADMIN_AUTH_KEY) === '1'
   );
@@ -337,24 +361,34 @@ function Admin() {
   const [form, setForm] = useState({ name: "", images: [], price: "" });
   const [imageError, setImageError] = useState("");
   const [isDragging, setIsDragging] = useState(false);
+  const [toolsMessage, setToolsMessage] = useState("");
+  const importInputRef = useRef(null);
 
   useEffect(() => {
-    setBikes(getAllBikesForAdmin(config.bikes));
+    let isMounted = true;
+    fetchAllBikesForAdmin(config.bikes).then((loadedBikes) => {
+      if (isMounted) {
+        setBikes(loadedBikes);
+      }
+    });
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setLoginError('');
-    if (!expectedPassword) {
-      setLoginError('Admin access is not configured. Set REACT_APP_ADMIN_PASSWORD in your .env file.');
+
+    const authenticated = await authenticateAdmin(password);
+    if (authenticated) {
+      sessionStorage.setItem(ADMIN_AUTH_KEY, '1');
+      sessionStorage.setItem(ADMIN_PASSWORD_KEY, password);
+      setIsAuthenticated(true);
       return;
     }
-    if (password === expectedPassword) {
-      sessionStorage.setItem(ADMIN_AUTH_KEY, '1');
-      setIsAuthenticated(true);
-    } else {
-      setLoginError('Incorrect password.');
-    }
+
+    setLoginError('Incorrect password or admin API is not configured.');
   };
 
   if (!isAuthenticated) {
@@ -393,7 +427,15 @@ function Admin() {
     return ids.length ? Math.max(...ids) + 1 : 0;
   };
 
-  const handleSubmit = (e) => {
+  const getAdminPassword = () => sessionStorage.getItem(ADMIN_PASSWORD_KEY) || password;
+
+  const persistBikes = async (updated) => {
+    const saved = await saveBikesToDatabase(updated, getAdminPassword());
+    setBikes(saved);
+    return saved;
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setImageError("");
     if (!form.name.trim()) return;
@@ -417,12 +459,11 @@ function Admin() {
     }
 
     try {
-      saveBikes(updated);
-      setBikes(updated);
+      await persistBikes(updated);
       setForm({ name: "", images: [], price: "" });
       setEditingId(null);
     } catch (err) {
-      setImageError("Storage limit reached. Try fewer or smaller images.");
+      setImageError(`Database save failed: ${err.message}`);
     }
   };
 
@@ -481,14 +522,17 @@ function Admin() {
     setEditingId(bike.id);
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (!window.confirm("Delete this bike listing?")) return;
     const updated = bikes.filter((b) => b.id !== id);
-    setBikes(updated);
-    saveBikes(updated);
-    if (editingId === id) {
-      setForm({ name: "", images: [], price: "" });
-      setEditingId(null);
+    try {
+      await persistBikes(updated);
+      if (editingId === id) {
+        setForm({ name: "", images: [], price: "" });
+        setEditingId(null);
+      }
+    } catch (err) {
+      setToolsMessage(`Delete failed: ${err.message}`);
     }
   };
 
@@ -496,6 +540,70 @@ function Admin() {
     setForm({ name: "", images: [], price: "" });
     setEditingId(null);
     setImageError("");
+  };
+
+  const handleExportBikes = () => {
+    setToolsMessage("");
+    const blob = new Blob([JSON.stringify(bikes, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `basementbikemechanic-bikes-${new Date().toISOString().slice(0, 10)}.json`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+    setToolsMessage("Bike listings exported.");
+  };
+
+  const handleSaveCurrentToDatabase = async () => {
+    setToolsMessage("");
+    try {
+      const saved = await saveBikesToDatabase(bikes, getAdminPassword());
+      setBikes(saved);
+      setToolsMessage(`Saved ${saved.length} bike listing${saved.length === 1 ? "" : "s"} to the database.`);
+    } catch (err) {
+      setToolsMessage(`Database save failed: ${err.message}`);
+    }
+  };
+
+  const handleImportClick = () => {
+    setToolsMessage("");
+    importInputRef.current?.click();
+  };
+
+  const handleImportBikes = async (e) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+
+    try {
+      const imported = JSON.parse(await file.text());
+      if (!Array.isArray(imported)) {
+        setToolsMessage("Import failed. Choose a bike listings JSON array.");
+        return;
+      }
+
+      const normalized = imported.map((bike, index) => ({
+        id: Number.isFinite(Number(bike.id)) ? Number(bike.id) : index,
+        name: typeof bike.name === "string" ? bike.name : "",
+        images: Array.isArray(bike.images) ? bike.images.filter((src) => typeof src === "string") : [],
+        price: parseInt(bike.price, 10) || 0,
+      }));
+
+      if (bikes.length > 0 && !window.confirm("Replace the current bike listings with this import?")) {
+        return;
+      }
+
+      const saved = await saveBikesToDatabase(normalized, getAdminPassword());
+      saveBikes(saved);
+      setBikes(saved);
+      setForm({ name: "", images: [], price: "" });
+      setEditingId(null);
+      setToolsMessage(`Imported ${saved.length} bike listing${saved.length === 1 ? "" : "s"}.`);
+    } catch (err) {
+      setToolsMessage(`Import failed: ${err.message}`);
+    }
   };
 
   return (
@@ -577,6 +685,29 @@ function Admin() {
         </BikeForm>
 
         <SectionTitle>Current listings</SectionTitle>
+        <AdminTools>
+          <Button type="button" className="secondary" onClick={handleExportBikes} disabled={bikes.length === 0}>
+            Export listings
+          </Button>
+          <Button
+            type="button"
+            className="secondary"
+            onClick={handleSaveCurrentToDatabase}
+            disabled={bikes.length === 0}
+          >
+            Save to database
+          </Button>
+          <Button type="button" className="secondary" onClick={handleImportClick}>
+            Import listings
+          </Button>
+          <HiddenFileInput
+            ref={importInputRef}
+            type="file"
+            accept="application/json,.json"
+            onChange={handleImportBikes}
+          />
+          {toolsMessage && <ToolMessage>{toolsMessage}</ToolMessage>}
+        </AdminTools>
         {bikes.length === 0 ? (
           <EmptyBikes>No bikes listed yet. Add one above.</EmptyBikes>
         ) : (

@@ -5,7 +5,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import PageSeo from "../components/PageSeo";
 import config from "../assets/siteConfig.json";
-import { getBikes } from "../utils/bikesStorage";
+import { fetchBikes } from "../utils/bikesStorage";
 import { SITE_URL } from "../seoConstants";
 
 const PageWrapper = styled.div`
@@ -30,9 +30,16 @@ const BikesGrid = styled.section`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 1.5rem;
+  width: 100%;
   max-width: ${({ theme }) => theme.maxWidth.content};
   margin: 0 auto 3rem;
   padding: 1.5rem;
+
+  @media screen and (max-width: 640px) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+    padding: 1rem;
+  }
 `;
 
 const Intro = styled.section`
@@ -64,6 +71,10 @@ const Intro = styled.section`
 `;
 
 const BikeTile = styled.button`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
   background: ${({ theme }) => theme.colors.surface};
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.radius.md};
@@ -80,6 +91,13 @@ const BikeTile = styled.button`
     box-shadow: ${({ theme }) => theme.shadow.lg};
     border-color: ${({ theme }) => theme.colors.primary};
   }
+
+  @media (hover: none) {
+    &:hover {
+      transform: none;
+      box-shadow: none;
+    }
+  }
 `;
 
 const TileImage = styled.img`
@@ -92,6 +110,8 @@ const TileImage = styled.img`
 
 const TileContent = styled.div`
   padding: 1rem 1.1rem;
+  width: 100%;
+  min-width: 0;
 `;
 
 const TileName = styled.h3`
@@ -99,6 +119,7 @@ const TileName = styled.h3`
   font-size: 1.15rem;
   font-weight: 600;
   color: ${({ theme }) => theme.colors.text};
+  overflow-wrap: anywhere;
 `;
 
 const TilePrice = styled.div`
@@ -135,6 +156,10 @@ const ModalOverlay = styled.div`
   align-items: center;
   justify-content: center;
   padding: 2rem;
+
+  @media screen and (max-width: 640px) {
+    padding: 1rem;
+  }
 `;
 
 const SlideshowContainer = styled.div`
@@ -144,6 +169,11 @@ const SlideshowContainer = styled.div`
   align-items: center;
   justify-content: center;
   margin-bottom: 1rem;
+
+  @media screen and (max-width: 640px) {
+    max-width: 100%;
+    max-height: 62vh;
+  }
 `;
 
 const SlideshowImage = styled.img`
@@ -151,6 +181,10 @@ const SlideshowImage = styled.img`
   max-height: 70vh;
   object-fit: contain;
   border-radius: 8px;
+
+  @media screen and (max-width: 640px) {
+    max-height: 62vh;
+  }
 `;
 
 const SlideshowNav = styled.div`
@@ -265,7 +299,15 @@ function BikesForSale() {
   const bikesListJsonLdId = `${bikesPageUrl}#itemlist`;
 
   useEffect(() => {
-    setBikes(getBikes(config.bikes));
+    let isMounted = true;
+    fetchBikes(config.bikes).then((loadedBikes) => {
+      if (isMounted) {
+        setBikes(loadedBikes);
+      }
+    });
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const handleTileClick = (bike) => {
