@@ -352,7 +352,7 @@ function compressImage(file) {
 function Admin() {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(() =>
-    sessionStorage.getItem(ADMIN_AUTH_KEY) === '1'
+    sessionStorage.getItem(ADMIN_AUTH_KEY) === '1' && Boolean(sessionStorage.getItem(ADMIN_PASSWORD_KEY))
   );
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
@@ -430,7 +430,14 @@ function Admin() {
   const getAdminPassword = () => sessionStorage.getItem(ADMIN_PASSWORD_KEY) || password;
 
   const persistBikes = async (updated) => {
-    const saved = await saveBikesToDatabase(updated, getAdminPassword());
+    const adminPassword = getAdminPassword();
+    if (!adminPassword) {
+      sessionStorage.removeItem(ADMIN_AUTH_KEY);
+      setIsAuthenticated(false);
+      throw new Error("Please log in again before saving to the database.");
+    }
+
+    const saved = await saveBikesToDatabase(updated, adminPassword);
     setBikes(saved);
     return saved;
   };
