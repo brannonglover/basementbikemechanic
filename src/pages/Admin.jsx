@@ -316,18 +316,37 @@ const ImagePreview = styled.div`
   }
 `;
 
+function looksLikeImageFile(file) {
+  if (file.type.startsWith("image/")) return true;
+  // Drag-and-drop from Desktop / some OS folders omits MIME type.
+  if (!file.type && /\.(jpe?g|png|webp|gif|bmp|avif)(\?|$)/i.test(file.name)) return true;
+  return false;
+}
+
 const MAX_PX = 1200;
 const JPEG_QUALITY = 0.78;
 
 function compressImage(file) {
+  const url = URL.createObjectURL(file);
+  const cleanup = () => URL.revokeObjectURL(url);
+
   return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onerror = reject;
-    reader.onload = (e) => {
-      const img = new Image();
-      img.onerror = reject;
-      img.onload = () => {
+    const img = new Image();
+    img.onerror = () => {
+      cleanup();
+      reject(new Error("Image decode failed"));
+    };
+    img.onload = async () => {
+      try {
+        if (img.decode) {
+          await img.decode();
+        }
         let { width, height } = img;
+        if (!width || !height) {
+          cleanup();
+          reject(new Error("Invalid image dimensions"));
+          return;
+        }
         if (width > MAX_PX || height > MAX_PX) {
           if (width >= height) {
             height = Math.round((height * MAX_PX) / width);
@@ -340,12 +359,22 @@ function compressImage(file) {
         const canvas = document.createElement("canvas");
         canvas.width = width;
         canvas.height = height;
-        canvas.getContext("2d").drawImage(img, 0, 0, width, height);
-        resolve(canvas.toDataURL("image/jpeg", JPEG_QUALITY));
-      };
-      img.src = e.target.result;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) {
+          cleanup();
+          reject(new Error("Canvas not available"));
+          return;
+        }
+        ctx.drawImage(img, 0, 0, width, height);
+        const dataUrl = canvas.toDataURL("image/jpeg", JPEG_QUALITY);
+        cleanup();
+        resolve(dataUrl);
+      } catch (e) {
+        cleanup();
+        reject(e instanceof Error ? e : new Error(String(e)));
+      }
     };
-    reader.readAsDataURL(file);
+    img.src = url;
   });
 }
 
@@ -477,15 +506,35 @@ function Admin() {
   const processFiles = async (files) => {
     if (files.length === 0) return;
     setImageError("");
-    const imageFiles = files.filter((f) => f.type.startsWith("image/"));
-    if (imageFiles.length < files.length) {
-      setImageError("Some files were skipped (not images).");
+    const imageFiles = files.filter(looksLikeImageFile);
+    const skippedNonImages = files.length - imageFiles.length;
+
+    const messageParts = [];
+    if (skippedNonImages > 0) {
+      messageParts.push("Some files were skipped (not images).");
     }
-    try {
-      const dataUrls = await Promise.all(imageFiles.map(compressImage));
-      setForm((f) => ({ ...f, images: [...f.images, ...dataUrls] }));
-    } catch (err) {
-      setImageError("Failed to read one or more images.");
+
+    const added = [];
+    let failed = 0;
+    for (const file of imageFiles) {
+      try {
+        added.push(await compressImage(file));
+      } catch {
+        failed += 1;
+      }
+    }
+    if (added.length > 0) {
+      setForm((f) => ({ ...f, images: [...f.images, ...added] }));
+    }
+    if (failed > 0) {
+      messageParts.push(
+        failed === imageFiles.length
+          ? "Failed to read one or more images."
+          : `${failed} image(s) could not be processed; others were added.`
+      );
+    }
+    if (messageParts.length > 0) {
+      setImageError(messageParts.join(" "));
     }
   };
 
