@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import PageSeo from "../components/PageSeo";
@@ -142,6 +142,96 @@ const StatusMessage = styled.p`
     font-weight: 500;
   }
 `;
+
+const skeletonShimmer = keyframes`
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+`;
+
+const SkeletonBone = styled.div`
+  border-radius: ${({ theme }) => theme.radius.sm};
+  background: linear-gradient(
+    90deg,
+    ${({ theme }) => theme.colors.bgMuted} 0%,
+    ${({ theme }) => theme.colors.borderStrong} 45%,
+    ${({ theme }) => theme.colors.bgMuted} 90%
+  );
+  background-size: 200% 100%;
+  animation: ${skeletonShimmer} 1.35s ease-in-out infinite;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+    background: ${({ theme }) => theme.colors.bgMuted};
+  }
+`;
+
+const SkeletonTile = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  background: ${({ theme }) => theme.colors.surface};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  border-radius: ${({ theme }) => theme.radius.md};
+  overflow: hidden;
+  box-shadow: ${({ theme }) => theme.shadow.sm};
+`;
+
+const SkeletonImage = styled(SkeletonBone)`
+  width: 100%;
+  aspect-ratio: 4/3;
+  border-radius: 0;
+`;
+
+const SkeletonContent = styled.div`
+  padding: 1rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+`;
+
+const SkeletonTitle = styled(SkeletonBone)`
+  height: 1.2rem;
+  width: 78%;
+`;
+
+const SkeletonPrice = styled(SkeletonBone)`
+  height: 1.45rem;
+  width: 32%;
+`;
+
+const LoadingHint = styled.p`
+  text-align: center;
+  margin: -1.5rem auto 2.5rem;
+  padding: 0 1.5rem;
+  font-size: 1rem;
+  color: ${({ theme }) => theme.colors.textMuted};
+`;
+
+const SKELETON_TILE_COUNT = 6;
+
+function BikesLoadingSkeleton() {
+  return (
+    <>
+      <BikesGrid aria-busy="true" aria-label="Loading bikes for sale">
+        {Array.from({ length: SKELETON_TILE_COUNT }, (_, index) => (
+          <SkeletonTile key={index} aria-hidden="true">
+            <SkeletonImage />
+            <SkeletonContent>
+              <SkeletonTitle />
+              <SkeletonPrice />
+            </SkeletonContent>
+          </SkeletonTile>
+        ))}
+      </BikesGrid>
+      <LoadingHint>Loading bikes for sale…</LoadingHint>
+    </>
+  );
+}
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -442,7 +532,7 @@ function BikesForSale() {
         </p>
       </Intro>
       {isLoading ? (
-        <StatusMessage>Loading bikes for sale…</StatusMessage>
+        <BikesLoadingSkeleton />
       ) : loadError || bikes.length === 0 ? (
         <StatusMessage>
           {loadError
