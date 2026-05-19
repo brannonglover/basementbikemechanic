@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import PageSeo from "../components/PageSeo";
 import config from "../assets/siteConfig.json";
-import { fetchBikes } from "../utils/bikesStorage";
+import { fetchBikeById, fetchBikes } from "../utils/bikesStorage";
 import { SITE_URL } from "../seoConstants";
 
 const PageWrapper = styled.div`
@@ -128,7 +128,7 @@ const TilePrice = styled.div`
   color: ${({ theme }) => theme.colors.primary};
 `;
 
-const EmptyState = styled.p`
+const StatusMessage = styled.p`
   font-size: 1.0625rem;
   text-align: center;
   max-width: 600px;
@@ -293,6 +293,8 @@ function BikesForSale() {
   const navigate = useNavigate();
   const location = useLocation();
   const [bikes, setBikes] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [selectedBike, setSelectedBike] = useState(null);
   const [slideIndex, setSlideIndex] = useState(0);
   const bikesPageUrl = `${SITE_URL}/bikes-for-sale`;
@@ -300,19 +302,42 @@ function BikesForSale() {
 
   useEffect(() => {
     let isMounted = true;
-    fetchBikes(config.bikes).then((loadedBikes) => {
-      if (isMounted) {
+    setIsLoading(true);
+    setLoadError(false);
+
+    fetchBikes(config.bikes)
+      .then((loadedBikes) => {
+        if (!isMounted) return;
         setBikes(loadedBikes);
-      }
-    });
+      })
+      .catch(() => {
+        if (!isMounted) return;
+        setBikes([]);
+        setLoadError(true);
+      })
+      .finally(() => {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      });
+
     return () => {
       isMounted = false;
     };
   }, []);
 
+  const loadBikeDetails = useCallback(async (bike) => {
+    try {
+      const fullBike = await fetchBikeById(bike.id);
+      if (fullBike) {
+        setSelectedBike(fullBike);
+      }
+    } catch (e) {
+      console.warn("Failed to load full bike details", e);
+    }
+  }, []);
+
   const handleTileClick = (bike) => {
-    setSelectedBike(bike);
-    setSlideIndex(0);
     navigate(
       { pathname: location.pathname, search: location.search, hash: `#bike-${bike.id}` },
       { replace: true }
@@ -338,13 +363,16 @@ function BikesForSale() {
 
   useEffect(() => {
     const id = getBikeIdFromHash(location.hash);
-    if (id === null) return;
-    const bike = bikes.find((b) => b.id === id);
-    if (bike) {
-      setSelectedBike(bike);
-      setSlideIndex(0);
+    if (id === null) {
+      setSelectedBike(null);
+      return;
     }
-  }, [location.hash, bikes]);
+    const bike = bikes.find((b) => b.id === id);
+    if (!bike) return;
+    setSelectedBike(bike);
+    setSlideIndex(0);
+    loadBikeDetails(bike);
+  }, [location.hash, bikes, loadBikeDetails]);
 
   return (
     <PageWrapper>
@@ -413,11 +441,16 @@ function BikesForSale() {
           fit.
         </p>
       </Intro>
-      {bikes.length === 0 ? (
-        <EmptyState>
-          No bikes are currently listed for sale. Check back soon or contact us at{" "}
-          <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a> to inquire about availability.
-        </EmptyState>
+      {isLoading ? (
+        <StatusMessage>Loading bikes for sale…</StatusMessage>
+      ) : loadError || bikes.length === 0 ? (
+        <StatusMessage>
+          {loadError
+            ? "We couldn’t load the bike listings right now. Please refresh the page or contact us at "
+            : "No bikes are currently listed for sale. Check back soon or contact us at "}
+          <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+          {loadError ? "." : " to inquire about availability."}
+        </StatusMessage>
       ) : (
         <BikesGrid>
           {bikes.map((bike) => (

@@ -72,6 +72,21 @@ function normalizeBikes(bikes) {
     });
 }
 
+function listImagesForScope(images, scope) {
+  const list = Array.isArray(images) ? images.filter((src) => typeof src === "string" && src) : [];
+  if (scope === "list") {
+    return list.length ? [list[0]] : [];
+  }
+  return list;
+}
+
+function bikesForScope(rows, scope) {
+  return normalizeBikes(rows || []).map((bike) => ({
+    ...bike,
+    images: listImagesForScope(bike.images, scope),
+  }));
+}
+
 exports.handler = async (event) => {
   if (event.httpMethod === "OPTIONS") {
     return { statusCode: 204, headers, body: "" };
@@ -79,8 +94,21 @@ exports.handler = async (event) => {
 
   try {
     if (event.httpMethod === "GET") {
+      const params = event.queryStringParameters || {};
+      const scope = params.full === "true" ? "full" : "list";
       const rows = await supabaseRequest(`${TABLE}?select=id,name,images,price&order=created_at.asc`);
-      return json(200, { bikes: rows || [] });
+
+      if (params.id !== undefined && params.id !== "") {
+        const bikeId = Number(params.id);
+        const match = (rows || []).find((row) => Number(row.id) === bikeId);
+        if (!match) {
+          return json(404, { error: "Bike not found" });
+        }
+        const [bike] = bikesForScope([match], "full");
+        return json(200, { bike });
+      }
+
+      return json(200, { bikes: bikesForScope(rows, scope) });
     }
 
     if (event.httpMethod === "POST") {

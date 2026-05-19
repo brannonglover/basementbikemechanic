@@ -1,6 +1,34 @@
 const BIKES_STORAGE_KEY = 'basementbikemechanic_bikes';
 const BIKES_API_URL = "/.netlify/functions/bikes";
 const ADMIN_AUTH_API_URL = "/.netlify/functions/admin-auth";
+const FETCH_RETRIES = 2;
+const FETCH_RETRY_DELAY_MS = 600;
+
+async function fetchJsonWithRetry(url, options = {}) {
+  let lastError;
+
+  for (let attempt = 0; attempt <= FETCH_RETRIES; attempt += 1) {
+    try {
+      const response = await fetch(url, {
+        cache: "no-store",
+        ...options,
+      });
+      if (!response.ok) {
+        throw new Error(`Request failed with ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      lastError = error;
+      if (attempt < FETCH_RETRIES) {
+        await new Promise((resolve) => {
+          setTimeout(resolve, FETCH_RETRY_DELAY_MS * (attempt + 1));
+        });
+      }
+    }
+  }
+
+  throw lastError;
+}
 
 function normalizeBikes(bikes) {
   return (Array.isArray(bikes) ? bikes : []).filter(
@@ -51,11 +79,7 @@ export function saveBikes(bikes) {
 
 export async function fetchBikes(configBikes) {
   try {
-    const response = await fetch(BIKES_API_URL);
-    if (!response.ok) {
-      throw new Error(`Bike listings request failed with ${response.status}`);
-    }
-    const data = await response.json();
+    const data = await fetchJsonWithRetry(BIKES_API_URL);
     const databaseBikes = normalizeBikes(data.bikes);
     if (databaseBikes.length > 0) {
       return databaseBikes;
@@ -66,13 +90,15 @@ export async function fetchBikes(configBikes) {
   return getBikes(configBikes);
 }
 
+export async function fetchBikeById(bikeId) {
+  const data = await fetchJsonWithRetry(`${BIKES_API_URL}?id=${encodeURIComponent(bikeId)}`);
+  const [bike] = normalizeBikes(data.bike ? [data.bike] : []);
+  return bike || null;
+}
+
 export async function fetchAllBikesForAdmin(configBikes) {
   try {
-    const response = await fetch(BIKES_API_URL);
-    if (!response.ok) {
-      throw new Error(`Bike listings request failed with ${response.status}`);
-    }
-    const data = await response.json();
+    const data = await fetchJsonWithRetry(`${BIKES_API_URL}?full=true`);
     if (Array.isArray(data.bikes) && data.bikes.length > 0) {
       return data.bikes;
     }
