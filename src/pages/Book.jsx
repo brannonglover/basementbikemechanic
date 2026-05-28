@@ -4,6 +4,7 @@ import styled, { css } from "styled-components";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import PageSeo from "../components/PageSeo";
+import { filterServices } from "../utils/serviceSearch";
 
 function normalizeBikeOpsOrigin(value) {
   if (!value) return "";
@@ -770,15 +771,10 @@ function Book() {
     };
   }, []);
 
-  const filteredServices = useMemo(() => {
-    const query = serviceSearch.trim().toLowerCase();
-    if (!query) return services;
-    return services.filter((service) =>
-      [service.name, service.description]
-        .filter(Boolean)
-        .some((value) => value.toLowerCase().includes(query))
-    );
-  }, [serviceSearch, services]);
+  const filteredServices = useMemo(
+    () => filterServices(services, serviceSearch),
+    [serviceSearch, services]
+  );
 
   const updateForm = (field, value) => {
     setForm((previous) => ({ ...previous, [field]: value }));
