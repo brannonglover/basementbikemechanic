@@ -1,10 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import PageSeo from "../components/PageSeo";
-import { filterServices } from "../utils/serviceSearch";
+import BookServicePicker from "../components/BookServicePicker";
 
 function normalizeBikeOpsOrigin(value) {
   if (!value) return "";
@@ -60,16 +60,6 @@ function formatPhoneInputUS(value) {
     return `(${normalized.slice(0, 3)}) ${normalized.slice(3)}`;
   }
   return `(${normalized.slice(0, 3)}) ${normalized.slice(3, 6)}-${normalized.slice(6, 10)}`;
-}
-
-function getServiceDescriptionItems(description) {
-  if (!description) return [];
-
-  return description
-    .split(/\r?\n|•/)
-    .map((item) => item.trim())
-    .filter(Boolean)
-    .map((item) => item.replace(/^[-*]\s*/, "").trim());
 }
 
 function isBikeEmpty(bike) {
@@ -452,128 +442,6 @@ const SavedBikeMeta = styled.div`
   color: ${({ theme }) => theme.colors.textMuted};
 `;
 
-const ServicesPanel = styled.div`
-  border: 1px solid
-    ${({ theme }) =>
-      theme.colors.bg === "#1a1a1e"
-        ? "rgba(255, 255, 255, 0.07)"
-        : "rgba(24, 24, 27, 0.08)"};
-  border-radius: 16px;
-  background: ${({ theme }) =>
-    theme.colors.bg === "#1a1a1e" ? "rgba(30, 41, 59, 0.82)" : theme.colors.surface};
-  max-height: 260px;
-  overflow-y: auto;
-  padding: 0.35rem;
-  box-shadow: ${({ theme }) =>
-    theme.colors.bg === "#1a1a1e"
-      ? "inset 0 1px 0 rgba(255, 255, 255, 0.03)"
-      : "none"};
-`;
-
-const ServiceRow = styled.label`
-  display: grid;
-  grid-template-columns: auto 1fr minmax(56px, auto);
-  gap: 0.75rem;
-  align-items: center;
-  padding: 0.75rem;
-  border-radius: 12px;
-  cursor: pointer;
-
-  &:hover {
-    background: ${({ theme }) =>
-      theme.colors.bg === "#1a1a1e" ? "rgba(51, 65, 85, 0.5)" : theme.colors.bgMuted};
-  }
-`;
-
-const ServiceName = styled.span`
-  display: block;
-  font-weight: 600;
-  color: ${({ theme }) =>
-    theme.colors.bg === "#1a1a1e" ? "#e2e8f0" : theme.colors.text};
-`;
-
-const ServiceDescription = styled.span`
-  display: block;
-  margin-top: 0.1rem;
-  font-size: 0.85rem;
-  line-height: 1.45;
-  color: ${({ theme }) => theme.colors.textMuted};
-`;
-
-const ServiceSummary = styled.div`
-  min-width: 0;
-`;
-
-const ServiceNameLine = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  min-width: 0;
-`;
-
-const ServiceExpandButton = styled.button`
-  border: 0;
-  background: transparent;
-  color: ${({ theme }) => theme.colors.textMuted};
-  font: inherit;
-  width: 24px;
-  height: 24px;
-  padding: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: color 0.15s ease, transform 0.15s ease;
-  flex: 0 0 auto;
-
-  &:hover {
-    color: ${({ theme }) => theme.colors.text};
-  }
-`;
-
-const ChevronIcon = styled.svg`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 12px;
-  height: 12px;
-  line-height: 1;
-  transform: rotate(${({ $expanded }) => ($expanded ? "180deg" : "0deg")});
-  transition: transform 0.15s ease;
-`;
-
-const ServiceDetails = styled.div`
-  grid-column: 2 / 4;
-  margin-top: -0.15rem;
-  padding: 0 0 0.1rem;
-`;
-
-const ServiceBulletList = styled.ul`
-  margin: 0;
-  padding-left: 1.1rem;
-  color: ${({ theme }) => theme.colors.textMuted};
-
-  li + li {
-    margin-top: 0.28rem;
-  }
-
-  li {
-    font-size: 0.85rem;
-    line-height: 1.45;
-  }
-`;
-
-const ServicePrice = styled.span`
-  font-size: 0.92rem;
-  font-weight: 700;
-  color: ${({ theme }) =>
-    theme.colors.bg === "#1a1a1e" ? "#f8fafc" : theme.colors.text};
-  grid-column: 3;
-  justify-self: end;
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-`;
-
 const Alert = styled.div`
   border-radius: ${({ theme }) => theme.radius.md};
   padding: 0.9rem 1rem;
@@ -678,21 +546,11 @@ const StatusLink = styled.a`
   }
 `;
 
-function formatCurrency(value) {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: 0,
-  }).format(value);
-}
-
 function Book() {
   const navigate = useNavigate();
   const [services, setServices] = useState([]);
   const [loadingServices, setLoadingServices] = useState(true);
   const [serviceLoadError, setServiceLoadError] = useState("");
-  const [serviceSearch, setServiceSearch] = useState("");
-  const [expandedServices, setExpandedServices] = useState({});
   const [savedBikes, setSavedBikes] = useState([]);
   const [savedBikeCustomer, setSavedBikeCustomer] = useState(null);
   const [lookingUpBikes, setLookingUpBikes] = useState(false);
@@ -771,11 +629,6 @@ function Book() {
     };
   }, []);
 
-  const filteredServices = useMemo(
-    () => filterServices(services, serviceSearch),
-    [serviceSearch, services]
-  );
-
   const updateForm = (field, value) => {
     setForm((previous) => ({ ...previous, [field]: value }));
   };
@@ -802,13 +655,6 @@ function Book() {
       serviceIds: previous.serviceIds.includes(serviceId)
         ? previous.serviceIds.filter((id) => id !== serviceId)
         : [...previous.serviceIds, serviceId],
-    }));
-  };
-
-  const toggleServiceDetails = (serviceId) => {
-    setExpandedServices((previous) => ({
-      ...previous,
-      [serviceId]: !previous[serviceId],
     }));
   };
 
@@ -1309,92 +1155,13 @@ function Book() {
 
             <Section>
               <SectionTitle>Requested services</SectionTitle>
-              <Field>
-                <Label htmlFor="serviceSearch">Search services</Label>
-                <Input
-                  id="serviceSearch"
-                  type="text"
-                  value={serviceSearch}
-                  onChange={(event) => setServiceSearch(event.target.value)}
-                  placeholder="Tune-up, brake service, wheel true..."
-                />
-              </Field>
-              <ServicesPanel>
-                {loadingServices ? (
-                  <HelperText>Loading services...</HelperText>
-                ) : serviceLoadError ? (
-                  <ErrorAlert>{serviceLoadError}</ErrorAlert>
-                ) : filteredServices.length > 0 ? (
-                  filteredServices.map((service) => (
-                    (() => {
-                      const descriptionItems = getServiceDescriptionItems(service.description);
-                      const hasDescription = descriptionItems.length > 0;
-                      const isExpanded = Boolean(expandedServices[service.id]);
-
-                      return (
-                        <ServiceRow key={service.id}>
-                          <Checkbox
-                            type="checkbox"
-                            checked={form.serviceIds.includes(service.id)}
-                            onChange={() => toggleService(service.id)}
-                          />
-                          <ServiceSummary>
-                            <ServiceNameLine>
-                              <ServiceName>{service.name}</ServiceName>
-                              {hasDescription && (
-                                <ServiceExpandButton
-                                  type="button"
-                                  aria-label={
-                                    isExpanded
-                                      ? `Hide details for ${service.name}`
-                                      : `Show details for ${service.name}`
-                                  }
-                                  aria-expanded={isExpanded}
-                                  onClick={(event) => {
-                                    event.preventDefault();
-                                    event.stopPropagation();
-                                    toggleServiceDetails(service.id);
-                                  }}
-                                >
-                                  <ChevronIcon
-                                    $expanded={isExpanded}
-                                    viewBox="0 0 12 12"
-                                    aria-hidden="true"
-                                  >
-                                    <path
-                                      d="M2.25 4.5 6 8.25 9.75 4.5"
-                                      fill="none"
-                                      stroke="currentColor"
-                                      strokeWidth="1.5"
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                    />
-                                  </ChevronIcon>
-                                </ServiceExpandButton>
-                              )}
-                            </ServiceNameLine>
-                            {!hasDescription && service.description && (
-                              <ServiceDescription>{service.description}</ServiceDescription>
-                            )}
-                          </ServiceSummary>
-                          <ServicePrice>{formatCurrency(service.price)}</ServicePrice>
-                          {hasDescription && isExpanded && (
-                            <ServiceDetails>
-                              <ServiceBulletList>
-                                {descriptionItems.map((item) => (
-                                  <li key={item}>{item}</li>
-                                ))}
-                              </ServiceBulletList>
-                            </ServiceDetails>
-                          )}
-                        </ServiceRow>
-                      );
-                    })()
-                  ))
-                ) : (
-                  <HelperText>No services match your search.</HelperText>
-                )}
-              </ServicesPanel>
+              <BookServicePicker
+                services={services}
+                loadingServices={loadingServices}
+                serviceLoadError={serviceLoadError}
+                selectedServiceIds={form.serviceIds}
+                onToggleService={toggleService}
+              />
             </Section>
 
             <Field>
