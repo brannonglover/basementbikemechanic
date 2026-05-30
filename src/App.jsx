@@ -357,9 +357,10 @@ function HomePage({ width, view, switchViews }) {
       <AboutSection id="about">
         <h2>About</h2>
         <p>
-          I grew up in Roswell, GA where bikes were just part of life — riding
-          everywhere, taking things apart to see how they worked, and putting
-          them back together. That curiosity never went away.
+          I grew up in Roswell, GA where bikes were just part of life — I rode
+          everywhere and developed a real passion for cycling. I&apos;m especially
+          into mountain biking, and I love the trails in northern Georgia. That
+          love of bikes never went away.
         </p>
         <p>
           A couple years ago I turned that lifelong passion into Basement Bike
