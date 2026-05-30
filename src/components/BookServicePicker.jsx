@@ -25,29 +25,93 @@ function formatCurrency(value) {
   }).format(value);
 }
 
+const ServicePickerCard = styled.div`
+  display: grid;
+  gap: 0.85rem;
+  padding: 1rem;
+  border: 1px solid
+    ${({ theme }) =>
+      theme.colors.bg === "#1a1a1e"
+        ? "rgba(255, 255, 255, 0.08)"
+        : "rgba(24, 24, 27, 0.1)"};
+  border-radius: 16px;
+  background: ${({ theme }) =>
+    theme.colors.bg === "#1a1a1e" ? "rgba(30, 41, 59, 0.45)" : theme.colors.bgMuted};
+
+  @media (max-width: 640px) {
+    padding: 0.95rem 0.85rem;
+    gap: 0.75rem;
+  }
+`;
+
+const IntroText = styled.p`
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: ${({ theme }) => theme.colors.text};
+
+  @media (max-width: 640px) {
+    font-size: 0.9rem;
+  }
+`;
+
+const SelectionSummary = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.65rem 0.85rem;
+  border-radius: 12px;
+  background: ${({ theme }) =>
+    theme.colors.bg === "#1a1a1e" ? "rgba(245, 158, 11, 0.14)" : theme.colors.accentMuted};
+  border: 1px solid
+    ${({ theme }) =>
+      theme.colors.bg === "#1a1a1e"
+        ? "rgba(245, 158, 11, 0.28)"
+        : "rgba(245, 158, 11, 0.35)"};
+  color: ${({ theme }) => theme.colors.text};
+  font-size: 0.9rem;
+  font-weight: 600;
+`;
+
+const FilterBox = styled.div`
+  display: grid;
+  gap: 0.65rem;
+  padding: 0.85rem;
+  border-radius: 14px;
+  background: ${({ theme }) => theme.colors.surface};
+  border: 1px solid ${({ theme }) => theme.colors.borderStrong};
+`;
+
+const FilterLegend = styled.p`
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: ${({ theme }) => theme.colors.textMuted};
+`;
+
 const QuickPickRow = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  margin: 0 0 0.85rem;
+  gap: 0.45rem;
 `;
 
 const QuickPickChip = styled.button`
   min-height: 44px;
-  padding: 0.45rem 0.9rem;
+  padding: 0.45rem 0.85rem;
   border-radius: 999px;
   border: 1px solid
     ${({ theme, $active }) =>
       $active ? theme.colors.accent : theme.colors.borderStrong};
   background: ${({ theme, $active }) =>
-    $active ? theme.colors.accentMuted : theme.colors.surface};
+    $active ? theme.colors.accentMuted : theme.colors.bgMuted};
   color: ${({ theme, $active }) =>
     $active ? theme.colors.accentHover : theme.colors.text};
   font: inherit;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   font-weight: 600;
   cursor: pointer;
-  transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+  transition: border-color 0.15s ease, background 0.15s ease;
 
   &:hover {
     border-color: ${({ theme }) => theme.colors.accent};
@@ -59,21 +123,81 @@ const QuickPickChip = styled.button`
   }
 `;
 
-const SearchMeta = styled.p`
-  margin: 0 0 0.65rem;
-  font-size: 0.85rem;
-  line-height: 1.45;
-  color: ${({ theme }) => theme.colors.textMuted};
+const SearchRow = styled.div`
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.45rem;
+  align-items: center;
 `;
 
-const ServiceSectionLabel = styled.h3`
-  margin: 0 0 0.45rem;
-  padding: 0 0.15rem;
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+const SearchInput = styled.input`
+  width: 100%;
+  min-height: 44px;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid ${({ theme }) => theme.colors.borderStrong};
+  border-radius: ${({ theme }) => theme.radius.sm};
+  background: ${({ theme }) => theme.colors.bgMuted};
+  color: ${({ theme }) => theme.colors.text};
+  font: inherit;
+  font-size: 1rem;
+
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.textMuted};
+  }
+
+  &:focus {
+    outline: 2px solid ${({ theme }) => theme.colors.accent};
+    outline-offset: 1px;
+    border-color: ${({ theme }) => theme.colors.accent};
+    background: ${({ theme }) => theme.colors.surface};
+  }
+`;
+
+const ClearSearchButton = styled.button`
+  min-height: 44px;
+  padding: 0 0.85rem;
+  border: 1px solid ${({ theme }) => theme.colors.borderStrong};
+  border-radius: ${({ theme }) => theme.radius.sm};
+  background: ${({ theme }) => theme.colors.surface};
   color: ${({ theme }) => theme.colors.textMuted};
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.text};
+    border-color: ${({ theme }) => theme.colors.accent};
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${({ theme }) => theme.colors.accent};
+    outline-offset: 2px;
+  }
+`;
+
+const ListHeader = styled.div`
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0 0.1rem;
+`;
+
+const ListTitle = styled.h3`
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: ${({ theme }) => theme.colors.text};
+`;
+
+const ListHint = styled.p`
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  color: ${({ theme }) => theme.colors.textMuted};
+  text-align: right;
 `;
 
 const ServicesPanel = styled.div`
@@ -82,21 +206,30 @@ const ServicesPanel = styled.div`
       theme.colors.bg === "#1a1a1e"
         ? "rgba(255, 255, 255, 0.07)"
         : "rgba(24, 24, 27, 0.08)"};
-  border-radius: 16px;
-  background: ${({ theme }) =>
-    theme.colors.bg === "#1a1a1e" ? "rgba(30, 41, 59, 0.82)" : theme.colors.surface};
+  border-radius: 14px;
+  background: ${({ theme }) => theme.colors.surface};
   padding: 0.35rem;
-  box-shadow: ${({ theme }) =>
-    theme.colors.bg === "#1a1a1e"
-      ? "inset 0 1px 0 rgba(255, 255, 255, 0.03)"
-      : "none"};
-
   max-height: 260px;
   overflow-y: auto;
 
   @media (max-width: 640px) {
-    max-height: min(52vh, 420px);
+    max-height: min(48vh, 380px);
   }
+`;
+
+const InPanelDivider = styled.hr`
+  margin: 0.35rem 0.75rem;
+  border: 0;
+  border-top: 1px solid ${({ theme }) => theme.colors.border};
+`;
+
+const InPanelLabel = styled.p`
+  margin: 0.35rem 0.75rem 0.15rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.colors.textMuted};
 `;
 
 const ServiceRow = styled.label`
@@ -235,34 +368,29 @@ const ServicePrice = styled.span`
 
 const ShowAllButton = styled.button`
   display: block;
-  width: 100%;
-  margin: 0.5rem 0 0;
+  width: calc(100% - 1rem);
+  margin: 0.35rem auto 0.5rem;
   min-height: 44px;
   padding: 0.65rem 1rem;
   border: 1px dashed ${({ theme }) => theme.colors.borderStrong};
   border-radius: 12px;
-  background: transparent;
+  background: ${({ theme }) => theme.colors.bgMuted};
   color: ${({ theme }) => theme.colors.text};
   font: inherit;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   font-weight: 600;
   cursor: pointer;
   transition: border-color 0.15s ease, background 0.15s ease;
 
   &:hover {
     border-color: ${({ theme }) => theme.colors.accent};
-    background: ${({ theme }) => theme.colors.bgMuted};
+    background: ${({ theme }) => theme.colors.surface};
   }
 
   &:focus-visible {
     outline: 2px solid ${({ theme }) => theme.colors.accent};
     outline-offset: 2px;
   }
-`;
-
-const PanelStack = styled.div`
-  display: grid;
-  gap: 0.75rem;
 `;
 
 const HelperText = styled.p`
@@ -283,39 +411,6 @@ const ErrorAlert = styled.div`
   background: ${({ theme }) =>
     theme.colors.bg === "#1a1a1e" ? "rgba(127, 29, 29, 0.34)" : "rgba(220, 38, 38, 0.1)"};
   color: ${({ theme }) => (theme.colors.bg === "#1a1a1e" ? "#fecaca" : "#991b1b")};
-`;
-
-const Field = styled.div`
-  display: grid;
-  gap: 0.45rem;
-`;
-
-const Label = styled.label`
-  font-size: 0.92rem;
-  font-weight: 600;
-  color: ${({ theme }) => theme.colors.text};
-`;
-
-const Input = styled.input`
-  width: 100%;
-  min-height: 44px;
-  padding: 0.65rem 0.85rem;
-  border: 1px solid ${({ theme }) => theme.colors.borderStrong};
-  border-radius: ${({ theme }) => theme.radius.sm};
-  background: ${({ theme }) => theme.colors.surface};
-  color: ${({ theme }) => theme.colors.text};
-  font: inherit;
-  font-size: 1rem;
-
-  &::placeholder {
-    color: ${({ theme }) => theme.colors.textMuted};
-  }
-
-  &:focus {
-    outline: 2px solid ${({ theme }) => theme.colors.accent};
-    outline-offset: 1px;
-    border-color: ${({ theme }) => theme.colors.accent};
-  }
 `;
 
 function ServiceNameHighlight({ name, query }) {
@@ -445,13 +540,25 @@ export default function BookServicePicker({
 
   const trimmedSearch = serviceSearch.trim();
   const isSearching = trimmedSearch.length > 0;
+  const selectedCount = selectedServiceIds.length;
 
   const display = useMemo(
     () => partitionServicesForDisplay(services, trimmedSearch, popularIds),
     [services, trimmedSearch, popularIds]
   );
 
+  const resetFilters = () => {
+    setServiceSearch("");
+    setActiveQuickPick(null);
+    setShowAllServices(false);
+  };
+
   const handleQuickPick = (chip) => {
+    if (activeQuickPick === chip.id) {
+      resetFilters();
+      return;
+    }
+
     setActiveQuickPick(chip.id);
     setServiceSearch(chip.searchQuery);
     setShowAllServices(true);
@@ -465,6 +572,8 @@ export default function BookServicePicker({
     }
     if (!value.trim()) {
       setShowAllServices(false);
+    } else {
+      setShowAllServices(true);
     }
   };
 
@@ -479,117 +588,146 @@ export default function BookServicePicker({
   const browseRest = display.mode === "browse" ? display.rest : [];
   const showBrowseRest =
     display.mode === "browse" && (showAllServices || browsePopular.length === 0);
-
   const searchList =
-    display.mode === "search"
-      ? [...display.popular, ...display.rest]
-      : [...browsePopular, ...(showBrowseRest ? browseRest : [])];
-
-  const matchLabel =
-    display.mode === "search" && display.matchCount > 0
-      ? `${display.matchCount} service${display.matchCount === 1 ? "" : "s"} match “${trimmedSearch}”`
-      : null;
+    display.mode === "search" ? [...display.popular, ...display.rest] : [];
 
   const hiddenBrowseCount =
     display.mode === "browse" && browsePopular.length > 0 && !showBrowseRest
       ? browseRest.length
       : 0;
 
+  const hasVisibleServices =
+    display.mode === "search"
+      ? searchList.length > 0
+      : browsePopular.length > 0 || (showBrowseRest && browseRest.length > 0);
+
+  const listTitle = isSearching ? "Matching services" : "Choose your services";
+  const listHint = isSearching
+    ? `${display.matchCount} result${display.matchCount === 1 ? "" : "s"}`
+    : "Check each one you need";
+
   return (
-    <>
-      <QuickPickRow role="group" aria-label="Filter by common service type">
-        {SERVICE_QUICK_PICKS.map((chip) => (
-          <QuickPickChip
-            key={chip.id}
-            type="button"
-            $active={activeQuickPick === chip.id}
-            aria-pressed={activeQuickPick === chip.id}
-            onClick={() => handleQuickPick(chip)}
-          >
-            {chip.label}
-          </QuickPickChip>
-        ))}
-      </QuickPickRow>
+    <ServicePickerCard aria-labelledby="requested-services-heading">
+      <IntroText>
+        Tap a category or search to find services, then check every repair or
+        maintenance item you want on this visit.
+      </IntroText>
 
-      <Field>
-        <Label htmlFor="serviceSearch">Search services</Label>
-        <Input
-          id="serviceSearch"
-          type="search"
-          enterKeyHint="search"
-          autoComplete="off"
-          value={serviceSearch}
-          onChange={(event) => handleSearchChange(event.target.value)}
-          placeholder="Try: tune-up, brakes, flat tire, wheel true"
-        />
-      </Field>
+      {selectedCount > 0 && (
+        <SelectionSummary aria-live="polite">
+          <span>
+            {selectedCount} service{selectedCount === 1 ? "" : "s"} selected
+          </span>
+        </SelectionSummary>
+      )}
 
-      {matchLabel && <SearchMeta>{matchLabel}</SearchMeta>}
+      <FilterBox>
+        <FilterLegend>
+          <strong>Step 1:</strong> Narrow the list (optional)
+        </FilterLegend>
+        <QuickPickRow role="group" aria-label="Filter services by type">
+          {SERVICE_QUICK_PICKS.map((chip) => (
+            <QuickPickChip
+              key={chip.id}
+              type="button"
+              $active={activeQuickPick === chip.id}
+              aria-pressed={activeQuickPick === chip.id}
+              onClick={() => handleQuickPick(chip)}
+            >
+              {chip.label}
+            </QuickPickChip>
+          ))}
+        </QuickPickRow>
+        <SearchRow>
+          <SearchInput
+            id="serviceSearch"
+            type="search"
+            enterKeyHint="search"
+            autoComplete="off"
+            value={serviceSearch}
+            onChange={(event) => handleSearchChange(event.target.value)}
+            placeholder="Or search by name…"
+            aria-label="Search services by name"
+          />
+          {isSearching && (
+            <ClearSearchButton type="button" onClick={resetFilters}>
+              Clear
+            </ClearSearchButton>
+          )}
+        </SearchRow>
+      </FilterBox>
 
-      <PanelStack>
+      <div>
+        <ListHeader>
+          <ListTitle>
+            {isSearching ? listTitle : "Step 2: Choose your services"}
+          </ListTitle>
+          {!loadingServices && !serviceLoadError && hasVisibleServices && (
+            <ListHint>{listHint}</ListHint>
+          )}
+        </ListHeader>
+
         {loadingServices ? (
-          <HelperText>Loading services...</HelperText>
+          <HelperText style={{ marginTop: "0.5rem" }}>Loading services...</HelperText>
         ) : serviceLoadError ? (
-          <ErrorAlert>{serviceLoadError}</ErrorAlert>
-        ) : searchList.length > 0 ? (
-          <>
-            {display.mode === "browse" && browsePopular.length > 0 && (
+          <ErrorAlert style={{ marginTop: "0.5rem" }}>{serviceLoadError}</ErrorAlert>
+        ) : hasVisibleServices ? (
+          <ServicesPanel style={{ marginTop: "0.5rem" }}>
+            {display.mode === "search" ? (
+              <ServiceList
+                services={searchList}
+                highlightQuery={trimmedSearch}
+                selectedIds={selectedServiceIds}
+                expandedServices={expandedServices}
+                onToggle={onToggleService}
+                onToggleDetails={toggleServiceDetails}
+              />
+            ) : (
               <>
-                <ServiceSectionLabel>Common requests</ServiceSectionLabel>
-                <ServicesPanel>
-                  <ServiceList
-                    services={browsePopular}
-                    highlightQuery={isSearching ? trimmedSearch : ""}
-                    selectedIds={selectedServiceIds}
-                    expandedServices={expandedServices}
-                    onToggle={onToggleService}
-                    onToggleDetails={toggleServiceDetails}
-                  />
-                </ServicesPanel>
+                {browsePopular.length > 0 && (
+                  <>
+                    {!showBrowseRest && <InPanelLabel>Most requested</InPanelLabel>}
+                    <ServiceList
+                      services={browsePopular}
+                      selectedIds={selectedServiceIds}
+                      expandedServices={expandedServices}
+                      onToggle={onToggleService}
+                      onToggleDetails={toggleServiceDetails}
+                    />
+                  </>
+                )}
+
+                {hiddenBrowseCount > 0 && (
+                  <ShowAllButton type="button" onClick={() => setShowAllServices(true)}>
+                    Show all {services.length} services
+                  </ShowAllButton>
+                )}
+
+                {showBrowseRest && browseRest.length > 0 && (
+                  <>
+                    {browsePopular.length > 0 && <InPanelDivider />}
+                    {browsePopular.length > 0 && (
+                      <InPanelLabel>More services</InPanelLabel>
+                    )}
+                    <ServiceList
+                      services={browseRest}
+                      selectedIds={selectedServiceIds}
+                      expandedServices={expandedServices}
+                      onToggle={onToggleService}
+                      onToggleDetails={toggleServiceDetails}
+                    />
+                  </>
+                )}
               </>
             )}
-
-            {display.mode === "search" && (
-              <>
-                <ServiceSectionLabel>Best matches</ServiceSectionLabel>
-                <ServicesPanel>
-                  <ServiceList
-                    services={searchList}
-                    highlightQuery={trimmedSearch}
-                    selectedIds={selectedServiceIds}
-                    expandedServices={expandedServices}
-                    onToggle={onToggleService}
-                    onToggleDetails={toggleServiceDetails}
-                  />
-                </ServicesPanel>
-              </>
-            )}
-
-            {display.mode === "browse" && showBrowseRest && browseRest.length > 0 && (
-              <>
-                <ServiceSectionLabel>All services</ServiceSectionLabel>
-                <ServicesPanel>
-                  <ServiceList
-                    services={browseRest}
-                    selectedIds={selectedServiceIds}
-                    expandedServices={expandedServices}
-                    onToggle={onToggleService}
-                    onToggleDetails={toggleServiceDetails}
-                  />
-                </ServicesPanel>
-              </>
-            )}
-
-            {hiddenBrowseCount > 0 && (
-              <ShowAllButton type="button" onClick={() => setShowAllServices(true)}>
-                Show all services ({services.length})
-              </ShowAllButton>
-            )}
-          </>
+          </ServicesPanel>
         ) : (
-          <HelperText>No services match your search.</HelperText>
+          <HelperText style={{ marginTop: "0.5rem" }}>
+            No services match your search. Try a different category or clear the
+            search.
+          </HelperText>
         )}
-      </PanelStack>
-    </>
+      </div>
+    </ServicePickerCard>
   );
 }

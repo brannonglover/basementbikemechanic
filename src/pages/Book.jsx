@@ -1154,7 +1154,7 @@ function Book() {
             </Section>
 
             <Section>
-              <SectionTitle>Requested services</SectionTitle>
+              <SectionTitle id="requested-services-heading">Requested services</SectionTitle>
               <BookServicePicker
                 services={services}
                 loadingServices={loadingServices}
