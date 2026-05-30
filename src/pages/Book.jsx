@@ -37,18 +37,12 @@ const BIKEOPS_BASE_CANDIDATES = [
 // Fall back to /api/widget for older BikeOps deployments.
 const BIKEOPS_API_BASE_PATHS = ["/api/booking", "/api/widget"];
 
-function getDefaultDateTime() {
-  const date = new Date();
-  date.setMinutes(0, 0, 0);
-  if (date.getHours() < 9) {
-    date.setHours(9, 0, 0, 0);
-  }
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  const hours = String(date.getHours()).padStart(2, "0");
-  const minutes = String(date.getMinutes()).padStart(2, "0");
-  return `${year}-${month}-${day}T${hours}:${minutes}`;
+function buildScheduleDateTime(date, time) {
+  const dateValue = String(date || "").trim();
+  if (!dateValue) return null;
+
+  const timeValue = String(time || "").trim();
+  return timeValue ? `${dateValue}T${timeValue}` : dateValue;
 }
 
 function formatPhoneInputUS(value) {
@@ -127,6 +121,17 @@ const Grid = styled.div`
   @media (max-width: 640px) {
     grid-template-columns: 1fr;
   }
+`;
+
+const DateTimeGroup = styled.div`
+  display: grid;
+  gap: 0.65rem;
+`;
+
+const OptionalHint = styled.span`
+  font-weight: 500;
+  color: ${({ theme }) => theme.colors.textMuted};
+  font-size: 0.85em;
 `;
 
 const Field = styled.div`
@@ -573,8 +578,10 @@ function Book() {
     phone: "",
     address: "",
     deliveryType: "DROP_OFF_AT_SHOP",
-    dropOffDate: getDefaultDateTime(),
+    dropOffDate: "",
+    dropOffTime: "",
     pickupDate: "",
+    pickupTime: "",
     collectionAddress: "",
     collectionWindowStart: "",
     collectionWindowEnd: "",
@@ -851,8 +858,8 @@ function Book() {
           bikeType: bike.bikeType === "AUTO" ? undefined : bike.bikeType,
         })),
         deliveryType: form.deliveryType,
-        dropOffDate: form.dropOffDate || null,
-        pickupDate: form.pickupDate || null,
+        dropOffDate: buildScheduleDateTime(form.dropOffDate, form.dropOffTime),
+        pickupDate: buildScheduleDateTime(form.pickupDate, form.pickupTime),
         collectionAddress:
           form.deliveryType === "COLLECTION_SERVICE"
             ? form.collectionAddress.trim() || null
@@ -1177,33 +1184,63 @@ function Book() {
             </Field>
 
             <Grid>
-              <Field>
-                <Label htmlFor="dropOffDate">
-                  {form.deliveryType === "COLLECTION_SERVICE"
-                    ? "Preferred collection pickup"
-                    : "Preferred drop-off time"}
-                </Label>
-                <ValidatedInput
-                  id="dropOffDate"
-                  type="datetime-local"
-                  value={form.dropOffDate}
-                  onChange={(event) => updateForm("dropOffDate", event.target.value)}
-                />
-              </Field>
-              <Field>
-                <Label htmlFor="pickupDate">
-                  {form.deliveryType === "COLLECTION_SERVICE"
-                    ? "Preferred collection return"
-                    : "Preferred pickup time"}
-                </Label>
-                <ValidatedInput
-                  id="pickupDate"
-                  type="datetime-local"
-                  value={form.pickupDate}
-                  onChange={(event) => updateForm("pickupDate", event.target.value)}
-                />
-              </Field>
+              <DateTimeGroup>
+                <Field>
+                  <Label htmlFor="dropOffDate">
+                    {form.deliveryType === "COLLECTION_SERVICE"
+                      ? "Preferred collection pickup date"
+                      : "Preferred drop-off date"}
+                  </Label>
+                  <ValidatedInput
+                    id="dropOffDate"
+                    type="date"
+                    value={form.dropOffDate}
+                    onChange={(event) => updateForm("dropOffDate", event.target.value)}
+                  />
+                </Field>
+                <Field>
+                  <Label htmlFor="dropOffTime">
+                    Time <OptionalHint>(optional)</OptionalHint>
+                  </Label>
+                  <ValidatedInput
+                    id="dropOffTime"
+                    type="time"
+                    value={form.dropOffTime}
+                    onChange={(event) => updateForm("dropOffTime", event.target.value)}
+                  />
+                </Field>
+              </DateTimeGroup>
+              <DateTimeGroup>
+                <Field>
+                  <Label htmlFor="pickupDate">
+                    {form.deliveryType === "COLLECTION_SERVICE"
+                      ? "Preferred collection return date"
+                      : "Preferred pickup date"}
+                  </Label>
+                  <ValidatedInput
+                    id="pickupDate"
+                    type="date"
+                    value={form.pickupDate}
+                    onChange={(event) => updateForm("pickupDate", event.target.value)}
+                  />
+                </Field>
+                <Field>
+                  <Label htmlFor="pickupTime">
+                    Time <OptionalHint>(optional)</OptionalHint>
+                  </Label>
+                  <ValidatedInput
+                    id="pickupTime"
+                    type="time"
+                    value={form.pickupTime}
+                    onChange={(event) => updateForm("pickupTime", event.target.value)}
+                  />
+                </Field>
+              </DateTimeGroup>
             </Grid>
+            <HelperText>
+              Leave dates blank if you&apos;re not sure yet. Time is optional — skip it if
+              you&apos;re flexible on when you drop off or pick up.
+            </HelperText>
 
             {form.deliveryType === "COLLECTION_SERVICE" && (
               <Grid>
