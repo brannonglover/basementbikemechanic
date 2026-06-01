@@ -358,21 +358,6 @@ const ConsentText = styled.div`
     theme.colors.bg === "#1a1a1e" ? "#cbd5e1" : theme.colors.text};
 `;
 
-const RequiredBadge = styled.span`
-  display: inline-flex;
-  align-items: center;
-  margin: 0 0.45rem 0.25rem 0;
-  border-radius: 999px;
-  background: ${({ theme }) =>
-    theme.colors.bg === "#1a1a1e" ? "rgba(245, 158, 11, 0.18)" : theme.colors.accentMuted};
-  color: ${({ theme }) => theme.colors.accentHover};
-  font-size: 0.72rem;
-  font-weight: 700;
-  line-height: 1;
-  padding: 0.28rem 0.48rem;
-  vertical-align: text-top;
-`;
-
 const HelperText = styled.p`
   margin: 0;
   font-size: 0.85rem;
@@ -816,13 +801,6 @@ function Book() {
     setError("");
     setAttemptedSubmit(true);
 
-    if (!form.smsConsent) {
-      setError(
-        "Please acknowledge the repair-related SMS updates before submitting. You can opt out any time by replying STOP."
-      );
-      return;
-    }
-
     if (form.deliveryType === "COLLECTION_SERVICE") {
       const r = collectionEligibility.result;
       if (collectionEligibility.status === "checking") {
@@ -1034,24 +1012,19 @@ function Book() {
               />
             </Field>
 
-            <ConsentCard
-              htmlFor="smsConsent"
-              $invalid={attemptedSubmit && !form.smsConsent}
-            >
+            <ConsentCard htmlFor="smsConsent">
               <Checkbox
                 id="smsConsent"
                 type="checkbox"
-                required
                 checked={form.smsConsent}
                 onChange={(event) => updateForm("smsConsent", event.target.checked)}
               />
               <ConsentText>
-                <RequiredBadge>Required</RequiredBadge>
-                I acknowledge that Basement Bike Mechanic may send repair-related SMS messages,
-                including booking confirmations, service updates, and pickup
-                notifications. No marketing texts. Message frequency varies. Message
-                and data rates may apply. Reply STOP to opt out and HELP for help.
-                View our{" "}
+                By checking this box, you are allowing Basement Bike Mechanic to send you
+                repair-related SMS messages, including booking confirmations, service
+                updates, and pickup notifications. No marketing texts. Message
+                frequency varies. Message and data rates may apply. Reply STOP to opt
+                out and HELP for help. View our{" "}
                 <a href="https://basementbikemechanic.com/terms">
                   Terms and Conditions
                 </a>{" "}
