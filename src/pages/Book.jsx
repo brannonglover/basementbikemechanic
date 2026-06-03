@@ -935,9 +935,11 @@ function Book() {
       <BookContent>
         <h1>Book a Repair</h1>
         <p>
-          Fill out the form below to request service. Your booking will be sent
-          directly into BikeOps, and the SMS consent message is shown here in
-          the form before you submit.
+          Fill out the form below to request service. All repairs happen at my
+          basement workshop — drop your bike off at the shop, or choose
+          collection within 5 miles for pickup and return. Your booking will be
+          sent directly into BikeOps, and the SMS consent message is shown here
+          in the form before you submit.
         </p>
         <FormCard>
           <Form onSubmit={handleSubmit} onInvalidCapture={() => setAttemptedSubmit(true)}>
@@ -1154,6 +1156,12 @@ function Book() {
                 <option value="DROP_OFF_AT_SHOP">Drop-off at shop</option>
                 <option value="COLLECTION_SERVICE">Collection service</option>
               </ValidatedSelect>
+              <HelperText>
+                Drop-off means you bring the bike to my shop at 2272 Melinda Dr
+                NE. Collection is pickup and return within 5 miles — I&apos;ll
+                get your bike and bring it back when it&apos;s ready, but all
+                repair work still happens at the shop, not at your location.
+              </HelperText>
             </Field>
 
             <Grid>

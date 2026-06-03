@@ -44,6 +44,17 @@ const SiteDescription = styled.section`
   }
 `;
 
+const ServiceCallout = styled.p`
+  margin: 1.25rem 0 0;
+  padding: 1rem 1.15rem;
+  font-size: 0.98rem;
+  line-height: 1.55;
+  color: ${({ theme }) => theme.colors.textMuted};
+  background: ${({ theme }) => theme.colors.bgMuted};
+  border-radius: ${({ theme }) => theme.radius.md};
+  border-left: 3px solid ${({ theme }) => theme.colors.accent};
+`;
+
 const RegularMaintenance = styled.section`
   display: flex;
   flex-direction: column;
@@ -347,6 +358,12 @@ function HomePage({ width, view, switchViews }) {
       <SiteDescription>
         <h1>Atlanta Bike Repair &amp; Bicycle Tune-Ups</h1>
         {config.site_description}
+        <ServiceCallout>
+          How it works: drop your bike off at my shop on Melinda Dr, or choose
+          collection within 5 miles and I&apos;ll pick it up and bring it back
+          when it&apos;s ready. Either way, all repairs happen here in my
+          basement workshop — not at your home or on-site.
+        </ServiceCallout>
       </SiteDescription>
       <BreakLine />
       <ReviewsSection>
@@ -365,9 +382,10 @@ function HomePage({ width, view, switchViews }) {
         <p>
           A couple years ago I turned that lifelong passion into Basement Bike
           Mechanic. The name is literal: I work out of my basement in Atlanta,
-          one appointment at a time. Working by reservation isn't just a
-          scheduling preference — it means every bike gets real, focused
-          attention instead of being rushed through a shop queue.
+          one appointment at a time — all shop-based repair, not mobile or
+          on-site service. Working by reservation isn't just a scheduling
+          preference — it means every bike gets real, focused attention instead
+          of being rushed through a shop queue.
         </p>
         <p>
           When you drop your bike off with me, I'm the one working on it, start

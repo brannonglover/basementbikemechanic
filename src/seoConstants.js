@@ -7,4 +7,4 @@ export const DEFAULT_TITLE =
   "Bike Repair Atlanta | Tune-Ups & Bicycle Service | Basement Bike Mechanic";
 
 export const DEFAULT_DESCRIPTION =
-  "Atlanta bike repair, tune-ups, and maintenance by appointment. Expert bicycle repair for commuters and cyclists—brakes, gears, flat tires, ebikes, and full overhauls. Text or book online.";
+  "Shop-based Atlanta bike repair and tune-ups by appointment. Drop off at 2272 Melinda Dr NE — optional pickup and return within 5 miles. All work done at my basement workshop; no on-site mobile repairs. Text or book online.";
