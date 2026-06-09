@@ -66,29 +66,67 @@ const SelectionSummary = styled.div`
 
 const FilterBox = styled.div`
   display: grid;
-  gap: 0.65rem;
+  gap: 0;
   padding: 0.85rem;
   border-radius: 14px;
   background: ${({ theme }) => theme.colors.surface};
   border: 1px solid ${({ theme }) => theme.colors.borderStrong};
 
   @media (max-width: 640px) {
-    gap: 0.75rem;
-    padding: 0.9rem 0.8rem;
+    padding: 0.85rem 0.75rem;
   }
 `;
 
-const FilterLegend = styled.p`
+const StepOneSection = styled.div`
+  display: block;
+`;
+
+const FilterControls = styled.div`
+  display: grid;
+  gap: 0.65rem;
+  margin: -0.35rem 0 0;
+  padding: 0;
+
+  @media (max-width: 640px) {
+    gap: 0.45rem;
+    margin-top: -0.5rem;
+  }
+`;
+
+const ServiceListSection = styled.div`
+  display: grid;
+  gap: 0;
+  padding-top: 0.85rem;
+  border-top: 1px solid ${({ theme }) => theme.colors.border};
+
+  @media (max-width: 640px) {
+    padding-top: 0.75rem;
+  }
+`;
+
+const StepHeading = styled.p`
   margin: 0;
-  font-size: 0.82rem;
-  line-height: 1.45;
-  color: ${({ theme }) => theme.colors.textMuted};
+  padding: 0;
+  font-size: 0.88rem;
+  line-height: 1;
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.text};
+
+  strong {
+    font-weight: 700;
+  }
+
+  @media (max-width: 640px) {
+    font-size: 0.85rem;
+  }
 `;
 
 const QuickPickRow = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 0.45rem;
+  margin: 0;
+  padding: 0;
 
   @media (max-width: 640px) {
     display: grid;
@@ -99,6 +137,7 @@ const QuickPickRow = styled.div`
 
 const QuickPickChip = styled.button`
   min-height: 44px;
+  margin: 0;
   padding: 0.45rem 0.85rem;
   border-radius: 999px;
   border: 1px solid
@@ -198,32 +237,30 @@ const ListHeader = styled.div`
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  gap: 0.75rem;
-  padding: 0 0.1rem;
+  gap: 0.5rem;
+  margin: 0 0 2px;
+  padding: 0;
 
   @media (max-width: 640px) {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.25rem;
+    display: grid;
+    gap: 0;
+    align-items: start;
+    justify-content: start;
   }
-`;
-
-const ListTitle = styled.h3`
-  margin: 0;
-  font-size: 0.92rem;
-  font-weight: 700;
-  color: ${({ theme }) => theme.colors.text};
 `;
 
 const ListHint = styled.p`
   margin: 0;
+  padding: 0;
   font-size: 0.82rem;
-  line-height: 1.4;
+  line-height: 1;
   color: ${({ theme }) => theme.colors.textMuted};
   text-align: right;
 
   @media (max-width: 640px) {
     text-align: left;
+    font-size: 0.8rem;
+    margin-top: -0.3rem;
   }
 `;
 
@@ -233,14 +270,17 @@ const ServicesPanel = styled.div`
       theme.colors.bg === "#1a1a1e"
         ? "rgba(255, 255, 255, 0.07)"
         : "rgba(24, 24, 27, 0.08)"};
-  border-radius: 14px;
-  background: ${({ theme }) => theme.colors.surface};
-  padding: 0.35rem;
+  border-radius: 12px;
+  background: ${({ theme }) => theme.colors.bgMuted};
+  padding: 0.5rem 0.45rem;
   max-height: 260px;
   overflow-y: auto;
 
   @media (max-width: 640px) {
-    max-height: min(48vh, 380px);
+    max-height: min(42vh, 340px);
+    border-radius: 10px;
+    padding: 0.1rem 0.45rem 0.35rem;
+    margin-top: 0;
   }
 `;
 
@@ -257,6 +297,12 @@ const InPanelLabel = styled.p`
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: ${({ theme }) => theme.colors.textMuted};
+
+  @media (max-width: 640px) {
+    margin: 0.1rem 0.45rem 0.05rem;
+    font-size: 0.72rem;
+    line-height: 1.2;
+  }
 `;
 
 const ServiceRow = styled.label`
@@ -276,8 +322,8 @@ const ServiceRow = styled.label`
 
   @media (max-width: 640px) {
     gap: 0.4rem 0.45rem;
-    min-height: 42px;
-    padding: 0.65rem 0.55rem;
+    min-height: 38px;
+    padding: 0.45rem 0.5rem;
     font-size: 0.84rem;
   }
 `;
@@ -660,7 +706,7 @@ export default function BookServicePicker({
       ? searchList.length > 0
       : browsePopular.length > 0 || (showBrowseRest && browseRest.length > 0);
 
-  const listTitle = isSearching ? "Matching services" : "Choose your services";
+  const step2Label = isSearching ? "Matching services" : "Choose your services";
   const listHint = isSearching
     ? `${display.matchCount} result${display.matchCount === 1 ? "" : "s"}`
     : "Check each one you need";
@@ -681,112 +727,116 @@ export default function BookServicePicker({
       )}
 
       <FilterBox>
-        <FilterLegend>
-          <strong>Step 1:</strong> Narrow the list (optional)
-        </FilterLegend>
-        <QuickPickRow role="group" aria-label="Filter services by type">
-          {SERVICE_QUICK_PICKS.map((chip) => (
-            <QuickPickChip
-              key={chip.id}
-              type="button"
-              $active={activeQuickPick === chip.id}
-              aria-pressed={activeQuickPick === chip.id}
-              onClick={() => handleQuickPick(chip)}
-            >
-              {chip.label}
-            </QuickPickChip>
-          ))}
-        </QuickPickRow>
-        <SearchRow>
-          <SearchInput
-            id="serviceSearch"
-            type="search"
-            enterKeyHint="search"
-            autoComplete="off"
-            value={serviceSearch}
-            onChange={(event) => handleSearchChange(event.target.value)}
-            placeholder="Or search by name…"
-            aria-label="Search services by name"
-          />
-          {isSearching && (
-            <ClearSearchButton type="button" onClick={resetFilters}>
-              Clear
-            </ClearSearchButton>
-          )}
-        </SearchRow>
-      </FilterBox>
-
-      <div>
-        <ListHeader>
-          <ListTitle>
-            {isSearching ? listTitle : "Step 2: Choose your services"}
-          </ListTitle>
-          {!loadingServices && !serviceLoadError && hasVisibleServices && (
-            <ListHint>{listHint}</ListHint>
-          )}
-        </ListHeader>
-
-        {loadingServices ? (
-          <HelperText style={{ marginTop: "0.5rem" }}>Loading services...</HelperText>
-        ) : serviceLoadError ? (
-          <ErrorAlert style={{ marginTop: "0.5rem" }}>{serviceLoadError}</ErrorAlert>
-        ) : hasVisibleServices ? (
-          <ServicesPanel style={{ marginTop: "0.5rem" }}>
-            {display.mode === "search" ? (
-              <ServiceList
-                services={searchList}
-                highlightQuery={trimmedSearch}
-                selectedIds={selectedServiceIds}
-                expandedServices={expandedServices}
-                onToggle={onToggleService}
-                onToggleDetails={toggleServiceDetails}
+        <StepOneSection>
+          <StepHeading>
+            <strong>Step 1:</strong> Narrow the list (optional)
+          </StepHeading>
+          <FilterControls>
+            <QuickPickRow role="group" aria-label="Filter services by type">
+              {SERVICE_QUICK_PICKS.map((chip) => (
+                <QuickPickChip
+                  key={chip.id}
+                  type="button"
+                  $active={activeQuickPick === chip.id}
+                  aria-pressed={activeQuickPick === chip.id}
+                  onClick={() => handleQuickPick(chip)}
+                >
+                  {chip.label}
+                </QuickPickChip>
+              ))}
+            </QuickPickRow>
+            <SearchRow>
+              <SearchInput
+                id="serviceSearch"
+                type="search"
+                enterKeyHint="search"
+                autoComplete="off"
+                value={serviceSearch}
+                onChange={(event) => handleSearchChange(event.target.value)}
+                placeholder="Or search by name…"
+                aria-label="Search services by name"
               />
-            ) : (
-              <>
-                {browsePopular.length > 0 && (
-                  <>
-                    {!showBrowseRest && <InPanelLabel>Most requested</InPanelLabel>}
-                    <ServiceList
-                      services={browsePopular}
-                      selectedIds={selectedServiceIds}
-                      expandedServices={expandedServices}
-                      onToggle={onToggleService}
-                      onToggleDetails={toggleServiceDetails}
-                    />
-                  </>
-                )}
+              {isSearching && (
+                <ClearSearchButton type="button" onClick={resetFilters}>
+                  Clear
+                </ClearSearchButton>
+              )}
+            </SearchRow>
+          </FilterControls>
+        </StepOneSection>
 
-                {hiddenBrowseCount > 0 && (
-                  <ShowAllButton type="button" onClick={() => setShowAllServices(true)}>
-                    Show all {services.length} services
-                  </ShowAllButton>
-                )}
-
-                {showBrowseRest && browseRest.length > 0 && (
-                  <>
-                    {browsePopular.length > 0 && <InPanelDivider />}
-                    {browsePopular.length > 0 && (
-                      <InPanelLabel>More services</InPanelLabel>
-                    )}
-                    <ServiceList
-                      services={browseRest}
-                      selectedIds={selectedServiceIds}
-                      expandedServices={expandedServices}
-                      onToggle={onToggleService}
-                      onToggleDetails={toggleServiceDetails}
-                    />
-                  </>
-                )}
-              </>
+        <ServiceListSection>
+          <ListHeader>
+            <StepHeading>
+              <strong>Step 2:</strong> {step2Label}
+            </StepHeading>
+            {!loadingServices && !serviceLoadError && hasVisibleServices && (
+              <ListHint>{listHint}</ListHint>
             )}
-          </ServicesPanel>
-        ) : (
-          <HelperText style={{ marginTop: "0.5rem" }}>
-            No services match your search. Try a different category or clear the
-            search.
-          </HelperText>
-        )}
-      </div>
+          </ListHeader>
+
+          {loadingServices ? (
+            <HelperText>Loading services...</HelperText>
+          ) : serviceLoadError ? (
+            <ErrorAlert>{serviceLoadError}</ErrorAlert>
+          ) : hasVisibleServices ? (
+            <ServicesPanel>
+              {display.mode === "search" ? (
+                <ServiceList
+                  services={searchList}
+                  highlightQuery={trimmedSearch}
+                  selectedIds={selectedServiceIds}
+                  expandedServices={expandedServices}
+                  onToggle={onToggleService}
+                  onToggleDetails={toggleServiceDetails}
+                />
+              ) : (
+                <>
+                  {browsePopular.length > 0 && (
+                    <>
+                      {!showBrowseRest && <InPanelLabel>Most requested</InPanelLabel>}
+                      <ServiceList
+                        services={browsePopular}
+                        selectedIds={selectedServiceIds}
+                        expandedServices={expandedServices}
+                        onToggle={onToggleService}
+                        onToggleDetails={toggleServiceDetails}
+                      />
+                    </>
+                  )}
+
+                  {hiddenBrowseCount > 0 && (
+                    <ShowAllButton type="button" onClick={() => setShowAllServices(true)}>
+                      Show all {services.length} services
+                    </ShowAllButton>
+                  )}
+
+                  {showBrowseRest && browseRest.length > 0 && (
+                    <>
+                      {browsePopular.length > 0 && <InPanelDivider />}
+                      {browsePopular.length > 0 && (
+                        <InPanelLabel>More services</InPanelLabel>
+                      )}
+                      <ServiceList
+                        services={browseRest}
+                        selectedIds={selectedServiceIds}
+                        expandedServices={expandedServices}
+                        onToggle={onToggleService}
+                        onToggleDetails={toggleServiceDetails}
+                      />
+                    </>
+                  )}
+                </>
+              )}
+            </ServicesPanel>
+          ) : (
+            <HelperText>
+              No services match your search. Try a different category or clear the
+              search.
+            </HelperText>
+          )}
+        </ServiceListSection>
+      </FilterBox>
     </ServicePickerCard>
   );
 }
