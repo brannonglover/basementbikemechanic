@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
 import Header from "../components/Header";
@@ -45,6 +45,10 @@ function buildScheduleDateTime(date, time) {
   return timeValue ? `${dateValue}T${timeValue}` : dateValue;
 }
 
+function buildOptionalScheduleField(date, time) {
+  return buildScheduleDateTime(date, time) || undefined;
+}
+
 function formatPhoneInputUS(value) {
   const digits = value.replace(/\D/g, "").slice(0, 11);
   const normalized = digits.startsWith("1") ? digits.slice(1) : digits;
@@ -74,6 +78,10 @@ const BookContent = styled.section`
   max-width: 760px;
   margin: 0 auto;
   padding: 2rem 1.5rem 3rem;
+
+  @media (max-width: 640px) {
+    padding: 1.5rem 1rem 2.5rem;
+  }
 
   h1 {
     font-size: clamp(1.35rem, 2.5vw, 1.85rem);
@@ -106,6 +114,11 @@ const FormCard = styled.div`
       ? "0 18px 48px rgba(2, 6, 23, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.04)"
       : theme.shadow.md};
   padding: 1.4rem;
+
+  @media (max-width: 640px) {
+    padding: 1.1rem 0.95rem;
+    border-radius: 16px;
+  }
 `;
 
 const Form = styled.form`
@@ -126,6 +139,41 @@ const Grid = styled.div`
 const DateTimeGroup = styled.div`
   display: grid;
   gap: 0.65rem;
+  grid-template-columns: 1fr;
+
+  @media (min-width: 480px) and (max-width: 640px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+`;
+
+const DateTimeFieldWrap = styled.div`
+  position: relative;
+
+  input[type="date"],
+  input[type="time"] {
+    color-scheme: ${({ theme }) => (theme.colors.bg === "#1a1a1e" ? "dark" : "light")};
+  }
+
+  ${({ $empty }) =>
+    $empty &&
+    css`
+      input[type="date"]:not(:focus)::-webkit-datetime-edit,
+      input[type="time"]:not(:focus)::-webkit-datetime-edit {
+        color: transparent;
+      }
+    `}
+`;
+
+const FieldPlaceholder = styled.span`
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: ${({ theme }) => theme.colors.textMuted};
+  pointer-events: none;
+  line-height: 1.4;
+  font-size: inherit;
 `;
 
 const OptionalHint = styled.span`
@@ -463,6 +511,35 @@ const SuccessAlert = styled(Alert)`
   color: ${({ theme }) => (theme.colors.bg === "#1a1a1e" ? "#a7f3d0" : "#065f46")};
 `;
 
+const InfoCallout = styled(Alert)`
+  display: flex;
+  gap: 0.7rem;
+  align-items: flex-start;
+  border: 1px solid
+    ${({ theme }) =>
+      theme.colors.bg === "#1a1a1e"
+        ? "rgba(245, 158, 11, 0.28)"
+        : "rgba(245, 158, 11, 0.35)"};
+  background: ${({ theme }) =>
+    theme.colors.bg === "#1a1a1e" ? "rgba(245, 158, 11, 0.14)" : theme.colors.accentMuted};
+  color: ${({ theme }) => theme.colors.text};
+`;
+
+const InfoCalloutIcon = styled.span`
+  flex: 0 0 auto;
+  width: 1.35rem;
+  height: 1.35rem;
+  margin-top: 0.1rem;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: ${({ theme }) => theme.colors.accent};
+  color: ${({ theme }) => theme.colors.textOnAccent};
+  font-size: 0.82rem;
+  font-weight: 800;
+  line-height: 1;
+`;
+
 const SuccessCard = styled.div`
   display: grid;
   gap: 1rem;
@@ -556,6 +633,10 @@ function Book() {
     result: null,
   });
   const [bikes, setBikes] = useState([{ make: "", model: "", bikeType: "AUTO" }]);
+  const dateFieldTouched = useRef({
+    dropOffDate: false,
+    pickupDate: false,
+  });
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -623,6 +704,29 @@ function Book() {
 
   const updateForm = (field, value) => {
     setForm((previous) => ({ ...previous, [field]: value }));
+  };
+
+  const handleOptionalDateFocus = (dateField) => () => {
+    dateFieldTouched.current[dateField] = true;
+  };
+
+  const handleOptionalDateChange = (dateField, timeField) => (event) => {
+    if (!dateFieldTouched.current[dateField]) {
+      return;
+    }
+
+    const value = event.target.value;
+    if (!value) {
+      dateFieldTouched.current[dateField] = false;
+      setForm((previous) => ({
+        ...previous,
+        [dateField]: "",
+        [timeField]: "",
+      }));
+      return;
+    }
+
+    updateForm(dateField, value);
   };
 
   const updateBike = (index, field, value) => {
@@ -822,6 +926,15 @@ function Book() {
     setSubmitting(true);
 
     try {
+      const dropOffSchedule = buildOptionalScheduleField(
+        form.dropOffDate,
+        form.dropOffTime
+      );
+      const pickupSchedule = buildOptionalScheduleField(
+        form.pickupDate,
+        form.pickupTime
+      );
+
       const payload = {
         customerId: savedBikeCustomer?.id || null,
         firstName: form.firstName.trim(),
@@ -836,8 +949,8 @@ function Book() {
           bikeType: bike.bikeType === "AUTO" ? undefined : bike.bikeType,
         })),
         deliveryType: form.deliveryType,
-        dropOffDate: buildScheduleDateTime(form.dropOffDate, form.dropOffTime),
-        pickupDate: buildScheduleDateTime(form.pickupDate, form.pickupTime),
+        ...(dropOffSchedule ? { dropOffDate: dropOffSchedule } : {}),
+        ...(pickupSchedule ? { pickupDate: pickupSchedule } : {}),
         collectionAddress:
           form.deliveryType === "COLLECTION_SERVICE"
             ? form.collectionAddress.trim() || null
@@ -1156,12 +1269,6 @@ function Book() {
                 <option value="DROP_OFF_AT_SHOP">Drop-off at shop</option>
                 <option value="COLLECTION_SERVICE">Collection service</option>
               </ValidatedSelect>
-              <HelperText>
-                Drop-off means you bring the bike to my shop at 2272 Melinda Dr
-                NE. Collection is pickup and return within 5 miles — I&apos;ll
-                get your bike and bring it back when it&apos;s ready, but all
-                repair work still happens at the shop, not at your location.
-              </HelperText>
             </Field>
 
             <Grid>
@@ -1172,23 +1279,35 @@ function Book() {
                       ? "Preferred collection pickup date"
                       : "Preferred drop-off date"}
                   </Label>
-                  <ValidatedInput
-                    id="dropOffDate"
-                    type="date"
-                    value={form.dropOffDate}
-                    onChange={(event) => updateForm("dropOffDate", event.target.value)}
-                  />
+                  <DateTimeFieldWrap $empty={!form.dropOffDate}>
+                    <ValidatedInput
+                      id="dropOffDate"
+                      type="date"
+                      autoComplete="off"
+                      value={form.dropOffDate}
+                      onFocus={handleOptionalDateFocus("dropOffDate")}
+                      onChange={handleOptionalDateChange("dropOffDate", "dropOffTime")}
+                    />
+                    {!form.dropOffDate && (
+                      <FieldPlaceholder aria-hidden="true">Select a date</FieldPlaceholder>
+                    )}
+                  </DateTimeFieldWrap>
                 </Field>
                 <Field>
                   <Label htmlFor="dropOffTime">
                     Time <OptionalHint>(optional)</OptionalHint>
                   </Label>
-                  <ValidatedInput
-                    id="dropOffTime"
-                    type="time"
-                    value={form.dropOffTime}
-                    onChange={(event) => updateForm("dropOffTime", event.target.value)}
-                  />
+                  <DateTimeFieldWrap $empty={!form.dropOffTime}>
+                    <ValidatedInput
+                      id="dropOffTime"
+                      type="time"
+                      value={form.dropOffTime}
+                      onChange={(event) => updateForm("dropOffTime", event.target.value)}
+                    />
+                    {!form.dropOffTime && (
+                      <FieldPlaceholder aria-hidden="true">Select a time</FieldPlaceholder>
+                    )}
+                  </DateTimeFieldWrap>
                 </Field>
               </DateTimeGroup>
               <DateTimeGroup>
@@ -1198,30 +1317,46 @@ function Book() {
                       ? "Preferred collection return date"
                       : "Preferred pickup date"}
                   </Label>
-                  <ValidatedInput
-                    id="pickupDate"
-                    type="date"
-                    value={form.pickupDate}
-                    onChange={(event) => updateForm("pickupDate", event.target.value)}
-                  />
+                  <DateTimeFieldWrap $empty={!form.pickupDate}>
+                    <ValidatedInput
+                      id="pickupDate"
+                      type="date"
+                      autoComplete="off"
+                      value={form.pickupDate}
+                      onFocus={handleOptionalDateFocus("pickupDate")}
+                      onChange={handleOptionalDateChange("pickupDate", "pickupTime")}
+                    />
+                    {!form.pickupDate && (
+                      <FieldPlaceholder aria-hidden="true">Select a date</FieldPlaceholder>
+                    )}
+                  </DateTimeFieldWrap>
                 </Field>
                 <Field>
                   <Label htmlFor="pickupTime">
                     Time <OptionalHint>(optional)</OptionalHint>
                   </Label>
-                  <ValidatedInput
-                    id="pickupTime"
-                    type="time"
-                    value={form.pickupTime}
-                    onChange={(event) => updateForm("pickupTime", event.target.value)}
-                  />
+                  <DateTimeFieldWrap $empty={!form.pickupTime}>
+                    <ValidatedInput
+                      id="pickupTime"
+                      type="time"
+                      value={form.pickupTime}
+                      onChange={(event) => updateForm("pickupTime", event.target.value)}
+                    />
+                    {!form.pickupTime && (
+                      <FieldPlaceholder aria-hidden="true">Select a time</FieldPlaceholder>
+                    )}
+                  </DateTimeFieldWrap>
                 </Field>
               </DateTimeGroup>
             </Grid>
-            <HelperText>
-              Leave dates blank if you&apos;re not sure yet. Time is optional — skip it if
-              you&apos;re flexible on when you drop off or pick up.
-            </HelperText>
+            <InfoCallout role="note">
+              <InfoCalloutIcon aria-hidden="true">i</InfoCalloutIcon>
+              <span>
+                <strong>Dates and times are optional.</strong> Leave them blank if you&apos;re
+                not sure yet, or skip the time if you&apos;re flexible on when you drop off or
+                pick up.
+              </span>
+            </InfoCallout>
 
             {form.deliveryType === "COLLECTION_SERVICE" && (
               <Grid>
@@ -1279,25 +1414,35 @@ function Book() {
                 </Field>
                 <Field>
                   <Label htmlFor="collectionWindowStart">Collection window start</Label>
-                  <ValidatedInput
-                    id="collectionWindowStart"
-                    type="time"
-                    value={form.collectionWindowStart}
-                    onChange={(event) =>
-                      updateForm("collectionWindowStart", event.target.value)
-                    }
-                  />
+                  <DateTimeFieldWrap $empty={!form.collectionWindowStart}>
+                    <ValidatedInput
+                      id="collectionWindowStart"
+                      type="time"
+                      value={form.collectionWindowStart}
+                      onChange={(event) =>
+                        updateForm("collectionWindowStart", event.target.value)
+                      }
+                    />
+                    {!form.collectionWindowStart && (
+                      <FieldPlaceholder aria-hidden="true">Select a time</FieldPlaceholder>
+                    )}
+                  </DateTimeFieldWrap>
                 </Field>
                 <Field>
                   <Label htmlFor="collectionWindowEnd">Collection window end</Label>
-                  <ValidatedInput
-                    id="collectionWindowEnd"
-                    type="time"
-                    value={form.collectionWindowEnd}
-                    onChange={(event) =>
-                      updateForm("collectionWindowEnd", event.target.value)
-                    }
-                  />
+                  <DateTimeFieldWrap $empty={!form.collectionWindowEnd}>
+                    <ValidatedInput
+                      id="collectionWindowEnd"
+                      type="time"
+                      value={form.collectionWindowEnd}
+                      onChange={(event) =>
+                        updateForm("collectionWindowEnd", event.target.value)
+                      }
+                    />
+                    {!form.collectionWindowEnd && (
+                      <FieldPlaceholder aria-hidden="true">Select a time</FieldPlaceholder>
+                    )}
+                  </DateTimeFieldWrap>
                 </Field>
               </Grid>
             )}

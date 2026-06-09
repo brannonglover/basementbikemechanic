@@ -359,10 +359,7 @@ function HomePage({ width, view, switchViews }) {
         <h1>Atlanta Bike Repair &amp; Bicycle Tune-Ups</h1>
         {config.site_description}
         <ServiceCallout>
-          How it works: drop your bike off at my shop on Melinda Dr, or choose
-          collection within 5 miles and I&apos;ll pick it up and bring it back
-          when it&apos;s ready. Either way, all repairs happen here in my
-          basement workshop — not at your home or on-site.
+          Disclaimer: I do not offer on-site mobile repair services. All work is done at my basement workshop in Atlanta.
         </ServiceCallout>
       </SiteDescription>
       <BreakLine />

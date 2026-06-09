@@ -28,18 +28,8 @@ function formatCurrency(value) {
 const ServicePickerCard = styled.div`
   display: grid;
   gap: 0.85rem;
-  padding: 1rem;
-  border: 1px solid
-    ${({ theme }) =>
-      theme.colors.bg === "#1a1a1e"
-        ? "rgba(255, 255, 255, 0.08)"
-        : "rgba(24, 24, 27, 0.1)"};
-  border-radius: 16px;
-  background: ${({ theme }) =>
-    theme.colors.bg === "#1a1a1e" ? "rgba(30, 41, 59, 0.45)" : theme.colors.bgMuted};
 
   @media (max-width: 640px) {
-    padding: 0.95rem 0.85rem;
     gap: 0.75rem;
   }
 `;
@@ -81,6 +71,11 @@ const FilterBox = styled.div`
   border-radius: 14px;
   background: ${({ theme }) => theme.colors.surface};
   border: 1px solid ${({ theme }) => theme.colors.borderStrong};
+
+  @media (max-width: 640px) {
+    gap: 0.75rem;
+    padding: 0.9rem 0.8rem;
+  }
 `;
 
 const FilterLegend = styled.p`
@@ -94,6 +89,12 @@ const QuickPickRow = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 0.45rem;
+
+  @media (max-width: 640px) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
 `;
 
 const QuickPickChip = styled.button`
@@ -121,6 +122,13 @@ const QuickPickChip = styled.button`
     outline: 2px solid ${({ theme }) => theme.colors.accent};
     outline-offset: 2px;
   }
+
+  @media (max-width: 640px) {
+    width: 100%;
+    justify-content: center;
+    padding: 0.55rem 0.65rem;
+    font-size: 0.86rem;
+  }
 `;
 
 const SearchRow = styled.div`
@@ -128,6 +136,11 @@ const SearchRow = styled.div`
   grid-template-columns: 1fr auto;
   gap: 0.45rem;
   align-items: center;
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
 `;
 
 const SearchInput = styled.input`
@@ -166,6 +179,10 @@ const ClearSearchButton = styled.button`
   cursor: pointer;
   white-space: nowrap;
 
+  @media (max-width: 640px) {
+    width: 100%;
+  }
+
   &:hover {
     color: ${({ theme }) => theme.colors.text};
     border-color: ${({ theme }) => theme.colors.accent};
@@ -183,6 +200,12 @@ const ListHeader = styled.div`
   justify-content: space-between;
   gap: 0.75rem;
   padding: 0 0.1rem;
+
+  @media (max-width: 640px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
 `;
 
 const ListTitle = styled.h3`
@@ -198,6 +221,10 @@ const ListHint = styled.p`
   line-height: 1.4;
   color: ${({ theme }) => theme.colors.textMuted};
   text-align: right;
+
+  @media (max-width: 640px) {
+    text-align: left;
+  }
 `;
 
 const ServicesPanel = styled.div`
@@ -234,7 +261,7 @@ const InPanelLabel = styled.p`
 
 const ServiceRow = styled.label`
   display: grid;
-  grid-template-columns: auto 1fr minmax(56px, auto);
+  grid-template-columns: auto minmax(0, 1fr) auto;
   gap: 0.75rem;
   align-items: center;
   min-height: 48px;
@@ -248,8 +275,10 @@ const ServiceRow = styled.label`
   }
 
   @media (max-width: 640px) {
-    min-height: 52px;
-    padding: 0.95rem 0.8rem;
+    gap: 0.4rem 0.45rem;
+    min-height: 42px;
+    padding: 0.65rem 0.55rem;
+    font-size: 0.84rem;
   }
 `;
 
@@ -262,8 +291,8 @@ const ServiceCheckbox = styled.input`
   cursor: pointer;
 
   @media (max-width: 640px) {
-    width: 24px;
-    height: 24px;
+    width: 18px;
+    height: 18px;
   }
 `;
 
@@ -290,6 +319,11 @@ const ServiceDescription = styled.span`
   font-size: 0.85rem;
   line-height: 1.45;
   color: ${({ theme }) => theme.colors.textMuted};
+
+  @media (max-width: 640px) {
+    font-size: 0.78rem;
+    line-height: 1.4;
+  }
 `;
 
 const ServiceSummary = styled.div`
@@ -321,6 +355,11 @@ const ServiceExpandButton = styled.button`
   &:hover {
     color: ${({ theme }) => theme.colors.text};
   }
+
+  @media (max-width: 640px) {
+    width: 28px;
+    height: 28px;
+  }
 `;
 
 const ChevronIcon = styled.svg`
@@ -338,6 +377,13 @@ const ServiceDetails = styled.div`
   grid-column: 2 / 4;
   margin-top: -0.15rem;
   padding: 0 0 0.1rem;
+
+  @media (max-width: 640px) {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    margin-top: 0;
+    padding-left: calc(18px + 0.5rem);
+  }
 `;
 
 const ServiceBulletList = styled.ul`
@@ -353,17 +399,30 @@ const ServiceBulletList = styled.ul`
     font-size: 0.85rem;
     line-height: 1.45;
   }
+
+  @media (max-width: 640px) {
+    li {
+      font-size: 0.78rem;
+      line-height: 1.4;
+    }
+  }
 `;
 
 const ServicePrice = styled.span`
   font-size: 0.92rem;
   font-weight: 700;
-  color: ${({ theme }) =>
-    theme.colors.bg === "#1a1a1e" ? "#f8fafc" : theme.colors.text};
+  color: ${({ theme }) => theme.colors.accent};
   grid-column: 3;
+  grid-row: 1;
   justify-self: end;
+  align-self: center;
   text-align: right;
+  white-space: nowrap;
   font-variant-numeric: tabular-nums;
+
+  @media (max-width: 640px) {
+    font-size: 0.8rem;
+  }
 `;
 
 const ShowAllButton = styled.button`
