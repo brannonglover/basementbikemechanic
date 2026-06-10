@@ -415,7 +415,7 @@ function BikesForSale() {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [config.bikes]);
 
   const loadBikeDetails = useCallback(async (bike) => {
     try {
