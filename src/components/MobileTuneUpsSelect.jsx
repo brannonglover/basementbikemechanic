@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import ServiceNameWithEmphasis from "./ServiceNameWithEmphasis";
+import { useLocale } from "../i18n/LocaleContext";
 
 const Wrapper = styled.div`
   margin: 0 auto;
@@ -159,6 +160,7 @@ const Details = styled.div`
 `;
 
 export default function MobileTuneUpsSelect({ services }) {
+  const { t } = useLocale();
   const [selectedId, setSelectedId] = useState(services[0]?.id ?? 0);
 
   useEffect(() => {
@@ -174,7 +176,7 @@ export default function MobileTuneUpsSelect({ services }) {
 
   return (
     <Wrapper>
-      <FieldLabel id="mobile-tuneup-options-label">Choose a tune-up</FieldLabel>
+      <FieldLabel id="mobile-tuneup-options-label">{t("mobileTuneUp.chooseLabel")}</FieldLabel>
       <OptionList
         role="list"
         aria-labelledby="mobile-tuneup-options-label"
@@ -196,7 +198,7 @@ export default function MobileTuneUpsSelect({ services }) {
                   <ServiceNameWithEmphasis>{s.service}</ServiceNameWithEmphasis>
                 </OptionName>
                 <OptionStatus $selected={s.id === selectedId}>
-                  {s.id === selectedId ? "Details open" : "Tap to view details"}
+                  {s.id === selectedId ? t("mobileTuneUp.detailsOpen") : t("mobileTuneUp.tapToView")}
                 </OptionStatus>
               </OptionText>
               <OptionPrice $selected={s.id === selectedId}>${s.price}</OptionPrice>

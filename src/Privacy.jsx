@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import PageSeo from './components/PageSeo';
+import { useLocale } from './i18n/LocaleContext';
 
 const PageWrapper = styled.div`
   margin: 0 auto;
@@ -60,48 +61,52 @@ const PrivacyContent = styled.section`
 
 function Privacy() {
   const navigate = useNavigate();
+  const { t, seo } = useLocale();
   return (
     <PageWrapper>
       <PageSeo
-        title="Privacy Policy | Basement Bike Mechanic"
-        description="How Basement Bike Mechanic collects and uses contact information for bicycle repair services. No spam; we never sell your data."
+        title={seo.privacyTitle}
+        description={seo.privacyDescription}
         path="/privacy"
       />
       <Header />
       <PrivacyContent>
-        <h1>Privacy Policy</h1>
-        <p>At <strong>Basement Bike Mechanic</strong>, your privacy matters. We only collect contact information that you voluntarily provide when seeking bicycle repair services. This page describes how we handle your phone number and ensure your data stays secure.</p>
+        <h1>{t("privacy.title")}</h1>
+        <p>{t("privacy.intro")}</p>
 
-        <h2>1. Opting In to SMS</h2>
-        <p>SMS consent is collected through the repair request booking form on our website. To opt in, you must:</p>
+        <h2>{t("privacy.optInTitle")}</h2>
+        <p>{t("privacy.optInP1")}</p>
         <ul>
-          <li>Enter your phone number in the booking form.</li>
-          <li>Check the optional SMS consent checkbox before submitting.</li>
+          <li>{t("privacy.optInLi1")}</li>
+          <li>{t("privacy.optInLi2")}</li>
         </ul>
-        <p>The checkbox reads: <em>"By checking this box, you are allowing Basement Bike Mechanic to send you repair-related SMS messages, including booking confirmations, service updates, and pickup notifications. No marketing texts. Message frequency varies. Message &amp; data rates may apply. Reply STOP to opt out and HELP for help."</em></p>
-        <p>Checking this box is optional. If you do, you allow <strong>Basement Bike Mechanic</strong> to send SMS updates related to your bicycle repair.</p>
+        <p><em>{t("privacy.optInP2")}</em></p>
+        <p>{t("privacy.optInP3")}</p>
 
-        <h2>2. Use of Your Contact Information</h2>
-        <p>Your phone number is used solely for operational purposes related to bicycle repair:</p>
+        <h2>{t("privacy.useTitle")}</h2>
+        <p>{t("privacy.useP1")}</p>
         <ul>
-          <li>Answering inquiries and providing quotes.</li>
-          <li>Updating you on repair status.</li>
-          <li>Notifying when your bike is ready for pickup.</li>
-          <li>Discussing parts, estimates, and technical issues discovered during service.</li>
+          <li>{t("privacy.useLi1")}</li>
+          <li>{t("privacy.useLi2")}</li>
+          <li>{t("privacy.useLi3")}</li>
+          <li>{t("privacy.useLi4")}</li>
         </ul>
 
-        <h2>3. SMS Opt-Out</h2>
-        <p>You may opt out of SMS messages at any time by replying <strong>STOP</strong> to any message. Reply <strong>HELP</strong> for assistance. After opting out, you will no longer receive SMS updates from us. Standard message and data rates may apply.</p>
+        <h2>{t("privacy.optOutTitle")}</h2>
+        <p>{t("privacy.optOutP")}</p>
 
-        <h2>4. No-Spam and Data Sharing Policy</h2>
-        <p>We respect your inbox and will never:</p>
+        <h2>{t("privacy.noSpamTitle")}</h2>
+        <p>{t("privacy.noSpamP1")}</p>
         <ul>
-          <li>Send marketing messages, newsletters, or promotional blasts.</li>
-          <li>Sell, share, or lease your information to third parties.</li>
+          <li>{t("privacy.noSpamLi1")}</li>
+          <li>{t("privacy.noSpamLi2")}</li>
         </ul>
-        <p>Your contact details remain private and are used only by our shop.</p>
+        <p>{t("privacy.noSpamP2")}</p>
         
-        <p>If you have questions about this policy, please <a href="mailto:support@basementbikemechanic.com">email us</a>.</p>
+        <p>
+          {t("privacy.questionsPrefix")}{" "}
+          <a href="mailto:support@basementbikemechanic.com">{t("privacy.emailUs")}</a>.
+        </p>
       </PrivacyContent>
       <Footer onBack={() => navigate('/')} />
     </PageWrapper>

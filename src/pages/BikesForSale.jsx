@@ -4,7 +4,7 @@ import styled, { keyframes } from "styled-components";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import PageSeo from "../components/PageSeo";
-import config from "../assets/siteConfig.json";
+import { useLocale } from "../i18n/LocaleContext";
 import { fetchBikeById, fetchBikes } from "../utils/bikesStorage";
 import { SITE_URL } from "../seoConstants";
 
@@ -214,10 +214,10 @@ const LoadingHint = styled.p`
 
 const SKELETON_TILE_COUNT = 6;
 
-function BikesLoadingSkeleton() {
+function BikesLoadingSkeleton({ t }) {
   return (
     <>
-      <BikesGrid aria-busy="true" aria-label="Loading bikes for sale">
+      <BikesGrid aria-busy="true" aria-label={t("bikes.loadingLabel")}>
         {Array.from({ length: SKELETON_TILE_COUNT }, (_, index) => (
           <SkeletonTile key={index} aria-hidden="true">
             <SkeletonImage />
@@ -228,7 +228,7 @@ function BikesLoadingSkeleton() {
           </SkeletonTile>
         ))}
       </BikesGrid>
-      <LoadingHint>Loading bikes for sale…</LoadingHint>
+      <LoadingHint>{t("bikes.loadingHint")}</LoadingHint>
     </>
   );
 }
@@ -362,7 +362,7 @@ const CloseButton = styled.button`
   }
 `;
 
-const CONTACT_EMAIL = config.email || "support@basementbikemechanic.com";
+const CONTACT_EMAIL = "support@basementbikemechanic.com";
 
 function getBikeIdFromHash(hash) {
   const value = (hash || "").replace(/^#/, "");
@@ -382,6 +382,7 @@ function toAbsoluteUrl(src) {
 function BikesForSale() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { t, siteConfig: config, seo } = useLocale();
   const [bikes, setBikes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
@@ -467,8 +468,8 @@ function BikesForSale() {
   return (
     <PageWrapper>
       <PageSeo
-        title="Used Bikes for Sale in Atlanta | Basement Bike Mechanic"
-        description="Browse quality used bicycles for sale from Basement Bike Mechanic in Atlanta. Contact us about availability and pricing."
+        title={seo.bikesTitle}
+        description={seo.bikesDescription}
         path="/bikes-for-sale"
         jsonLd={{
           "@context": "https://schema.org",
@@ -477,16 +478,15 @@ function BikesForSale() {
               "@type": "CollectionPage",
               "@id": `${bikesPageUrl}#webpage`,
               url: bikesPageUrl,
-              name: "Used Bikes for Sale in Atlanta",
-              description:
-                "Browse quality used bicycles for sale from Basement Bike Mechanic in Atlanta. Contact us about availability and pricing.",
+              name: t("bikes.jsonLdName"),
+              description: seo.bikesDescription,
               about: { "@id": `${SITE_URL}/#business` },
               mainEntity: { "@id": bikesListJsonLdId },
             },
             {
               "@type": "ItemList",
               "@id": bikesListJsonLdId,
-              name: "Used bikes for sale in Atlanta",
+              name: t("bikes.jsonLdListName"),
               url: bikesPageUrl,
               itemListOrder: "https://schema.org/ItemListOrderAscending",
               numberOfItems: bikes.length,
@@ -519,27 +519,22 @@ function BikesForSale() {
         }}
       />
       <Header />
-      <PageTitle>Used Bikes for Sale in Atlanta</PageTitle>
+      <PageTitle>{t("bikes.pageTitle")}</PageTitle>
       <Intro>
         <p>
-          Browse our current used bike listings. Availability can change quickly — for the most up-to-date info, text{" "}
-          <a href={`tel:${config.phone}`}>{config.phone}</a> or email{" "}
+          {t("bikes.introP1Prefix")}{" "}
+          <a href={`tel:${config.phone}`}>{config.phone}</a> {t("bikes.introP1Middle")}{" "}
           <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
         </p>
-        <p>
-          Looking for something specific (road, commuter, mountain, or ebike)? Reach out and we’ll help you find a good
-          fit.
-        </p>
+        <p>{t("bikes.introP2")}</p>
       </Intro>
       {isLoading ? (
-        <BikesLoadingSkeleton />
+        <BikesLoadingSkeleton t={t} />
       ) : loadError || bikes.length === 0 ? (
         <StatusMessage>
-          {loadError
-            ? "We couldn’t load the bike listings right now. Please refresh the page or contact us at "
-            : "No bikes are currently listed for sale. Check back soon or contact us at "}
+          {loadError ? t("bikes.loadError") : t("bikes.noBikes")}{" "}
           <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
-          {loadError ? "." : " to inquire about availability."}
+          {loadError ? t("bikes.loadErrorSuffix") : t("bikes.inquireSuffix")}
         </StatusMessage>
       ) : (
         <BikesGrid>
@@ -547,7 +542,7 @@ function BikesForSale() {
             <BikeTile key={bike.id} id={`bike-${bike.id}`} onClick={() => handleTileClick(bike)} type="button">
               <TileImage
                 src={bike.images[0]}
-                alt={`${bike.name} used bike for sale in Atlanta`}
+                alt={t("bikes.tileAlt", { name: bike.name })}
                 loading="lazy"
                 decoding="async"
               />
@@ -561,33 +556,33 @@ function BikesForSale() {
       )}
       {selectedBike && (
         <ModalOverlay onClick={handleBackdropClick}>
-          <CloseButton onClick={handleClose} aria-label="Close">
+          <CloseButton onClick={handleClose} aria-label={t("bikes.close")}>
             ×
           </CloseButton>
           <SlideshowContainer>
             <SlideshowImage
               src={selectedBike.images[slideIndex]}
-              alt={`${selectedBike.name} - image ${slideIndex + 1}`}
+              alt={t("bikes.imageAlt", { name: selectedBike.name, index: slideIndex + 1 })}
               loading="eager"
             />
           </SlideshowContainer>
           {selectedBike.images.length > 1 && (
             <SlideshowNav>
               <button onClick={prevSlide} disabled={selectedBike.images.length <= 1}>
-                ← Prev
+                {t("bikes.prev")}
               </button>
               <span>
                 {slideIndex + 1} / {selectedBike.images.length}
               </span>
               <button onClick={nextSlide} disabled={selectedBike.images.length <= 1}>
-                Next →
+                {t("bikes.next")}
               </button>
             </SlideshowNav>
           )}
           <ModalTitle>{selectedBike.name}</ModalTitle>
           <ModalPrice>${selectedBike.price}</ModalPrice>
           <ContactButton href={`mailto:${CONTACT_EMAIL}?subject=Inquiry about ${encodeURIComponent(selectedBike.name)}`}>
-            Contact Me
+            {t("bikes.contactMe")}
           </ContactButton>
         </ModalOverlay>
       )}

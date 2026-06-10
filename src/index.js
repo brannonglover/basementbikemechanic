@@ -7,6 +7,7 @@ import { PostHogProvider } from '@posthog/react';
 import App from './App';
 import GlobalStyle from './GlobalStyle';
 import { ThemeModeProvider } from './ThemeModeContext';
+import { LocaleProvider } from './i18n/LocaleContext';
 
 const POSTHOG_OPT_OUT_KEY = 'bbm_posthog_opt_out';
 const POSTHOG_PROJECT_KEY = process.env.REACT_APP_PUBLIC_POSTHOG_KEY || 'phc_vKDFFaTih87w8hxDjhefDEiTtJBNdBqkKcB7Hc5SToT4';
@@ -53,8 +54,10 @@ root.render(
     <HelmetProvider>
       <BrowserRouter>
         <ThemeModeProvider>
-          <GlobalStyle />
-          <App />
+          <LocaleProvider>
+            <GlobalStyle />
+            <App />
+          </LocaleProvider>
         </ThemeModeProvider>
       </BrowserRouter>
     </HelmetProvider>

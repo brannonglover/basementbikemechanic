@@ -5,6 +5,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import PageSeo from "../components/PageSeo";
 import BookServicePicker from "../components/BookServicePicker";
+import { useLocale } from "../i18n/LocaleContext";
 
 function normalizeBikeOpsOrigin(value) {
   if (!value) return "";
@@ -615,6 +616,7 @@ const StatusLink = styled.a`
 
 function Book() {
   const navigate = useNavigate();
+  const { t, seo } = useLocale();
   const [services, setServices] = useState([]);
   const [loadingServices, setLoadingServices] = useState(true);
   const [serviceLoadError, setServiceLoadError] = useState("");
@@ -688,9 +690,7 @@ function Book() {
       if (!cancelled) {
         setServices([]);
         console.warn("[Book] Couldn't load services from BikeOps", { checked });
-        setServiceLoadError(
-          "Couldn't load services from BikeOps. Please refresh and try again. If you use an ad blocker or privacy tool, try disabling it for this site."
-        );
+        setServiceLoadError(t("book.servicesLoadError"));
         setLoadingServices(false);
       }
     };
@@ -700,7 +700,7 @@ function Book() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [t]);
 
   const updateForm = (field, value) => {
     setForm((previous) => ({ ...previous, [field]: value }));
@@ -908,16 +908,16 @@ function Book() {
     if (form.deliveryType === "COLLECTION_SERVICE") {
       const r = collectionEligibility.result;
       if (collectionEligibility.status === "checking") {
-        setError("Checking collection address… please try again in a moment.");
+        setError(t("book.checkingAddress"));
         return;
       }
       if (r && r.enabled === true) {
         if (r.ok === true && r.eligible === false) {
-          setError("That address is outside our 5-mile collection radius. Please choose drop-off instead.");
+          setError(t("book.outsideRadius"));
           return;
         }
         if (r.ok === false) {
-          setError(r.error || "We couldn’t verify that collection address. Please double-check it.");
+          setError(r.error || t("book.verifyFailed"));
           return;
         }
       }
@@ -993,16 +993,16 @@ function Book() {
             continue;
           }
 
-          setError(data.error || "Unable to submit booking. Please try again.");
+          setError(data.error || t("book.submitFailed"));
           return;
         } catch (submitError) {
           // Try the next endpoint.
         }
       }
 
-      setError("Unable to submit booking. Please check your connection and try again.");
+      setError(t("book.connectionFailed"));
     } catch (submitError) {
-      setError("Unable to submit booking. Please check your connection and try again.");
+      setError(t("book.connectionFailed"));
     } finally {
       setSubmitting(false);
     }
@@ -1012,8 +1012,8 @@ function Book() {
     return (
       <PageWrapper>
         <PageSeo
-          title="Book a Repair | Basement Bike Mechanic"
-          description="Request a bike repair with Basement Bike Mechanic in Atlanta. Fill out the form to book your service and get SMS updates on your repair."
+          title={seo.bookTitle}
+          description={seo.bookDescription}
           path="/book"
         />
         <Header />
@@ -1021,14 +1021,11 @@ function Book() {
           <SuccessCard>
             <SuccessMark>✓</SuccessMark>
             <div>
-              <h1>Request submitted</h1>
-              <p>
-                We received your booking request and sent it to BikeOps. We&apos;ll
-                review it and follow up soon.
-              </p>
+              <h1>{t("book.successTitle")}</h1>
+              <p>{t("book.successBody")}</p>
             </div>
             <StatusLink href={success.statusUrl} target="_blank" rel="noreferrer">
-              Track your repair status
+              {t("book.trackStatus")}
             </StatusLink>
           </SuccessCard>
         </BookContent>
@@ -1040,25 +1037,19 @@ function Book() {
   return (
     <PageWrapper>
       <PageSeo
-        title="Book a Repair | Basement Bike Mechanic"
-        description="Request a bike repair with Basement Bike Mechanic in Atlanta. Fill out the form to book your service and get SMS updates on your repair."
+        title={seo.bookTitle}
+        description={seo.bookDescription}
         path="/book"
       />
       <Header />
       <BookContent>
-        <h1>Book a Repair</h1>
-        <p>
-          Fill out the form below to request service. All repairs happen at my
-          basement workshop — drop your bike off at the shop, or choose
-          collection within 5 miles for pickup and return. Your booking will be
-          sent directly into BikeOps, and the SMS consent message is shown here
-          in the form before you submit.
-        </p>
+        <h1>{t("book.pageTitle")}</h1>
+        <p>{t("book.intro")}</p>
         <FormCard>
           <Form onSubmit={handleSubmit} onInvalidCapture={() => setAttemptedSubmit(true)}>
             <Grid>
               <Field>
-                <Label htmlFor="firstName">First name *</Label>
+                <Label htmlFor="firstName">{t("book.firstName")}</Label>
                 <ValidatedInput
                   id="firstName"
                   type="text"
@@ -1071,7 +1062,7 @@ function Book() {
                 />
               </Field>
               <Field>
-                <Label htmlFor="lastName">Last name *</Label>
+                <Label htmlFor="lastName">{t("book.lastName")}</Label>
                 <ValidatedInput
                   id="lastName"
                   type="text"
@@ -1087,7 +1078,7 @@ function Book() {
 
             <Grid>
               <Field>
-                <Label htmlFor="email">Email *</Label>
+                <Label htmlFor="email">{t("book.email")}</Label>
                 <ValidatedInput
                   id="email"
                   type="email"
@@ -1100,7 +1091,7 @@ function Book() {
                 />
               </Field>
               <Field>
-                <Label htmlFor="phone">Phone *</Label>
+                <Label htmlFor="phone">{t("book.phone")}</Label>
                 <ValidatedInput
                   id="phone"
                   type="tel"
@@ -1117,13 +1108,13 @@ function Book() {
             </Grid>
 
             <Field>
-              <Label htmlFor="address">Address</Label>
+              <Label htmlFor="address">{t("book.address")}</Label>
               <Input
                 id="address"
                 type="text"
                 value={form.address}
                 onChange={(event) => updateForm("address", event.target.value)}
-                placeholder="Optional street address"
+                placeholder={t("book.addressPlaceholder")}
               />
             </Field>
 
@@ -1135,35 +1126,33 @@ function Book() {
                 onChange={(event) => updateForm("smsConsent", event.target.checked)}
               />
               <ConsentText>
-                By checking this box, you are allowing Basement Bike Mechanic to send you
-                repair-related SMS messages, including booking confirmations, service
-                updates, and pickup notifications. No marketing texts. Message
-                frequency varies. Message and data rates may apply. Reply STOP to opt
-                out and HELP for help. View our{" "}
+                {t("book.smsConsent")}{" "}
                 <a href="https://basementbikemechanic.com/terms">
-                  Terms and Conditions
+                  {t("book.termsLink")}
                 </a>{" "}
-                and{" "}
+                {t("home.smsAnd")}{" "}
                 <a href="https://basementbikemechanic.com/privacy">
-                  Privacy Policy
+                  {t("book.privacyLink")}
                 </a>
                 .
               </ConsentText>
             </ConsentCard>
 
             <Section>
-              <SectionTitle>Bike details</SectionTitle>
+              <SectionTitle>{t("book.bikeDetails")}</SectionTitle>
               {(lookingUpBikes || savedBikes.length > 0) && (
                 <SavedBikesPanel>
                   <SavedBikesHeader>
                     <SavedBikesTitle>
                       {lookingUpBikes
-                        ? "Looking up your saved bikes..."
+                        ? t("book.lookingUpBikes")
                         : savedBikeCustomer
-                          ? `Saved bikes for ${savedBikeCustomer.firstName}${
-                              savedBikeCustomer.lastName ? ` ${savedBikeCustomer.lastName}` : ""
-                            }`
-                          : "Saved bikes"}
+                          ? t("book.savedBikesFor", {
+                              name: `${savedBikeCustomer.firstName}${
+                                savedBikeCustomer.lastName ? ` ${savedBikeCustomer.lastName}` : ""
+                              }`,
+                            })
+                          : t("book.savedBikes")}
                     </SavedBikesTitle>
                   </SavedBikesHeader>
                   {!lookingUpBikes && savedBikes.length > 0 && (
@@ -1180,10 +1169,10 @@ function Book() {
                           </SavedBikeName>
                           <SavedBikeMeta>
                             {bike.bikeType === "E_BIKE"
-                              ? "E-bike"
+                              ? t("book.eBike")
                               : bike.bikeType === "REGULAR"
-                                ? "Standard bike"
-                                : "Bike type auto-detected"}
+                                ? t("book.standardBike")
+                                : t("book.bikeTypeAuto")}
                           </SavedBikeMeta>
                         </SavedBikeButton>
                       ))}
@@ -1194,16 +1183,18 @@ function Book() {
               {bikes.map((bike, index) => (
                 <BikeCard key={index}>
                   <BikeCardHeader>
-                    <BikeTitle>{bikes.length > 1 ? `Bike ${index + 1}` : "Bike"}</BikeTitle>
+                    <BikeTitle>
+                      {bikes.length > 1 ? t("book.bikeN", { n: index + 1 }) : t("book.bike")}
+                    </BikeTitle>
                     {bikes.length > 1 && (
                       <InlineButton type="button" onClick={() => removeBike(index)}>
-                        Remove
+                        {t("book.remove")}
                       </InlineButton>
                     )}
                   </BikeCardHeader>
                   <Grid>
                     <Field>
-                      <Label htmlFor={`bike-make-${index}`}>Make *</Label>
+                      <Label htmlFor={`bike-make-${index}`}>{t("book.make")}</Label>
                       <ValidatedInput
                         id={`bike-make-${index}`}
                         type="text"
@@ -1215,41 +1206,38 @@ function Book() {
                       />
                     </Field>
                     <Field>
-                      <Label htmlFor={`bike-model-${index}`}>Model</Label>
+                      <Label htmlFor={`bike-model-${index}`}>{t("book.model")}</Label>
                       <Input
                         id={`bike-model-${index}`}
                         type="text"
                         value={bike.model}
                         onChange={(event) => updateBike(index, "model", event.target.value)}
-                        placeholder="Optional"
+                        placeholder={t("book.optionalOnly")}
                       />
                     </Field>
                   </Grid>
                   <Field>
-                    <Label htmlFor={`bike-type-${index}`}>Type</Label>
+                    <Label htmlFor={`bike-type-${index}`}>{t("book.type")}</Label>
                     <ValidatedSelect
                       id={`bike-type-${index}`}
                       value={bike.bikeType}
                       onChange={(event) => updateBike(index, "bikeType", event.target.value)}
                     >
-                      <option value="AUTO">Auto-detect from make/model</option>
-                      <option value="REGULAR">Standard bike</option>
-                      <option value="E_BIKE">E-bike</option>
+                      <option value="AUTO">{t("book.autoDetect")}</option>
+                      <option value="REGULAR">{t("book.standardBike")}</option>
+                      <option value="E_BIKE">{t("book.eBike")}</option>
                     </ValidatedSelect>
                   </Field>
                 </BikeCard>
               ))}
               <AddBikeButton type="button" onClick={addBike}>
-                Add another bike
+                {t("book.addAnotherBike")}
               </AddBikeButton>
-              <HelperText>
-                Collection service pricing is applied in BikeOps automatically when
-                the booking is accepted.
-              </HelperText>
+              <HelperText>{t("book.collectionPricingHint")}</HelperText>
             </Section>
 
             <Section>
-              <SectionTitle id="requested-services-heading">Requested services</SectionTitle>
+              <SectionTitle id="requested-services-heading">{t("book.requestedServices")}</SectionTitle>
               <BookServicePicker
                 services={services}
                 loadingServices={loadingServices}
@@ -1260,14 +1248,14 @@ function Book() {
             </Section>
 
             <Field>
-              <Label htmlFor="deliveryType">Delivery option</Label>
+              <Label htmlFor="deliveryType">{t("book.deliveryOption")}</Label>
               <ValidatedSelect
                 id="deliveryType"
                 value={form.deliveryType}
                 onChange={(event) => updateForm("deliveryType", event.target.value)}
               >
-                <option value="DROP_OFF_AT_SHOP">Drop-off at shop</option>
-                <option value="COLLECTION_SERVICE">Collection service</option>
+                <option value="DROP_OFF_AT_SHOP">{t("book.dropOffAtShop")}</option>
+                <option value="COLLECTION_SERVICE">{t("book.collectionService")}</option>
               </ValidatedSelect>
             </Field>
 
@@ -1276,8 +1264,8 @@ function Book() {
                 <Field>
                   <Label htmlFor="dropOffDate">
                     {form.deliveryType === "COLLECTION_SERVICE"
-                      ? "Preferred collection pickup date"
-                      : "Preferred drop-off date"}
+                      ? t("book.preferredCollectionPickup")
+                      : t("book.preferredDropOff")}
                   </Label>
                   <DateTimeFieldWrap $empty={!form.dropOffDate}>
                     <ValidatedInput
@@ -1289,13 +1277,13 @@ function Book() {
                       onChange={handleOptionalDateChange("dropOffDate", "dropOffTime")}
                     />
                     {!form.dropOffDate && (
-                      <FieldPlaceholder aria-hidden="true">Select a date</FieldPlaceholder>
+                      <FieldPlaceholder aria-hidden="true">{t("book.selectDate")}</FieldPlaceholder>
                     )}
                   </DateTimeFieldWrap>
                 </Field>
                 <Field>
                   <Label htmlFor="dropOffTime">
-                    Time <OptionalHint>(optional)</OptionalHint>
+                    {t("book.time")} <OptionalHint>{t("book.optional")}</OptionalHint>
                   </Label>
                   <DateTimeFieldWrap $empty={!form.dropOffTime}>
                     <ValidatedInput
@@ -1305,7 +1293,7 @@ function Book() {
                       onChange={(event) => updateForm("dropOffTime", event.target.value)}
                     />
                     {!form.dropOffTime && (
-                      <FieldPlaceholder aria-hidden="true">Select a time</FieldPlaceholder>
+                      <FieldPlaceholder aria-hidden="true">{t("book.selectTime")}</FieldPlaceholder>
                     )}
                   </DateTimeFieldWrap>
                 </Field>
@@ -1314,8 +1302,8 @@ function Book() {
                 <Field>
                   <Label htmlFor="pickupDate">
                     {form.deliveryType === "COLLECTION_SERVICE"
-                      ? "Preferred collection return date"
-                      : "Preferred pickup date"}
+                      ? t("book.preferredCollectionReturn")
+                      : t("book.preferredPickup")}
                   </Label>
                   <DateTimeFieldWrap $empty={!form.pickupDate}>
                     <ValidatedInput
@@ -1327,13 +1315,13 @@ function Book() {
                       onChange={handleOptionalDateChange("pickupDate", "pickupTime")}
                     />
                     {!form.pickupDate && (
-                      <FieldPlaceholder aria-hidden="true">Select a date</FieldPlaceholder>
+                      <FieldPlaceholder aria-hidden="true">{t("book.selectDate")}</FieldPlaceholder>
                     )}
                   </DateTimeFieldWrap>
                 </Field>
                 <Field>
                   <Label htmlFor="pickupTime">
-                    Time <OptionalHint>(optional)</OptionalHint>
+                    {t("book.time")} <OptionalHint>{t("book.optional")}</OptionalHint>
                   </Label>
                   <DateTimeFieldWrap $empty={!form.pickupTime}>
                     <ValidatedInput
@@ -1343,7 +1331,7 @@ function Book() {
                       onChange={(event) => updateForm("pickupTime", event.target.value)}
                     />
                     {!form.pickupTime && (
-                      <FieldPlaceholder aria-hidden="true">Select a time</FieldPlaceholder>
+                      <FieldPlaceholder aria-hidden="true">{t("book.selectTime")}</FieldPlaceholder>
                     )}
                   </DateTimeFieldWrap>
                 </Field>
@@ -1352,16 +1340,14 @@ function Book() {
             <InfoCallout role="note">
               <InfoCalloutIcon aria-hidden="true">i</InfoCalloutIcon>
               <span>
-                <strong>Dates and times are optional.</strong> Leave them blank if you&apos;re
-                not sure yet, or skip the time if you&apos;re flexible on when you drop off or
-                pick up.
+                <strong>{t("book.datesOptionalTitle")}</strong> {t("book.datesOptionalBody")}
               </span>
             </InfoCallout>
 
             {form.deliveryType === "COLLECTION_SERVICE" && (
               <Grid>
                 <Field>
-                  <Label htmlFor="collectionAddress">Collection address</Label>
+                  <Label htmlFor="collectionAddress">{t("book.collectionAddress")}</Label>
                   <ValidatedInput
                     id="collectionAddress"
                     type="text"
@@ -1379,15 +1365,13 @@ function Book() {
                             collectionEligibility.result.ok === true &&
                             collectionEligibility.result.eligible === false)))
                     }
-                    placeholder="Street, city, ZIP"
+                    placeholder={t("book.collectionAddressPlaceholder")}
                   />
                   {collectionEligibility.status === "checking" && (
-                    <HelperText>Checking whether this address is within our 5-mile collection area…</HelperText>
+                    <HelperText>{t("book.checkingCollection")}</HelperText>
                   )}
                   {collectionEligibility.status === "error" && (
-                    <HelperText>
-                      We couldn&apos;t verify the address right now. Collection is only available within 5 miles.
-                    </HelperText>
+                    <HelperText>{t("book.verifyAddressError")}</HelperText>
                   )}
                   {collectionEligibility.status === "ok" &&
                     collectionEligibility.result &&
@@ -1395,11 +1379,11 @@ function Book() {
                     collectionEligibility.result.ok === true &&
                     collectionEligibility.result.eligible === false && (
                       <WarningAlert>
-                        Collection isn&apos;t available for this address.
+                        {t("book.collectionUnavailable")}
                         {typeof collectionEligibility.result.distanceMiles === "number" && (
-                          <> It&apos;s about {formatMiles(collectionEligibility.result.distanceMiles)} mi away.</>
+                          <> {t("book.milesAway", { miles: formatMiles(collectionEligibility.result.distanceMiles) })}</>
                         )}{" "}
-                        We collect within {collectionEligibility.result.radiusMiles} mi of the shop.
+                        {t("book.collectWithin", { radius: collectionEligibility.result.radiusMiles })}
                       </WarningAlert>
                     )}
                   {collectionEligibility.status === "ok" &&
@@ -1408,12 +1392,12 @@ function Book() {
                     collectionEligibility.result.ok === true &&
                     collectionEligibility.result.eligible === true && (
                       <SuccessAlert>
-                        Good news — this address is within our {collectionEligibility.result.radiusMiles}-mile collection area.
+                        {t("book.collectionAvailable", { radius: collectionEligibility.result.radiusMiles })}
                       </SuccessAlert>
                     )}
                 </Field>
                 <Field>
-                  <Label htmlFor="collectionWindowStart">Collection window start</Label>
+                  <Label htmlFor="collectionWindowStart">{t("book.collectionWindowStart")}</Label>
                   <DateTimeFieldWrap $empty={!form.collectionWindowStart}>
                     <ValidatedInput
                       id="collectionWindowStart"
@@ -1424,12 +1408,12 @@ function Book() {
                       }
                     />
                     {!form.collectionWindowStart && (
-                      <FieldPlaceholder aria-hidden="true">Select a time</FieldPlaceholder>
+                      <FieldPlaceholder aria-hidden="true">{t("book.selectTime")}</FieldPlaceholder>
                     )}
                   </DateTimeFieldWrap>
                 </Field>
                 <Field>
-                  <Label htmlFor="collectionWindowEnd">Collection window end</Label>
+                  <Label htmlFor="collectionWindowEnd">{t("book.collectionWindowEnd")}</Label>
                   <DateTimeFieldWrap $empty={!form.collectionWindowEnd}>
                     <ValidatedInput
                       id="collectionWindowEnd"
@@ -1440,7 +1424,7 @@ function Book() {
                       }
                     />
                     {!form.collectionWindowEnd && (
-                      <FieldPlaceholder aria-hidden="true">Select a time</FieldPlaceholder>
+                      <FieldPlaceholder aria-hidden="true">{t("book.selectTime")}</FieldPlaceholder>
                     )}
                   </DateTimeFieldWrap>
                 </Field>
@@ -1448,26 +1432,23 @@ function Book() {
             )}
 
             {form.deliveryType === "COLLECTION_SERVICE" && (
-              <HelperText>
-                Collection service is available within 5 miles of the shop. If you
-                prefer drop-off instead, choose the shop option above.
-              </HelperText>
+              <HelperText>{t("book.collectionHelper")}</HelperText>
             )}
 
             <Field>
-              <Label htmlFor="notesTextarea">Anything else we should know?</Label>
+              <Label htmlFor="notesTextarea">{t("book.notesLabel")}</Label>
               <ValidatedTextarea
                 id="notesTextarea"
                 value={form.customerNotes}
                 onChange={(event) => updateForm("customerNotes", event.target.value)}
-                placeholder="Describe the issue, timing, or anything helpful for intake."
+                placeholder={t("book.notesPlaceholder")}
               />
             </Field>
 
             {error && <ErrorAlert>{error}</ErrorAlert>}
 
             <SubmitButton type="submit" disabled={submitting}>
-              {submitting ? "Submitting request..." : "Book now"}
+              {submitting ? t("book.submitting") : t("book.bookNow")}
             </SubmitButton>
           </Form>
         </FormCard>

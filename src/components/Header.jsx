@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
 import { usePostHog } from '@posthog/react';
 import { useThemeMode } from "../ThemeModeContext";
-import config from "../assets/siteConfig.json";
+import { useLocale } from "../i18n/LocaleContext";
 import HeaderImage from "../images/header-image.jpeg";
 
 const PageHeader = styled.header`
@@ -324,6 +324,35 @@ const NavBookButton = styled(BookButton)`
   }
 `;
 
+const LanguageToggle = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+  margin-left: 0.25rem;
+  padding: 0.2rem;
+  border-radius: ${({ theme }) => theme.radius.sm};
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid ${({ theme }) => theme.colors.borderStrong};
+`;
+
+const LanguageButton = styled.button`
+  background: ${({ $active }) => ($active ? "rgba(255, 255, 255, 0.18)" : "transparent")};
+  border: none;
+  color: ${({ theme }) => theme.colors.textInverse};
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: ${({ $active }) => ($active ? 700 : 500)};
+  letter-spacing: 0.02em;
+  padding: 0.35rem 0.5rem;
+  border-radius: ${({ theme }) => theme.radius.sm};
+  transition: background ${({ theme }) => theme.transition};
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.14);
+  }
+`;
+
 function ThemeIcon({ mode }) {
   if (mode === "dark") {
     return (
@@ -360,6 +389,7 @@ function Header() {
   const navigate = useNavigate();
   const posthog = usePostHog();
   const { mode, toggleTheme } = useThemeMode();
+  const { locale, setLocale, t, siteConfig: config } = useLocale();
   const [width, setWidth] = useState(typeof window !== "undefined" ? window.innerWidth : 1024);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -422,15 +452,15 @@ function Header() {
           <Tagline>{config.tagline}</Tagline>
           <MobileBookButtonContainer>
             <BookButton href="/book" onClick={(e) => { e.preventDefault(); navigate("/book"); }}>
-              Book now
+              {t("nav.bookNow")}
             </BookButton>
           </MobileBookButtonContainer>
         </HeaderContent>
         <ThemeToggleMobile
           type="button"
           onClick={toggleTheme}
-          aria-label={mode === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-          title={mode === "dark" ? "Light mode" : "Dark mode"}
+          aria-label={mode === "dark" ? t("nav.switchToLight") : t("nav.switchToDark")}
+          title={mode === "dark" ? t("nav.lightMode") : t("nav.darkMode")}
         >
           <ThemeIcon mode={mode} />
         </ThemeToggleMobile>
@@ -439,46 +469,82 @@ function Header() {
           onClick={() => setMenuOpen(!menuOpen)}
           aria-expanded={menuOpen}
           aria-controls="site-mobile-menu"
-          aria-label={menuOpen ? "Close menu" : "Open menu"}
+          aria-label={menuOpen ? t("nav.closeMenu") : t("nav.openMenu")}
         >
           <MenuIcon open={menuOpen} />
         </HamburgerButton>
-        <NavContainer aria-label="Main">
+        <NavContainer aria-label={t("nav.main")}>
           <HomeLink href="/" onClick={(e) => handleNav(e, "/")}>
-            Home
+            {t("nav.home")}
           </HomeLink>
           <HomeLink href="/#about" onClick={handleAboutNav}>
-            About
+            {t("nav.about")}
           </HomeLink>
           <HomeLink href="/bikes-for-sale" onClick={(e) => handleNav(e, "/bikes-for-sale")}>
-            Bikes for Sale
+            {t("nav.bikesForSale")}
           </HomeLink>
           <NavBookButton href="/book" onClick={(e) => handleNav(e, "/book")}>
-            Book now
+            {t("nav.bookNow")}
           </NavBookButton>
+          <LanguageToggle role="group" aria-label={t("nav.language")}>
+            <LanguageButton
+              type="button"
+              $active={locale === "en"}
+              onClick={() => setLocale("en")}
+              aria-pressed={locale === "en"}
+            >
+              EN
+            </LanguageButton>
+            <LanguageButton
+              type="button"
+              $active={locale === "es"}
+              onClick={() => setLocale("es")}
+              aria-pressed={locale === "es"}
+            >
+              ES
+            </LanguageButton>
+          </LanguageToggle>
           <ThemeToggleDesktop
             type="button"
             onClick={toggleTheme}
-            aria-label={mode === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-            title={mode === "dark" ? "Light mode" : "Dark mode"}
+            aria-label={mode === "dark" ? t("nav.switchToLight") : t("nav.switchToDark")}
+            title={mode === "dark" ? t("nav.lightMode") : t("nav.darkMode")}
           >
             <ThemeIcon mode={mode} />
           </ThemeToggleDesktop>
         </NavContainer>
       </HeaderInner>
       <MenuBackdrop $isOpen={menuOpen} onClick={() => setMenuOpen(false)} aria-hidden="true" />
-      <MobileMenu id="site-mobile-menu" $isOpen={menuOpen} role="dialog" aria-modal="true" aria-label="Menu">
+      <MobileMenu id="site-mobile-menu" $isOpen={menuOpen} role="dialog" aria-modal="true" aria-label={t("nav.main")}>
         <MobileMenuLink href="/" onClick={(e) => handleNav(e, "/")}>
-          Home
+          {t("nav.home")}
         </MobileMenuLink>
         <MobileMenuLink href="/#about" onClick={handleAboutNav}>
-          About
+          {t("nav.about")}
         </MobileMenuLink>
         <MobileMenuLink href="/bikes-for-sale" onClick={(e) => handleNav(e, "/bikes-for-sale")}>
-          Bikes for Sale
+          {t("nav.bikesForSale")}
         </MobileMenuLink>
+        <LanguageToggle role="group" aria-label={t("nav.language")} style={{ marginTop: "0.5rem" }}>
+          <LanguageButton
+            type="button"
+            $active={locale === "en"}
+            onClick={() => setLocale("en")}
+            aria-pressed={locale === "en"}
+          >
+            EN
+          </LanguageButton>
+          <LanguageButton
+            type="button"
+            $active={locale === "es"}
+            onClick={() => setLocale("es")}
+            aria-pressed={locale === "es"}
+          >
+            ES
+          </LanguageButton>
+        </LanguageToggle>
         <BookButton href="/book" onClick={(e) => { e.preventDefault(); navigate("/book"); setMenuOpen(false); }} style={{ marginTop: "0.5rem", textAlign: "center" }}>
-          Book now
+          {t("nav.bookNow")}
         </BookButton>
       </MobileMenu>
     </PageHeader>

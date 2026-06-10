@@ -12,9 +12,8 @@ import Terms from "./Terms";
 import BikesForSale from "./pages/BikesForSale";
 import Admin from "./pages/Admin";
 import Book from "./pages/Book";
-import config from './assets/siteConfig.json';
 import PageSeo from './components/PageSeo';
-import { DEFAULT_DESCRIPTION, DEFAULT_TITLE } from './seoConstants';
+import { useLocale } from './i18n/LocaleContext';
 import TuneUp from './images/close-up-hand-repairing-bike.jpg';
 import { useThemeMode } from "./ThemeModeContext";
 
@@ -350,54 +349,38 @@ function ReviewsWidget() {
 function HomePage({ width, view, switchViews }) {
   const navigate = useNavigate();
   const posthog = usePostHog();
+  const { t, siteConfig: config, seo } = useLocale();
   const mapQuery = encodeURIComponent("2272 Melinda Dr NE, Atlanta GA 30345");
   return (
     <PageWrapper>
-      <PageSeo title={DEFAULT_TITLE} description={DEFAULT_DESCRIPTION} path="" />
+      <PageSeo title={seo.defaultTitle} description={seo.defaultDescription} path="" />
       <Header />
       <SiteDescription>
-        <h1>Atlanta Bike Repair &amp; Bicycle Tune-Ups</h1>
+        <h1>{t("home.heroTitle")}</h1>
         {config.site_description}
         <ServiceCallout>
-          Disclaimer: I do not offer on-site mobile repair services. All work is done at my basement workshop in Atlanta.
+          {t("home.disclaimer")}
         </ServiceCallout>
       </SiteDescription>
       <BreakLine />
       <ReviewsSection>
-        <h2>What Customers Are Saying</h2>
+        <h2>{t("home.reviewsHeading")}</h2>
         <ReviewsWidget />
       </ReviewsSection>
       <BreakLine />
       <AboutSection id="about">
-        <h2>About</h2>
-        <p>
-          I grew up in Roswell, GA where bikes were just part of life — I rode
-          everywhere and developed a real passion for cycling. I&apos;m especially
-          into mountain biking, and I love the trails in northern Georgia. That
-          love of bikes never went away.
-        </p>
-        <p>
-          A couple years ago I turned that lifelong passion into Basement Bike
-          Mechanic. The name is literal: I work out of my basement in Atlanta,
-          one appointment at a time — all shop-based repair, not mobile or
-          on-site service. Working by reservation isn't just a scheduling
-          preference — it means every bike gets real, focused attention instead
-          of being rushed through a shop queue.
-        </p>
-        <p>
-          When you drop your bike off with me, I'm the one working on it, start
-          to finish. No handoffs, no shortcuts. Just an Atlanta cyclist who
-          takes care of other people's bikes the same way he takes care of his
-          own.
-        </p>
+        <h2>{t("home.aboutHeading")}</h2>
+        <p>{t("home.aboutP1")}</p>
+        <p>{t("home.aboutP2")}</p>
+        <p>{t("home.aboutP3")}</p>
       </AboutSection>
       <RegularMaintenance>
         <img
           src={TuneUp}
-          alt="Mechanic performing bicycle tune-up and bike repair service in Atlanta"
+          alt={t("home.tuneUpImageAlt")}
         />
         <div>
-          <h2>Regular Maintenance</h2>
+          <h2>{t("home.maintenanceHeading")}</h2>
           <p>{config.regular_maintenance_first}</p>
           <p>{config.regular_maintenance_second}</p>
         </div>
@@ -405,7 +388,7 @@ function HomePage({ width, view, switchViews }) {
       {width <= 1000 ? (
         <>
           <ViewButton>
-            <button onClick={() => { posthog.capture('service_tab_switched', { tab: 'tuneup' }); switchViews('tuneup'); }} className={view === 'tuneup' ? 'active' : undefined}>Tune Ups</button><button onClick={() => { posthog.capture('service_tab_switched', { tab: 'service' }); switchViews('service'); }} className={view === 'service' ? 'active' : undefined}>Services</button>
+            <button onClick={() => { posthog.capture('service_tab_switched', { tab: 'tuneup' }); switchViews('tuneup'); }} className={view === 'tuneup' ? 'active' : undefined}>{t("home.tabTuneUps")}</button><button onClick={() => { posthog.capture('service_tab_switched', { tab: 'service' }); switchViews('service'); }} className={view === 'service' ? 'active' : undefined}>{t("home.tabServices")}</button>
           </ViewButton>
           {view === 'tuneup' && (
             <>
@@ -436,12 +419,12 @@ function HomePage({ width, view, switchViews }) {
         </>
       )}
       <MyEmail>
-        Text: <a href={`tel:${config.phone}`} onClick={() => posthog.capture('contact_clicked', { method: 'phone' })}>{config.phone}</a><br />
-        Email: <a href={`mailto:${config.email}`} onClick={() => posthog.capture('contact_clicked', { method: 'email' })}>{config.email}</a><br />
-        Location: <a href="https://maps.app.goo.gl/dPsymJhVVwD5ymha6" onClick={() => posthog.capture('contact_clicked', { method: 'maps' })}>2272 Melinda Dr NE, Atlanta GA 30345</a>
+        {t("home.contactText")} <a href={`tel:${config.phone}`} onClick={() => posthog.capture('contact_clicked', { method: 'phone' })}>{config.phone}</a><br />
+        {t("home.contactEmail")} <a href={`mailto:${config.email}`} onClick={() => posthog.capture('contact_clicked', { method: 'email' })}>{config.email}</a><br />
+        {t("home.contactLocation")} <a href="https://maps.app.goo.gl/dPsymJhVVwD5ymha6" onClick={() => posthog.capture('contact_clicked', { method: 'maps' })}>2272 Melinda Dr NE, Atlanta GA 30345</a>
         <LocationMap>
           <iframe
-            title="Map showing Basement Bike Mechanic location at 2272 Melinda Dr NE, Atlanta GA 30345"
+            title={t("home.mapTitle")}
             src={`https://www.google.com/maps?q=${mapQuery}&output=embed`}
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
@@ -449,15 +432,15 @@ function HomePage({ width, view, switchViews }) {
         </LocationMap>
       </MyEmail>
       <SmsDisclosure>
-        <h2>SMS Communication</h2>
-        <p>We send SMS updates from Basement Bike Mechanic related to active bike repairs, including booking confirmations, service progress, and pickup notifications.</p>
-        <p>Customers opt in by submitting a repair request form on our website and checking the optional SMS consent checkbox. This checkbox is displayed during the booking process and must be selected to receive messages.</p>
-        <p>Message frequency varies. Message &amp; data rates may apply. Reply <strong>STOP</strong> to opt out, <strong>HELP</strong> for help. No marketing messages are sent.</p>
+        <h2>{t("home.smsHeading")}</h2>
+        <p>{t("home.smsP1")}</p>
+        <p>{t("home.smsP2")}</p>
+        <p>{t("home.smsP3")}</p>
         <p>
-          View our{' '}
-          <a href="/privacy" onClick={(e) => { e.preventDefault(); navigate('/privacy'); }}>Privacy Policy</a>
-          {' '}and{' '}
-          <a href="/terms" onClick={(e) => { e.preventDefault(); navigate('/terms'); }}>Terms of Service</a>.
+          {t("home.smsViewOur")}{' '}
+          <a href="/privacy" onClick={(e) => { e.preventDefault(); navigate('/privacy'); }}>{t("footer.privacyPolicy")}</a>
+          {' '}{t("home.smsAnd")}{' '}
+          <a href="/terms" onClick={(e) => { e.preventDefault(); navigate('/terms'); }}>{t("home.smsTermsOfService")}</a>.
         </p>
       </SmsDisclosure>
       <Footer onNavigatePrivacy={() => navigate('/privacy')} onNavigateTerms={() => navigate('/terms')} />

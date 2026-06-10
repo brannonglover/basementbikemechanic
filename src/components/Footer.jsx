@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
+import { useLocale } from "../i18n/LocaleContext";
 
 const FooterStyled = styled.footer`
   background-color: ${({ theme }) => theme.colors.surface};
@@ -37,6 +38,7 @@ const FooterStyled = styled.footer`
 function Footer({ onNavigatePrivacy, onNavigateTerms, onBack }) {
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useLocale();
   const isBackPage = location.pathname === "/privacy" || location.pathname === "/terms" || location.pathname === "/admin" || location.pathname === "/book";
 
   const handleBackClick = (e) => {
@@ -70,16 +72,16 @@ function Footer({ onNavigatePrivacy, onNavigateTerms, onBack }) {
     <FooterStyled>
       {isBackPage ? (
         <button type="button" onClick={handleBackClick}>
-          Back to home
+          {t("footer.backToHome")}
         </button>
       ) : (
         <>
           <button type="button" onClick={handlePrivacyClick}>
-            Privacy Policy
+            {t("footer.privacyPolicy")}
           </button>
           <span aria-hidden="true"> · </span>
           <button type="button" onClick={handleTermsClick}>
-            Terms & Conditions
+            {t("footer.termsConditions")}
           </button>
         </>
       )}

@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from "react";
 import styled from "styled-components";
 import { SERVICE_QUICK_PICKS } from "../config/bookingServices";
+import { useLocale } from "../i18n/LocaleContext";
 import {
   buildPopularServiceIds,
   getHighlightedNameSegments,
@@ -17,8 +18,8 @@ function getServiceDescriptionItems(description) {
     .map((item) => item.replace(/^[-*]\s*/, "").trim());
 }
 
-function formatCurrency(value) {
-  return new Intl.NumberFormat("en-US", {
+function formatCurrency(value, locale) {
+  return new Intl.NumberFormat(locale === "es" ? "es-US" : "en-US", {
     style: "currency",
     currency: "USD",
     maximumFractionDigits: 0,
@@ -541,6 +542,7 @@ function ServiceListItem({
   highlightQuery,
   onToggle,
   onToggleDetails,
+  locale,
 }) {
   const descriptionItems = getServiceDescriptionItems(service.description);
   const hasDescription = descriptionItems.length > 0;
@@ -592,7 +594,7 @@ function ServiceListItem({
           <ServiceDescription>{service.description}</ServiceDescription>
         )}
       </ServiceSummary>
-      <ServicePrice>{formatCurrency(service.price)}</ServicePrice>
+      <ServicePrice>{formatCurrency(service.price, locale)}</ServicePrice>
       {hasDescription && expanded && (
         <ServiceDetails>
           <ServiceBulletList>
@@ -613,6 +615,7 @@ function ServiceList({
   expandedServices,
   onToggle,
   onToggleDetails,
+  locale,
 }) {
   if (!services.length) return null;
 
@@ -625,9 +628,18 @@ function ServiceList({
       highlightQuery={highlightQuery}
       onToggle={onToggle}
       onToggleDetails={onToggleDetails}
+      locale={locale}
     />
   ));
 }
+
+const QUICK_PICK_LABEL_KEYS = {
+  "tune-up": "bookPicker.quickPick.tuneUp",
+  brakes: "bookPicker.quickPick.brakes",
+  "flat-tire": "bookPicker.quickPick.flatTire",
+  wheels: "bookPicker.quickPick.wheels",
+  ebike: "bookPicker.quickPick.ebike",
+};
 
 export default function BookServicePicker({
   services,
@@ -636,6 +648,7 @@ export default function BookServicePicker({
   selectedServiceIds,
   onToggleService,
 }) {
+  const { t, locale } = useLocale();
   const [serviceSearch, setServiceSearch] = useState("");
   const [activeQuickPick, setActiveQuickPick] = useState(null);
   const [showAllServices, setShowAllServices] = useState(false);
@@ -706,22 +719,23 @@ export default function BookServicePicker({
       ? searchList.length > 0
       : browsePopular.length > 0 || (showBrowseRest && browseRest.length > 0);
 
-  const step2Label = isSearching ? "Matching services" : "Choose your services";
+  const step2Label = isSearching ? t("bookPicker.matchingServices") : t("bookPicker.chooseServices");
   const listHint = isSearching
-    ? `${display.matchCount} result${display.matchCount === 1 ? "" : "s"}`
-    : "Check each one you need";
+    ? (display.matchCount === 1
+        ? t("bookPicker.searchResults", { count: display.matchCount })
+        : t("bookPicker.searchResultsPlural", { count: display.matchCount }))
+    : t("bookPicker.checkEach");
 
   return (
     <ServicePickerCard aria-labelledby="requested-services-heading">
-      <IntroText>
-        Tap a category or search to find services, then check every repair or
-        maintenance item you want on this visit.
-      </IntroText>
+      <IntroText>{t("bookPicker.intro")}</IntroText>
 
       {selectedCount > 0 && (
         <SelectionSummary aria-live="polite">
           <span>
-            {selectedCount} service{selectedCount === 1 ? "" : "s"} selected
+            {selectedCount === 1
+              ? t("bookPicker.servicesSelected", { count: selectedCount })
+              : t("bookPicker.servicesSelectedPlural", { count: selectedCount })}
           </span>
         </SelectionSummary>
       )}
@@ -729,10 +743,10 @@ export default function BookServicePicker({
       <FilterBox>
         <StepOneSection>
           <StepHeading>
-            <strong>Step 1:</strong> Narrow the list (optional)
+            <strong>{t("bookPicker.step1")}</strong> {t("bookPicker.narrowList")}
           </StepHeading>
           <FilterControls>
-            <QuickPickRow role="group" aria-label="Filter services by type">
+            <QuickPickRow role="group" aria-label={t("bookPicker.filterByType")}>
               {SERVICE_QUICK_PICKS.map((chip) => (
                 <QuickPickChip
                   key={chip.id}
@@ -741,7 +755,7 @@ export default function BookServicePicker({
                   aria-pressed={activeQuickPick === chip.id}
                   onClick={() => handleQuickPick(chip)}
                 >
-                  {chip.label}
+                  {t(QUICK_PICK_LABEL_KEYS[chip.id] || chip.id)}
                 </QuickPickChip>
               ))}
             </QuickPickRow>
@@ -753,12 +767,12 @@ export default function BookServicePicker({
                 autoComplete="off"
                 value={serviceSearch}
                 onChange={(event) => handleSearchChange(event.target.value)}
-                placeholder="Or search by name…"
-                aria-label="Search services by name"
+                placeholder={t("bookPicker.searchPlaceholder")}
+                aria-label={t("bookPicker.searchLabel")}
               />
               {isSearching && (
                 <ClearSearchButton type="button" onClick={resetFilters}>
-                  Clear
+                  {t("bookPicker.clear")}
                 </ClearSearchButton>
               )}
             </SearchRow>
@@ -768,7 +782,7 @@ export default function BookServicePicker({
         <ServiceListSection>
           <ListHeader>
             <StepHeading>
-              <strong>Step 2:</strong> {step2Label}
+              <strong>{t("bookPicker.step2Prefix")}</strong> {step2Label}
             </StepHeading>
             {!loadingServices && !serviceLoadError && hasVisibleServices && (
               <ListHint>{listHint}</ListHint>
@@ -776,7 +790,7 @@ export default function BookServicePicker({
           </ListHeader>
 
           {loadingServices ? (
-            <HelperText>Loading services...</HelperText>
+            <HelperText>{t("bookPicker.loadingServices")}</HelperText>
           ) : serviceLoadError ? (
             <ErrorAlert>{serviceLoadError}</ErrorAlert>
           ) : hasVisibleServices ? (
@@ -789,25 +803,27 @@ export default function BookServicePicker({
                   expandedServices={expandedServices}
                   onToggle={onToggleService}
                   onToggleDetails={toggleServiceDetails}
+                  locale={locale}
                 />
               ) : (
                 <>
                   {browsePopular.length > 0 && (
                     <>
-                      {!showBrowseRest && <InPanelLabel>Most requested</InPanelLabel>}
+                      {!showBrowseRest && <InPanelLabel>{t("bookPicker.mostRequested")}</InPanelLabel>}
                       <ServiceList
                         services={browsePopular}
                         selectedIds={selectedServiceIds}
                         expandedServices={expandedServices}
                         onToggle={onToggleService}
                         onToggleDetails={toggleServiceDetails}
+                        locale={locale}
                       />
                     </>
                   )}
 
                   {hiddenBrowseCount > 0 && (
                     <ShowAllButton type="button" onClick={() => setShowAllServices(true)}>
-                      Show all {services.length} services
+                      {t("bookPicker.showAllServices", { count: services.length })}
                     </ShowAllButton>
                   )}
 
@@ -815,7 +831,7 @@ export default function BookServicePicker({
                     <>
                       {browsePopular.length > 0 && <InPanelDivider />}
                       {browsePopular.length > 0 && (
-                        <InPanelLabel>More services</InPanelLabel>
+                        <InPanelLabel>{t("bookPicker.moreServices")}</InPanelLabel>
                       )}
                       <ServiceList
                         services={browseRest}
@@ -823,6 +839,7 @@ export default function BookServicePicker({
                         expandedServices={expandedServices}
                         onToggle={onToggleService}
                         onToggleDetails={toggleServiceDetails}
+                        locale={locale}
                       />
                     </>
                   )}
@@ -830,10 +847,7 @@ export default function BookServicePicker({
               )}
             </ServicesPanel>
           ) : (
-            <HelperText>
-              No services match your search. Try a different category or clear the
-              search.
-            </HelperText>
+            <HelperText>{t("bookPicker.noServicesHint")}</HelperText>
           )}
         </ServiceListSection>
       </FilterBox>

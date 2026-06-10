@@ -6,6 +6,7 @@ import {
   DEFAULT_TITLE,
   DEFAULT_DESCRIPTION,
 } from "../seoConstants";
+import { useLocale } from "../i18n/LocaleContext";
 
 /**
  * Per-route title, description, canonical, and social tags.
@@ -19,6 +20,7 @@ export default function PageSeo({
   ogImage = DEFAULT_OG_IMAGE,
   jsonLd,
 }) {
+  const { htmlLang, ogLocale } = useLocale();
   const canonical = path
     ? `${SITE_URL}${path.startsWith("/") ? path : `/${path}`}`
     : SITE_URL;
@@ -27,7 +29,7 @@ export default function PageSeo({
   const serializeJsonLd = (data) => JSON.stringify(data).replace(/</g, "\\u003c");
 
   return (
-    <Helmet htmlAttributes={{ lang: "en" }}>
+    <Helmet htmlAttributes={{ lang: htmlLang }}>
       <title>{title}</title>
       <meta name="description" content={description} />
       <link rel="canonical" href={canonical} />
@@ -35,7 +37,7 @@ export default function PageSeo({
 
       <meta property="og:type" content="website" />
       <meta property="og:site_name" content="Basement Bike Mechanic" />
-      <meta property="og:locale" content="en_US" />
+      <meta property="og:locale" content={ogLocale} />
       <meta property="og:url" content={canonical} />
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
