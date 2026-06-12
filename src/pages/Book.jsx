@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
 import Header from "../components/Header";
@@ -6,6 +6,7 @@ import Footer from "../components/Footer";
 import PageSeo from "../components/PageSeo";
 import BookServicePicker from "../components/BookServicePicker";
 import { useLocale } from "../i18n/LocaleContext";
+import { localizeBikeOpsServices } from "../i18n/localizeServices";
 
 function normalizeBikeOpsOrigin(value) {
   if (!value) return "";
@@ -616,8 +617,12 @@ const StatusLink = styled.a`
 
 function Book() {
   const navigate = useNavigate();
-  const { t, seo } = useLocale();
+  const { t, seo, locale } = useLocale();
   const [services, setServices] = useState([]);
+  const localizedServices = useMemo(
+    () => localizeBikeOpsServices(services, locale),
+    [services, locale]
+  );
   const [loadingServices, setLoadingServices] = useState(true);
   const [serviceLoadError, setServiceLoadError] = useState("");
   const [savedBikes, setSavedBikes] = useState([]);
@@ -1239,7 +1244,7 @@ function Book() {
             <Section>
               <SectionTitle id="requested-services-heading">{t("book.requestedServices")}</SectionTitle>
               <BookServicePicker
-                services={services}
+                services={localizedServices}
                 loadingServices={loadingServices}
                 serviceLoadError={serviceLoadError}
                 selectedServiceIds={form.serviceIds}

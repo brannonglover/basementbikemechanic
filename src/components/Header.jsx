@@ -324,35 +324,6 @@ const NavBookButton = styled(BookButton)`
   }
 `;
 
-const LanguageToggle = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.15rem;
-  margin-left: 0.25rem;
-  padding: 0.2rem;
-  border-radius: ${({ theme }) => theme.radius.sm};
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid ${({ theme }) => theme.colors.borderStrong};
-`;
-
-const LanguageButton = styled.button`
-  background: ${({ $active }) => ($active ? "rgba(255, 255, 255, 0.18)" : "transparent")};
-  border: none;
-  color: ${({ theme }) => theme.colors.textInverse};
-  cursor: pointer;
-  font-family: inherit;
-  font-size: 0.78rem;
-  font-weight: ${({ $active }) => ($active ? 700 : 500)};
-  letter-spacing: 0.02em;
-  padding: 0.35rem 0.5rem;
-  border-radius: ${({ theme }) => theme.radius.sm};
-  transition: background ${({ theme }) => theme.transition};
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.14);
-  }
-`;
-
 function ThemeIcon({ mode }) {
   if (mode === "dark") {
     return (
@@ -389,7 +360,7 @@ function Header() {
   const navigate = useNavigate();
   const posthog = usePostHog();
   const { mode, toggleTheme } = useThemeMode();
-  const { locale, setLocale, t, siteConfig: config } = useLocale();
+  const { t, siteConfig: config } = useLocale();
   const [width, setWidth] = useState(typeof window !== "undefined" ? window.innerWidth : 1024);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -486,24 +457,6 @@ function Header() {
           <NavBookButton href="/book" onClick={(e) => handleNav(e, "/book")}>
             {t("nav.bookNow")}
           </NavBookButton>
-          <LanguageToggle role="group" aria-label={t("nav.language")}>
-            <LanguageButton
-              type="button"
-              $active={locale === "en"}
-              onClick={() => setLocale("en")}
-              aria-pressed={locale === "en"}
-            >
-              EN
-            </LanguageButton>
-            <LanguageButton
-              type="button"
-              $active={locale === "es"}
-              onClick={() => setLocale("es")}
-              aria-pressed={locale === "es"}
-            >
-              ES
-            </LanguageButton>
-          </LanguageToggle>
           <ThemeToggleDesktop
             type="button"
             onClick={toggleTheme}
@@ -525,24 +478,6 @@ function Header() {
         <MobileMenuLink href="/bikes-for-sale" onClick={(e) => handleNav(e, "/bikes-for-sale")}>
           {t("nav.bikesForSale")}
         </MobileMenuLink>
-        <LanguageToggle role="group" aria-label={t("nav.language")} style={{ marginTop: "0.5rem" }}>
-          <LanguageButton
-            type="button"
-            $active={locale === "en"}
-            onClick={() => setLocale("en")}
-            aria-pressed={locale === "en"}
-          >
-            EN
-          </LanguageButton>
-          <LanguageButton
-            type="button"
-            $active={locale === "es"}
-            onClick={() => setLocale("es")}
-            aria-pressed={locale === "es"}
-          >
-            ES
-          </LanguageButton>
-        </LanguageToggle>
         <BookButton href="/book" onClick={(e) => { e.preventDefault(); navigate("/book"); setMenuOpen(false); }} style={{ marginTop: "0.5rem", textAlign: "center" }}>
           {t("nav.bookNow")}
         </BookButton>

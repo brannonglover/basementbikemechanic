@@ -37,6 +37,14 @@ function tokenize(text) {
     .filter((token) => token.length > 0);
 }
 
+function getServiceNameForSearch(service) {
+  return service?.nameEn || service?.name || "";
+}
+
+function getServiceDescriptionForSearch(service) {
+  return service?.descriptionEn || service?.description || "";
+}
+
 function normalizeComparableText(text) {
   return String(text || "")
     .toLowerCase()
@@ -118,7 +126,9 @@ export function serviceMatchesQuery(service, rawQuery) {
   const query = String(rawQuery || "").trim();
   if (!query) return true;
 
-  const fields = [service?.name, service?.description].filter(Boolean);
+  const fields = [getServiceNameForSearch(service), getServiceDescriptionForSearch(service)].filter(
+    Boolean
+  );
   if (fields.length === 0) return false;
 
   if (fields.some((field) => textMatchesQueryVariants(field, query))) {
@@ -128,7 +138,7 @@ export function serviceMatchesQuery(service, rawQuery) {
   const queryTokens = tokenize(query);
   if (queryTokens.length === 0) return false;
 
-  const nameTokens = tokenize(service?.name);
+  const nameTokens = tokenize(getServiceNameForSearch(service));
   if (nameTokens.length > 0 && tokensMatchQueryTokens(nameTokens, queryTokens)) {
     return true;
   }
@@ -152,7 +162,7 @@ export function buildPopularServiceIds(services) {
   for (const service of Array.isArray(services) ? services : []) {
     if (ids.size >= MAX_POPULAR_SERVICES) break;
     if (ids.has(service.id)) continue;
-    if (POPULAR_SERVICE_MATCHERS.some((matcher) => matcher(service.name || ""))) {
+    if (POPULAR_SERVICE_MATCHERS.some((matcher) => matcher(getServiceNameForSearch(service)))) {
       ids.add(service.id);
     }
   }
@@ -169,17 +179,18 @@ export function getServiceMatchScore(service, rawQuery, popularIds) {
   if (!query) return 0;
   if (!serviceMatchesQuery(service, query)) return 0;
 
-  const name = normalizeComparableText(service?.name);
+  const searchableName = getServiceNameForSearch(service);
+  const name = normalizeComparableText(searchableName);
   const queryNormalized = normalizeComparableText(query);
   const queryTokens = tokenize(query);
-  const nameTokens = tokenize(service?.name);
+  const nameTokens = tokenize(getServiceNameForSearch(service));
 
   let score = 10;
 
   if (name === queryNormalized) score = 100;
-  else if (textMatchesQueryVariants(service?.name, query)) score = 90;
+  else if (textMatchesQueryVariants(searchableName, query)) score = 90;
   else if (nameTokens.length > 0 && tokensMatchQueryTokens(nameTokens, queryTokens)) score = 80;
-  else if (textMatchesQueryVariants(service?.description, query)) score = 55;
+  else if (textMatchesQueryVariants(getServiceDescriptionForSearch(service), query)) score = 55;
   else score = 40;
 
   if (isPopularService(service, popularIds)) score += 8;
