@@ -5,8 +5,11 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import PageSeo from "../components/PageSeo";
 import BookServicePicker from "../components/BookServicePicker";
+import TurnstileWidget from "../components/TurnstileWidget";
 import { useLocale } from "../i18n/LocaleContext";
 import { localizeBikeOpsServices } from "../i18n/localizeServices";
+
+const TURNSTILE_SITE_KEY = (process.env.REACT_APP_TURNSTILE_SITE_KEY || "").trim();
 
 function normalizeBikeOpsOrigin(value) {
   if (!value) return "";
@@ -633,6 +636,8 @@ function Book() {
   const [attemptedSubmit, setAttemptedSubmit] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState(null);
+  const [turnstileResetSignal, setTurnstileResetSignal] = useState(0);
   const [success, setSuccess] = useState(null);
   const [resolvedApiBase, setResolvedApiBase] = useState(BIKEOPS_BASE_URL);
   const [collectionEligibility, setCollectionEligibility] = useState({
@@ -928,6 +933,15 @@ function Book() {
       }
     }
 
+    if (!TURNSTILE_SITE_KEY) {
+      setError("Booking verification is not configured. Please try again later.");
+      return;
+    }
+    if (!turnstileToken) {
+      setError("Please complete the security check before booking.");
+      return;
+    }
+
     setSubmitting(true);
 
     try {
@@ -970,6 +984,7 @@ function Book() {
             : null,
         customerNotes: form.customerNotes.trim() || null,
         serviceIds: form.serviceIds,
+        turnstileToken,
       };
 
       for (const apiBasePath of BIKEOPS_API_BASE_PATHS) {
@@ -999,6 +1014,8 @@ function Book() {
           }
 
           setError(data.error || t("book.submitFailed"));
+          setTurnstileToken(null);
+          setTurnstileResetSignal((n) => n + 1);
           return;
         } catch (submitError) {
           // Try the next endpoint.
@@ -1006,8 +1023,12 @@ function Book() {
       }
 
       setError(t("book.connectionFailed"));
+      setTurnstileToken(null);
+      setTurnstileResetSignal((n) => n + 1);
     } catch (submitError) {
       setError(t("book.connectionFailed"));
+      setTurnstileToken(null);
+      setTurnstileResetSignal((n) => n + 1);
     } finally {
       setSubmitting(false);
     }
@@ -1452,7 +1473,20 @@ function Book() {
 
             {error && <ErrorAlert>{error}</ErrorAlert>}
 
-            <SubmitButton type="submit" disabled={submitting}>
+            {TURNSTILE_SITE_KEY ? (
+              <TurnstileWidget
+                siteKey={TURNSTILE_SITE_KEY}
+                onToken={setTurnstileToken}
+                resetSignal={turnstileResetSignal}
+                theme="auto"
+              />
+            ) : (
+              <ErrorAlert>
+                Booking verification is not configured.
+              </ErrorAlert>
+            )}
+
+            <SubmitButton type="submit" disabled={submitting || !turnstileToken}>
               {submitting ? t("book.submitting") : t("book.bookNow")}
             </SubmitButton>
           </Form>
