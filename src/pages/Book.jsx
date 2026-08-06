@@ -9,12 +9,10 @@ import TurnstileWidget from "../components/TurnstileWidget";
 import { useLocale } from "../i18n/LocaleContext";
 import { localizeBikeOpsServices } from "../i18n/localizeServices";
 
-// Public Turnstile site key — must be present in the client bundle.
-// Prefer REACT_APP_ (CRA); also accept NEXT_PUBLIC_ if set in Netlify.
+// Public Turnstile site key (same widget as BikeOps). CRA only inlines REACT_APP_*.
+// Hardcoded fallback so a misnamed Netlify env (e.g. NEXT_PUBLIC_*) cannot blank the widget.
 const TURNSTILE_SITE_KEY = (
-  process.env.REACT_APP_TURNSTILE_SITE_KEY ||
-  process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ||
-  ""
+  process.env.REACT_APP_TURNSTILE_SITE_KEY || "0x4AAAAAAEILjjXCF6DLhly_"
 ).trim();
 
 function normalizeBikeOpsOrigin(value) {
