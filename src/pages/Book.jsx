@@ -9,7 +9,11 @@ import TurnstileWidget from "../components/TurnstileWidget";
 import { useLocale } from "../i18n/LocaleContext";
 import { localizeBikeOpsServices } from "../i18n/localizeServices";
 
-const TURNSTILE_SITE_KEY = (process.env.REACT_APP_TURNSTILE_SITE_KEY || "").trim();
+// Site key is public (same as BikeOps NEXT_PUBLIC_TURNSTILE_SITE_KEY). Fallback
+// so Netlify builds work even if REACT_APP_TURNSTILE_SITE_KEY wasn't set at build time.
+const TURNSTILE_SITE_KEY = (
+  process.env.REACT_APP_TURNSTILE_SITE_KEY || "0x4AAAAAAEILjjXCF6DLhly_"
+).trim();
 
 function normalizeBikeOpsOrigin(value) {
   if (!value) return "";
