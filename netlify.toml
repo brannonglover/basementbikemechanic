@@ -5,3 +5,5 @@
 
 [build.environment]
   NODE_VERSION = "24"
+  # Turnstile site keys are public browser keys (must ship in client JS). Omit from Netlify secrets scan.
+  SECRETS_SCAN_OMIT_KEYS = "REACT_APP_TURNSTILE_SITE_KEY,NEXT_PUBLIC_TURNSTILE_SITE_KEY"
