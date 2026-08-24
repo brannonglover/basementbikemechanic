@@ -34,10 +34,10 @@ const ServiceBoxName = styled.span`
 
   @media screen and (min-width: 1000px) {
     font-size: 0.95rem;
-    white-space: nowrap;
+    white-space: normal;
 
     > span {
-      flex-wrap: nowrap;
+      flex-wrap: wrap;
     }
   }
 

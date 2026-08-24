@@ -1,6 +1,7 @@
 import React from "react";
 import { styled } from "styled-components";
 import ServiceNameWithEmphasis from "./ServiceNameWithEmphasis";
+import ServicePrices from "./ServicePrices";
 
 const ServiceBoxWrapper = styled.div`
   width: 100%;
@@ -25,16 +26,6 @@ const ServiceBoxName = styled.h3`
     ${({ theme }) => theme.colors.serviceHeaderDark} 100%
   );
   border-radius: ${({ theme }) => theme.radius.md} ${({ theme }) => theme.radius.md} 0 0;
-`;
-
-const ServicePrice = styled.div`
-  text-align: center;
-  font-size: 1.25rem;
-  font-weight: 700;
-  background-color: ${({ theme }) => theme.colors.servicePriceBg};
-  margin: 0;
-  padding: 0.65rem 0;
-  color: ${({ theme }) => theme.colors.servicePriceText};
 `;
 
 const ServiceList = styled.div`
@@ -68,7 +59,11 @@ const ServiceBox = ({ services }) => {
       <ServiceBoxName>
         <ServiceNameWithEmphasis>{services.service}</ServiceNameWithEmphasis>
       </ServiceBoxName>
-      <ServicePrice>${services.price}</ServicePrice>
+      <ServicePrices
+        price={services.price}
+        roadPrice={services.roadPrice}
+        ebikePrice={services.ebikePrice}
+      />
       <ServiceList>
         <ul>
           {services.list?.map((item) => (

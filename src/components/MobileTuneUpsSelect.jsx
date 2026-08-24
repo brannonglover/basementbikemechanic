@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import ServiceNameWithEmphasis from "./ServiceNameWithEmphasis";
+import ServicePrices, { hasTieredPrices } from "./ServicePrices";
 import { useLocale } from "../i18n/LocaleContext";
 
 const Wrapper = styled.div`
@@ -63,9 +64,12 @@ const OptionItem = styled.div`
 const OptionButton = styled.button`
   width: 100%;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto auto;
+  grid-template-columns: ${({ $tiered }) =>
+    $tiered ? "minmax(0, 1fr) auto" : "minmax(0, 1fr) auto auto"};
+  grid-template-areas: ${({ $tiered }) =>
+    $tiered ? `"text chevron" "prices prices"` : `"text prices chevron"`};
   align-items: center;
-  gap: 0.65rem;
+  gap: ${({ $tiered }) => ($tiered ? "0.45rem 0.65rem" : "0.65rem")};
   min-height: 3.25rem;
   padding: 0.75rem 0.85rem;
   text-align: left;
@@ -97,6 +101,7 @@ const OptionText = styled.span`
   display: grid;
   gap: 0.15rem;
   min-width: 0;
+  grid-area: text;
 `;
 
 const OptionName = styled.span`
@@ -112,23 +117,17 @@ const OptionStatus = styled.span`
     $selected ? "rgba(250, 250, 250, 0.78)" : theme.colors.textMuted};
 `;
 
-const OptionPrice = styled.span`
-  justify-self: end;
-  padding: 0.35rem 0.55rem;
-  border-radius: ${({ theme }) => theme.radius.full};
-  font-size: 0.92rem;
-  font-weight: 800;
-  line-height: 1;
-  white-space: nowrap;
-  color: ${({ theme, $selected }) =>
-    $selected ? theme.colors.servicePriceText : theme.colors.text};
-  background: ${({ theme, $selected }) =>
-    $selected ? theme.colors.servicePriceBg : theme.colors.bgMuted};
+const OptionPriceSlot = styled.span`
+  justify-self: ${({ $tiered }) => ($tiered ? "stretch" : "end")};
+  min-width: 0;
+  grid-area: prices;
 `;
 
 const Chevron = styled.span`
   width: 0.62rem;
   height: 0.62rem;
+  grid-area: chevron;
+  justify-self: end;
   border-right: 2px solid currentColor;
   border-bottom: 2px solid currentColor;
   transform: ${({ $expanded }) =>
@@ -181,7 +180,9 @@ export default function MobileTuneUpsSelect({ services }) {
         role="list"
         aria-labelledby="mobile-tuneup-options-label"
       >
-        {services.map((s) => (
+        {services.map((s) => {
+          const tiered = hasTieredPrices(s);
+          return (
           <OptionItem key={s.id} role="listitem" $selected={s.id === selectedId}>
             <OptionButton
               type="button"
@@ -189,6 +190,7 @@ export default function MobileTuneUpsSelect({ services }) {
               aria-controls={`mobile-tuneup-details-${s.id}`}
               data-tuneup-id={s.id}
               $selected={s.id === selectedId}
+              $tiered={tiered}
               onClick={() =>
                 setSelectedId((currentId) => (currentId === s.id ? null : s.id))
               }
@@ -201,7 +203,15 @@ export default function MobileTuneUpsSelect({ services }) {
                   {s.id === selectedId ? t("mobileTuneUp.detailsOpen") : t("mobileTuneUp.tapToView")}
                 </OptionStatus>
               </OptionText>
-              <OptionPrice $selected={s.id === selectedId}>${s.price}</OptionPrice>
+              <OptionPriceSlot $tiered={tiered}>
+                <ServicePrices
+                  price={s.price}
+                  roadPrice={s.roadPrice}
+                  ebikePrice={s.ebikePrice}
+                  compact
+                  selected={s.id === selectedId}
+                />
+              </OptionPriceSlot>
               <Chevron $expanded={s.id === selectedId} aria-hidden="true" />
             </OptionButton>
             <Details
@@ -215,7 +225,8 @@ export default function MobileTuneUpsSelect({ services }) {
               </ul>
             </Details>
           </OptionItem>
-        ))}
+          );
+        })}
       </OptionList>
     </Wrapper>
   );

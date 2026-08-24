@@ -78,6 +78,11 @@ const messages = {
     detailsOpen: "Details open",
     tapToView: "Tap to view details",
   },
+  servicePrice: {
+    standard: "Standard",
+    road: "Road",
+    ebike: "e-bike",
+  },
   bikes: {
     pageTitle: "Used Bikes for Sale in Atlanta",
     introP1Prefix: "Browse our current used bike listings. Availability can change quickly — for the most up-to-date info, text",

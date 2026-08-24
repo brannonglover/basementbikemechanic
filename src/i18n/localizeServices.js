@@ -2,47 +2,47 @@ import enSiteConfig from "../assets/siteConfig.json";
 import esLocale from "./locales/es";
 
 const NAME_ALIASES = {
-  "tube and/or tire replacement (per tire)": "Tube Replacement (per tire)",
-  "tube and/or tire replacement ebike (per tire)": "Tube Replacement ebike (per tire)",
-  "new bike build (adult) ebike": "New bike build (adult) (ebike)",
+  "tube replacement (per tire)": "Tube and/or Tire Replacement (per tire)",
+  "tube replacement ebike (per tire)": "Tube and/or Tire Replacement ebike (per tire)",
+  "new bike build (adult) (ebike)": "New bike build (adult) ebike",
+  "pedal installalation": "Pedal installation",
+  "pedals installalation": "Pedal installation",
 };
 
 const EXTRA_SPANISH_BY_NAME = {
   "bike dropoff": { name: "Entrega de bicicleta en el taller" },
   "bike pickup": { name: "Recogida de bicicleta en el taller" },
-  "bottom bracket replacement": { name: "Reemplazo de pedalier" },
-  "brake bleed (top off)": { name: "Purga de frenos (relleno)" },
-  "cable and housing replacement ebike (per cable)": {
-    name: "Reemplazo de cable y funda ebike (por cable)",
-  },
-  "component install": { name: "Instalación de componente" },
-  "component install e-bike": { name: "Instalación de componente e-bike" },
-  "drivetrain installation": {
-    name: "Instalación de transmisión",
+  "standard tune-up ebike": {
+    name: "Ajuste estándar ebike",
     description:
-      "Reemplazo de todos los componentes de transmisión en la bicicleta\r\n- Cambio\r\n- Bielas\r\n- Cassette\r\n- Desviador",
+      "Lavado completo de la bicicleta\r\nLimpieza de cassette/roda libre\r\nLimpieza y lubricación de cadena\r\nLubricación de cables\r\nReemplazo de cables deshilachados\r\nIndexado de cambios\r\nLimpieza de frenos\r\nLimpieza y centrado de ruedas\r\nEngrase del sillín",
   },
   "drop bar wrap (for repairs)": {
-    name: "Envoltura de manillar (para reparaciones)",
+    name: "Re-envoltura de manillar de carretera",
     description:
       "En bicicletas con manillar de carretera, debemos quitar la mitad de la cinta para acceder a los cables de freno/cambio y luego volver a envolver.",
   },
-  "freewheel install": { name: "Instalación de roda libre" },
-  "hanger install": { name: "Instalación de patilla de cambio" },
-  "headset adjustment": { name: "Ajuste de dirección" },
-  "headset adjustment ebike": { name: "Ajuste de dirección ebike" },
-  "hydraulic brake install ebike (front)": { name: "Instalación de freno hidráulico ebike (delantero)" },
-  "hydraulic brake install ebike (rear)": { name: "Instalación de freno hidráulico ebike (trasero)" },
-  "internally routed cables": { name: "Cables con paso interno" },
-  "mechanical disc brake adjustment": { name: "Ajuste de freno de disco mecánico" },
-  "rethreading of crank arm": { name: "Roscado de biela" },
-  "rotor install ebike (front)": { name: "Instalación de disco ebike (delantero)" },
-  "rotor install ebike (rear)": { name: "Instalación de disco ebike (trasero)" },
+  "drop bar wrap (re-wrap)": {
+    name: "Re-envoltura de manillar de carretera",
+    description:
+      "En bicicletas con manillar de carretera, debemos quitar la mitad de la cinta para acceder a los cables de freno/cambio y luego volver a envolver.",
+  },
+  "drop bar aerobar (re-mount)": {
+    name: "Reinstalación de acoples aerodinámicos",
+    description: "Los acoples aerodinámicos deben retirarse para acceder a las fundas.",
+  },
+  "rethreading of crank arm": {
+    name: "Roscado de biela",
+    description:
+      "Con una herramienta se cortan las roscas de la biela e inserta una pieza nueva para el tamaño de pedal 9/16\".",
+  },
+  "rust removal": { name: "Eliminación de óxido" },
   "shimano nexus internal gear service": { name: "Servicio de cambio interno Shimano Nexus" },
-  "spoke replacement": { name: "Reemplazo de radio" },
-  "suspension fork install": { name: "Instalación de horquilla de suspensión" },
-  "v-brake alignment": { name: "Alineación de V-Brake" },
-  "wheel install w/ wiring ebike": { name: "Instalación de rueda con cableado ebike" },
+  "suspension fork install": {
+    name: "Instalación de horquilla de suspensión",
+    description:
+      "Retirar la horquilla vieja\r\nTransferir la copa de dirección\r\nCortar el tubo de dirección nuevo\r\nInstalar tuerca de arranque si es necesario (salvo SWAT)\r\nReinstalar espaciadores/potencia\r\nReinstalar freno delantero",
+  },
 };
 
 function normalizeName(name) {
@@ -96,7 +96,18 @@ function resolveEnglishName(name) {
 function getSpanishTranslation(englishName) {
   const resolved = resolveEnglishName(englishName);
   const normalized = normalizeName(resolved);
-  return SPANISH_LOOKUP.get(normalized) || EXTRA_SPANISH_BY_NAME[normalizeName(englishName)] || null;
+  const extra =
+    EXTRA_SPANISH_BY_NAME[normalizeName(englishName)] || EXTRA_SPANISH_BY_NAME[normalized];
+  const fromConfig = SPANISH_LOOKUP.get(normalized);
+
+  if (!fromConfig && !extra) {
+    return null;
+  }
+
+  return {
+    name: fromConfig?.name || extra?.name,
+    description: fromConfig?.description ?? extra?.description ?? null,
+  };
 }
 
 export function localizeBikeOpsService(service, locale) {

@@ -27,4 +27,26 @@ describe("localizeBikeOpsService", () => {
     );
     expect(localized.name).toBe("Entrega de bicicleta en el taller");
   });
+
+  it("translates newly cataloged services in Spanish", () => {
+    const localized = localizeBikeOpsService(
+      { id: "svc-3", name: "Rear hub rebuild", description: null, price: 75 },
+      "es"
+    );
+    expect(localized.name).toBe("Reconstrucción de buje trasero");
+  });
+
+  it("still translates the BikeOps e-bike tune-up after homepage cards are combined", () => {
+    const localized = localizeBikeOpsService(
+      {
+        id: "svc-5",
+        name: "Standard Tune-Up ebike",
+        description: "Complete bike wash\r\nGear indexing",
+        price: 155,
+      },
+      "es"
+    );
+    expect(localized.name).toBe("Ajuste estándar ebike");
+    expect(localized.description).toContain("Lavado completo de la bicicleta");
+  });
 });
