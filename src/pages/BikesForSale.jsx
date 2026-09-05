@@ -288,10 +288,10 @@ const ModalOverlay = styled.div`
 const ModalCard = styled.div`
   position: relative;
   display: grid;
-  grid-template-columns: 1.15fr 1fr;
-  max-width: 960px;
+  grid-template-columns: 3fr 2fr;
+  max-width: 1200px;
   width: 100%;
-  max-height: 90vh;
+  max-height: 92vh;
   background: ${({ theme }) => theme.colors.surface};
   border-radius: ${({ theme }) => theme.radius.lg};
   overflow: hidden;
@@ -335,9 +335,7 @@ const CloseButton = styled.button`
 
 const ImagePanel = styled.div`
   position: relative;
-  display: flex;
-  flex-direction: column;
-  background: ${({ theme }) => theme.colors.bg};
+  background: #000;
   min-height: 0;
 
   @media screen and (max-width: 860px) {
@@ -401,12 +399,20 @@ const ChevronButton = styled.button`
 `;
 
 const PaginationDots = styled.div`
+  position: absolute;
+  bottom: 0.75rem;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 0.75rem 0;
-  background: ${({ theme }) => theme.colors.bg};
+  padding: 0.4rem 0.75rem;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border-radius: ${({ theme }) => theme.radius.full};
+  z-index: 2;
 `;
 
 const Dot = styled.button`
@@ -416,11 +422,11 @@ const Dot = styled.button`
   border: none;
   padding: 0;
   cursor: pointer;
-  background: ${({ $active, theme }) => ($active ? theme.colors.primary : theme.colors.borderStrong)};
+  background: ${({ $active }) => ($active ? "#fff" : "rgba(255, 255, 255, 0.4)")};
   transition: width 0.25s ease, background 0.2s ease;
 
   &:hover {
-    background: ${({ $active, theme }) => ($active ? theme.colors.primary : theme.colors.textMuted)};
+    background: ${({ $active }) => ($active ? "#fff" : "rgba(255, 255, 255, 0.7)")};
   }
 `;
 
@@ -788,21 +794,19 @@ function BikesForSale() {
                     <ChevronButton $side="right" onClick={nextSlide} aria-label={t("bikes.next")}>
                       ›
                     </ChevronButton>
+                    <PaginationDots>
+                      {selectedBike.images.map((_, i) => (
+                        <Dot
+                          key={i}
+                          $active={i === slideIndex}
+                          onClick={() => setSlideIndex(i)}
+                          aria-label={`Image ${i + 1}`}
+                        />
+                      ))}
+                    </PaginationDots>
                   </>
                 )}
               </ImageArea>
-              {selectedBike.images.length > 1 && (
-                <PaginationDots>
-                  {selectedBike.images.map((_, i) => (
-                    <Dot
-                      key={i}
-                      $active={i === slideIndex}
-                      onClick={() => setSlideIndex(i)}
-                      aria-label={`Image ${i + 1}`}
-                    />
-                  ))}
-                </PaginationDots>
-              )}
             </ImagePanel>
 
             {/* ── Info panel ── */}
