@@ -3,9 +3,34 @@ create table if not exists public.bike_listings (
   name text not null,
   images jsonb not null default '[]'::jsonb,
   price integer not null default 0,
+  status text not null default 'available',
+  description text not null default '',
+  frame_size text not null default '',
+  wheel_size text not null default '',
+  components jsonb not null default '[]'::jsonb,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+
+-- Migration helper: add columns to existing tables (safe to re-run)
+do $$
+begin
+  if not exists (select 1 from information_schema.columns where table_schema = 'public' and table_name = 'bike_listings' and column_name = 'status') then
+    alter table public.bike_listings add column status text not null default 'available';
+  end if;
+  if not exists (select 1 from information_schema.columns where table_schema = 'public' and table_name = 'bike_listings' and column_name = 'description') then
+    alter table public.bike_listings add column description text not null default '';
+  end if;
+  if not exists (select 1 from information_schema.columns where table_schema = 'public' and table_name = 'bike_listings' and column_name = 'frame_size') then
+    alter table public.bike_listings add column frame_size text not null default '';
+  end if;
+  if not exists (select 1 from information_schema.columns where table_schema = 'public' and table_name = 'bike_listings' and column_name = 'wheel_size') then
+    alter table public.bike_listings add column wheel_size text not null default '';
+  end if;
+  if not exists (select 1 from information_schema.columns where table_schema = 'public' and table_name = 'bike_listings' and column_name = 'components') then
+    alter table public.bike_listings add column components jsonb not null default '[]'::jsonb;
+  end if;
+end $$;
 
 alter table public.bike_listings enable row level security;
 

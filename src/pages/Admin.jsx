@@ -178,6 +178,34 @@ const EmptyBikes = styled.p`
   padding: 1rem 0;
 `;
 
+const SoldBadge = styled.span`
+  display: inline-block;
+  background: #b42318;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+`;
+
+const AvailableBadge = styled.span`
+  display: inline-block;
+  background: #16a34a;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+`;
+
 const ToolMessage = styled.p`
   flex-basis: 100%;
   margin: 0;
@@ -387,7 +415,11 @@ function Admin() {
   const [loginError, setLoginError] = useState('');
   const [bikes, setBikes] = useState([]);
   const [editingId, setEditingId] = useState(null);
-  const [form, setForm] = useState({ name: "", images: [], price: "" });
+  const [form, setForm] = useState({
+    name: "", images: [], price: "", description: "",
+    frame_size: "", wheel_size: "", components: [],
+  });
+  const [componentInput, setComponentInput] = useState("");
   const [imageError, setImageError] = useState("");
   const [isDragging, setIsDragging] = useState(false);
   const [toolsMessage, setToolsMessage] = useState("");
@@ -480,11 +512,17 @@ function Admin() {
       return;
     }
 
+    const existingBike = editingId !== null ? bikes.find((b) => b.id === editingId) : null;
     const bike = {
       id: editingId !== null ? editingId : nextId(),
       name: form.name.trim(),
       images: [...form.images],
       price: parseInt(form.price, 10) || 0,
+      status: existingBike?.status || "available",
+      description: form.description.trim(),
+      frame_size: form.frame_size.trim(),
+      wheel_size: form.wheel_size.trim(),
+      components: form.components.filter((c) => c.trim()),
     };
 
     let updated;
@@ -496,7 +534,8 @@ function Admin() {
 
     try {
       await persistBikes(updated);
-      setForm({ name: "", images: [], price: "" });
+      setForm({ name: "", images: [], price: "", description: "", frame_size: "", wheel_size: "", components: [] });
+      setComponentInput("");
       setEditingId(null);
     } catch (err) {
       setImageError(`Database save failed: ${err.message}`);
@@ -574,7 +613,12 @@ function Admin() {
       name: bike.name,
       images: [...(bike.images || [])],
       price: String(bike.price),
+      description: bike.description || "",
+      frame_size: bike.frame_size || "",
+      wheel_size: bike.wheel_size || "",
+      components: Array.isArray(bike.components) ? [...bike.components] : [],
     });
+    setComponentInput("");
     setEditingId(bike.id);
   };
 
@@ -584,7 +628,8 @@ function Admin() {
     try {
       await persistBikes(updated);
       if (editingId === id) {
-        setForm({ name: "", images: [], price: "" });
+        setForm({ name: "", images: [], price: "", description: "", frame_size: "", wheel_size: "", components: [] });
+        setComponentInput("");
         setEditingId(null);
       }
     } catch (err) {
@@ -593,9 +638,40 @@ function Admin() {
   };
 
   const handleCancelEdit = () => {
-    setForm({ name: "", images: [], price: "" });
+    setForm({ name: "", images: [], price: "", description: "", frame_size: "", wheel_size: "", components: [] });
+    setComponentInput("");
     setEditingId(null);
     setImageError("");
+  };
+
+  const handleToggleSold = async (id) => {
+    const bike = bikes.find((b) => b.id === id);
+    if (!bike) return;
+    const newStatus = bike.status === "sold" ? "available" : "sold";
+    const updated = bikes.map((b) => (b.id === id ? { ...b, status: newStatus } : b));
+    try {
+      await persistBikes(updated);
+    } catch (err) {
+      setToolsMessage(`Status update failed: ${err.message}`);
+    }
+  };
+
+  const addComponent = () => {
+    const trimmed = componentInput.trim();
+    if (!trimmed) return;
+    setForm((f) => ({ ...f, components: [...f.components, trimmed] }));
+    setComponentInput("");
+  };
+
+  const removeComponent = (index) => {
+    setForm((f) => ({ ...f, components: f.components.filter((_, i) => i !== index) }));
+  };
+
+  const handleComponentKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      addComponent();
+    }
   };
 
   const handleExportBikes = () => {
@@ -645,6 +721,11 @@ function Admin() {
         name: typeof bike.name === "string" ? bike.name : "",
         images: Array.isArray(bike.images) ? bike.images.filter((src) => typeof src === "string") : [],
         price: parseInt(bike.price, 10) || 0,
+        status: bike.status === "sold" ? "sold" : "available",
+        description: typeof bike.description === "string" ? bike.description : "",
+        frame_size: typeof bike.frame_size === "string" ? bike.frame_size : "",
+        wheel_size: typeof bike.wheel_size === "string" ? bike.wheel_size : "",
+        components: Array.isArray(bike.components) ? bike.components.filter((c) => typeof c === "string") : [],
       }));
 
       if (bikes.length > 0 && !window.confirm("Replace the current bike listings with this import?")) {
@@ -654,7 +735,8 @@ function Admin() {
       const saved = await saveBikesToDatabase(normalized, getAdminPassword());
       saveBikes(saved);
       setBikes(saved);
-      setForm({ name: "", images: [], price: "" });
+      setForm({ name: "", images: [], price: "", description: "", frame_size: "", wheel_size: "", components: [] });
+      setComponentInput("");
       setEditingId(null);
       setToolsMessage(`Imported ${saved.length} bike listing${saved.length === 1 ? "" : "s"}.`);
     } catch (err) {
@@ -730,6 +812,79 @@ function Admin() {
               placeholder="300"
             />
           </FormGroup>
+          <FormGroup>
+            <label htmlFor="bike-description">Description</label>
+            <textarea
+              id="bike-description"
+              value={form.description}
+              onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
+              placeholder="Describe the bike's condition, history, or anything a buyer should know…"
+            />
+          </FormGroup>
+          <FormGroup>
+            <label htmlFor="bike-frame-size">Frame size</label>
+            <input
+              id="bike-frame-size"
+              type="text"
+              value={form.frame_size}
+              onChange={(e) => setForm((f) => ({ ...f, frame_size: e.target.value }))}
+              placeholder='e.g. 56cm, Medium, 17"'
+            />
+          </FormGroup>
+          <FormGroup>
+            <label htmlFor="bike-wheel-size">Wheel size</label>
+            <input
+              id="bike-wheel-size"
+              type="text"
+              value={form.wheel_size}
+              onChange={(e) => setForm((f) => ({ ...f, wheel_size: e.target.value }))}
+              placeholder="e.g. 700c, 27.5&quot;, 29&quot;"
+            />
+          </FormGroup>
+          <FormGroup>
+            <label>Components</label>
+            <small>Add notable components like groupset, brakes, wheels, etc.</small>
+            <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.5rem" }}>
+              <input
+                type="text"
+                value={componentInput}
+                onChange={(e) => setComponentInput(e.target.value)}
+                onKeyDown={handleComponentKeyDown}
+                placeholder="e.g. Shimano 105 groupset"
+                style={{ flex: 1 }}
+              />
+              <Button type="button" className="secondary" onClick={addComponent} style={{ whiteSpace: "nowrap" }}>
+                + Add
+              </Button>
+            </div>
+            {form.components.length > 0 && (
+              <ul style={{ listStyle: "none", padding: 0, margin: "0.5rem 0 0" }}>
+                {form.components.map((comp, i) => (
+                  <li
+                    key={i}
+                    style={{
+                      display: "flex", alignItems: "center", justifyContent: "space-between",
+                      padding: "0.35rem 0.5rem", borderRadius: "4px", marginBottom: "0.25rem",
+                      background: "rgba(0,0,0,0.04)", fontSize: "0.95rem",
+                    }}
+                  >
+                    {comp}
+                    <button
+                      type="button"
+                      onClick={() => removeComponent(i)}
+                      style={{
+                        background: "none", border: "none", cursor: "pointer",
+                        color: "#b42318", fontWeight: 700, fontSize: "1.1rem", padding: "0 0.25rem",
+                      }}
+                      aria-label={`Remove ${comp}`}
+                    >
+                      ×
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </FormGroup>
           <ButtonRow>
             <Button type="submit">{editingId !== null ? "Update" : "Add"} bike</Button>
             {editingId !== null && (
@@ -771,10 +926,21 @@ function Admin() {
             {bikes.map((bike) => (
               <BikeListItem key={bike.id}>
                 <div className="bike-info">
-                  <div className="bike-name">{bike.name || '(Untitled)'}</div>
+                  <div className="bike-name">
+                    {bike.name || '(Untitled)'}
+                    {bike.status === "sold" ? <SoldBadge>Sold</SoldBadge> : <AvailableBadge>Available</AvailableBadge>}
+                  </div>
                   <div className="bike-price">${bike.price} · {bike.images.length} image(s)</div>
                 </div>
                 <div className="bike-actions">
+                  <Button
+                    type="button"
+                    className={bike.status === "sold" ? "secondary" : "danger"}
+                    onClick={() => handleToggleSold(bike.id)}
+                    style={{ fontSize: "0.85rem", padding: "0.4rem 0.75rem" }}
+                  >
+                    {bike.status === "sold" ? "Mark Available" : "Mark Sold"}
+                  </Button>
                   <Button type="button" className="secondary" onClick={() => handleEdit(bike)}>
                     Edit
                   </Button>

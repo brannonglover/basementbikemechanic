@@ -54,6 +54,11 @@ function normalizeBike(bike, index) {
     name: typeof bike.name === "string" ? bike.name.trim() : "",
     images: Array.isArray(bike.images) ? bike.images.filter((src) => typeof src === "string" && src) : [],
     price: parseInt(bike.price, 10) || 0,
+    status: bike.status === "sold" ? "sold" : "available",
+    description: typeof bike.description === "string" ? bike.description.trim() : "",
+    frame_size: typeof bike.frame_size === "string" ? bike.frame_size.trim() : "",
+    wheel_size: typeof bike.wheel_size === "string" ? bike.wheel_size.trim() : "",
+    components: Array.isArray(bike.components) ? bike.components.filter((c) => typeof c === "string" && c.trim()) : [],
   };
 }
 
@@ -96,7 +101,7 @@ exports.handler = async (event) => {
     if (event.httpMethod === "GET") {
       const params = event.queryStringParameters || {};
       const scope = params.full === "true" ? "full" : "list";
-      const rows = await supabaseRequest(`${TABLE}?select=id,name,images,price&order=created_at.asc`);
+      const rows = await supabaseRequest(`${TABLE}?select=id,name,images,price,status,description,frame_size,wheel_size,components&order=created_at.asc`);
 
       if (params.id !== undefined && params.id !== "") {
         const bikeId = Number(params.id);

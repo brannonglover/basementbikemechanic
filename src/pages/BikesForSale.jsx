@@ -128,6 +128,37 @@ const TilePrice = styled.div`
   color: ${({ theme }) => theme.colors.primary};
 `;
 
+const TileSoldBadge = styled.div`
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  background: #b42318;
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.25rem 0.65rem;
+  border-radius: 4px;
+  z-index: 1;
+`;
+
+const TileImageWrapper = styled.div`
+  position: relative;
+  width: 100%;
+
+  ${({ $sold, theme }) =>
+    $sold
+      ? `&::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: rgba(0, 0, 0, 0.35);
+          pointer-events: none;
+        }`
+      : ""}
+`;
+
 const StatusMessage = styled.p`
   font-size: 1.0625rem;
   text-align: center;
@@ -343,6 +374,69 @@ const ContactButton = styled.a`
   }
 `;
 
+const ModalSoldBanner = styled.div`
+  background: #b42318;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.5rem 1.5rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+`;
+
+const BikeDetails = styled.div`
+  color: rgba(255, 255, 255, 0.9);
+  max-width: 600px;
+  width: 100%;
+  margin-bottom: 1.5rem;
+`;
+
+const DetailRow = styled.div`
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.4rem 0;
+  font-size: 0.95rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+  &:last-child {
+    border-bottom: none;
+  }
+`;
+
+const DetailLabel = styled.span`
+  font-weight: 600;
+  min-width: 110px;
+  color: rgba(255, 255, 255, 0.65);
+  flex-shrink: 0;
+`;
+
+const DetailValue = styled.span`
+  color: #fff;
+`;
+
+const ComponentsList = styled.ul`
+  list-style: disc;
+  padding-left: 1.25rem;
+  margin: 0;
+
+  li {
+    padding: 0.15rem 0;
+    font-size: 0.95rem;
+  }
+`;
+
+const BikeDescription = styled.p`
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  max-width: 600px;
+  text-align: center;
+  margin: 0 0 1.25rem;
+  white-space: pre-line;
+`;
+
 const CloseButton = styled.button`
   position: absolute;
   top: 1rem;
@@ -507,7 +601,7 @@ function BikesForSale() {
                       url: `${bikesPageUrl}#bike-${bike.id}`,
                       priceCurrency: "USD",
                       price: bike.price,
-                      availability: "https://schema.org/InStock",
+                      availability: bike.status === "sold" ? "https://schema.org/SoldOut" : "https://schema.org/InStock",
                       itemCondition: "https://schema.org/UsedCondition",
                       seller: { "@id": `${SITE_URL}/#business` },
                     },
@@ -540,15 +634,18 @@ function BikesForSale() {
         <BikesGrid>
           {bikes.map((bike) => (
             <BikeTile key={bike.id} id={`bike-${bike.id}`} onClick={() => handleTileClick(bike)} type="button">
-              <TileImage
-                src={bike.images[0]}
-                alt={t("bikes.tileAlt", { name: bike.name })}
-                loading="lazy"
-                decoding="async"
-              />
+              <TileImageWrapper $sold={bike.status === "sold"}>
+                {bike.status === "sold" && <TileSoldBadge>{t("bikes.sold")}</TileSoldBadge>}
+                <TileImage
+                  src={bike.images[0]}
+                  alt={t("bikes.tileAlt", { name: bike.name })}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </TileImageWrapper>
               <TileContent>
                 <TileName>{bike.name}</TileName>
-                <TilePrice>${bike.price}</TilePrice>
+                <TilePrice>{bike.status === "sold" ? t("bikes.sold") : `$${bike.price}`}</TilePrice>
               </TileContent>
             </BikeTile>
           ))}
@@ -580,10 +677,47 @@ function BikesForSale() {
             </SlideshowNav>
           )}
           <ModalTitle>{selectedBike.name}</ModalTitle>
-          <ModalPrice>${selectedBike.price}</ModalPrice>
-          <ContactButton href={`mailto:${CONTACT_EMAIL}?subject=Inquiry about ${encodeURIComponent(selectedBike.name)}`}>
-            {t("bikes.contactMe")}
-          </ContactButton>
+          {selectedBike.status === "sold" ? (
+            <ModalSoldBanner>{t("bikes.soldBanner")}</ModalSoldBanner>
+          ) : (
+            <ModalPrice>${selectedBike.price}</ModalPrice>
+          )}
+          {selectedBike.description && (
+            <BikeDescription>{selectedBike.description}</BikeDescription>
+          )}
+          {(selectedBike.frame_size || selectedBike.wheel_size || (selectedBike.components && selectedBike.components.length > 0)) && (
+            <BikeDetails>
+              {selectedBike.frame_size && (
+                <DetailRow>
+                  <DetailLabel>{t("bikes.frameSize")}</DetailLabel>
+                  <DetailValue>{selectedBike.frame_size}</DetailValue>
+                </DetailRow>
+              )}
+              {selectedBike.wheel_size && (
+                <DetailRow>
+                  <DetailLabel>{t("bikes.wheelSize")}</DetailLabel>
+                  <DetailValue>{selectedBike.wheel_size}</DetailValue>
+                </DetailRow>
+              )}
+              {selectedBike.components && selectedBike.components.length > 0 && (
+                <DetailRow>
+                  <DetailLabel>{t("bikes.components")}</DetailLabel>
+                  <DetailValue>
+                    <ComponentsList>
+                      {selectedBike.components.map((comp, i) => (
+                        <li key={i}>{comp}</li>
+                      ))}
+                    </ComponentsList>
+                  </DetailValue>
+                </DetailRow>
+              )}
+            </BikeDetails>
+          )}
+          {selectedBike.status !== "sold" && (
+            <ContactButton href={`mailto:${CONTACT_EMAIL}?subject=Inquiry about ${encodeURIComponent(selectedBike.name)}`}>
+              {t("bikes.contactMe")}
+            </ContactButton>
+          )}
         </ModalOverlay>
       )}
       <Footer onNavigatePrivacy={() => navigate("/privacy")} onNavigateTerms={() => navigate("/terms")} />

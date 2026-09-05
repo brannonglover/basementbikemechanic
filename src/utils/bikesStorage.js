@@ -30,10 +30,21 @@ async function fetchJsonWithRetry(url, options = {}) {
   throw lastError;
 }
 
+function normalizeBike(b) {
+  return {
+    ...b,
+    status: b.status === "sold" ? "sold" : "available",
+    description: typeof b.description === "string" ? b.description : "",
+    frame_size: typeof b.frame_size === "string" ? b.frame_size : "",
+    wheel_size: typeof b.wheel_size === "string" ? b.wheel_size : "",
+    components: Array.isArray(b.components) ? b.components.filter((c) => typeof c === "string" && c.trim()) : [],
+  };
+}
+
 function normalizeBikes(bikes) {
-  return (Array.isArray(bikes) ? bikes : []).filter(
-    (b) => b.name && b.name.trim() && Array.isArray(b.images) && b.images.length > 0
-  );
+  return (Array.isArray(bikes) ? bikes : [])
+    .filter((b) => b.name && b.name.trim() && Array.isArray(b.images) && b.images.length > 0)
+    .map(normalizeBike);
 }
 
 function loadStoredBikes() {
