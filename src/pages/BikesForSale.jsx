@@ -288,10 +288,10 @@ const ModalOverlay = styled.div`
 const ModalCard = styled.div`
   position: relative;
   display: grid;
-  grid-template-columns: 3fr 2fr;
-  max-width: 1200px;
+  grid-template-columns: 3fr 1.5fr;
+  max-width: 1400px;
   width: 100%;
-  max-height: 92vh;
+  max-height: 94vh;
   background: ${({ theme }) => theme.colors.surface};
   border-radius: ${({ theme }) => theme.radius.lg};
   overflow: hidden;
@@ -365,16 +365,17 @@ const ChevronButton = styled.button`
   top: 50%;
   transform: translateY(-50%);
   ${({ $side }) => ($side === "left" ? "left: 0.75rem;" : "right: 0.75rem;")}
-  width: 40px;
-  height: 40px;
+  width: 52px;
+  height: 52px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.35);
   border: none;
   border-radius: ${({ theme }) => theme.radius.full};
-  color: rgba(255, 255, 255, 0.85);
-  font-size: 1.1rem;
+  color: #fff;
+  font-size: 1.6rem;
+  font-weight: 700;
   cursor: pointer;
   transition: background 0.25s ease, color 0.25s ease, transform 0.15s ease, box-shadow 0.25s ease;
   box-shadow: none;
@@ -394,9 +395,9 @@ const ChevronButton = styled.button`
   }
 
   @media screen and (max-width: 480px) {
-    width: 34px;
-    height: 34px;
-    font-size: 0.95rem;
+    width: 42px;
+    height: 42px;
+    font-size: 1.3rem;
   }
 `;
 
