@@ -264,196 +264,310 @@ function BikesLoadingSkeleton({ t }) {
   );
 }
 
+/* ── Modal ── */
+
 const ModalOverlay = styled.div`
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.85);
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   z-index: 2000;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 2rem;
+  overflow-y: auto;
 
-  @media screen and (max-width: 640px) {
-    padding: 1rem;
+  @media screen and (max-width: 860px) {
+    padding: 0;
+    align-items: flex-start;
   }
 `;
 
-const SlideshowContainer = styled.div`
-  max-width: 90vw;
-  max-height: 70vh;
+const ModalCard = styled.div`
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  max-width: 960px;
+  width: 100%;
+  max-height: 90vh;
+  background: ${({ theme }) => theme.colors.surface};
+  border-radius: ${({ theme }) => theme.radius.lg};
+  overflow: hidden;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+
+  @media screen and (max-width: 860px) {
+    grid-template-columns: 1fr;
+    max-height: none;
+    border-radius: 0;
+    min-height: 100dvh;
+  }
+`;
+
+const CloseButton = styled.button`
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 10;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 1rem;
+  background: ${({ theme }) => theme.colors.surface};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  color: ${({ theme }) => theme.colors.textMuted};
+  font-size: 1.25rem;
+  cursor: pointer;
+  border-radius: ${({ theme }) => theme.radius.full};
+  line-height: 1;
+  transition: background ${({ theme }) => theme.transition}, color ${({ theme }) => theme.transition};
+  box-shadow: ${({ theme }) => theme.shadow.sm};
 
-  @media screen and (max-width: 640px) {
-    max-width: 100%;
-    max-height: 62vh;
+  &:hover {
+    background: ${({ theme }) => theme.colors.bgMuted};
+    color: ${({ theme }) => theme.colors.text};
   }
+`;
+
+/* ── Image side ── */
+
+const ImagePanel = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: ${({ theme }) => theme.colors.bg};
+  min-height: 0;
+
+  @media screen and (max-width: 860px) {
+    aspect-ratio: 4 / 3;
+  }
+`;
+
+const ImageArea = styled.div`
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  min-height: 0;
 `;
 
 const SlideshowImage = styled.img`
-  max-width: 100%;
-  max-height: 70vh;
-  object-fit: contain;
-  border-radius: 8px;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+`;
 
-  @media screen and (max-width: 640px) {
-    max-height: 62vh;
+const ChevronButton = styled.button`
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  ${({ $side }) => ($side === "left" ? "left: 0.75rem;" : "right: 0.75rem;")}
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: none;
+  border-radius: ${({ theme }) => theme.radius.full};
+  color: #18181b;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background ${({ theme }) => theme.transition}, transform 0.15s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  z-index: 2;
+
+  &:hover {
+    background: #fff;
+    transform: translateY(-50%) scale(1.08);
+  }
+
+  &:active {
+    transform: translateY(-50%) scale(0.96);
+  }
+
+  @media screen and (max-width: 480px) {
+    width: 34px;
+    height: 34px;
+    font-size: 0.95rem;
   }
 `;
 
-const SlideshowNav = styled.div`
+const PaginationDots = styled.div`
   display: flex;
-  gap: 1rem;
   align-items: center;
-  margin-bottom: 1.5rem;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 0;
+  background: ${({ theme }) => theme.colors.bg};
+`;
 
-  button {
-    background: ${({ theme }) => theme.colors.accent};
-    border: none;
-    color: ${({ theme }) => theme.colors.textOnAccent};
-    padding: 0.5rem 1rem;
-    font-size: 0.95rem;
-    font-weight: 600;
-    font-family: inherit;
-    cursor: pointer;
-    border-radius: ${({ theme }) => theme.radius.sm};
-    transition: background ${({ theme }) => theme.transition};
+const Dot = styled.button`
+  width: ${({ $active }) => ($active ? "20px" : "8px")};
+  height: 8px;
+  border-radius: ${({ theme }) => theme.radius.full};
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  background: ${({ $active, theme }) => ($active ? theme.colors.primary : theme.colors.borderStrong)};
+  transition: width 0.25s ease, background 0.2s ease;
 
-    &:hover {
-      background: ${({ theme }) => theme.colors.accentHover};
-    }
-
-    &:disabled {
-      opacity: 0.45;
-      cursor: not-allowed;
-    }
+  &:hover {
+    background: ${({ $active, theme }) => ($active ? theme.colors.primary : theme.colors.textMuted)};
   }
+`;
 
-  span {
-    color: #fff;
-    font-size: 0.95rem;
+/* ── Info side ── */
+
+const InfoPanel = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 2rem 2rem 1.75rem;
+  overflow-y: auto;
+  min-height: 0;
+
+  @media screen and (max-width: 860px) {
+    padding: 1.5rem;
   }
 `;
 
 const ModalTitle = styled.h2`
-  color: #fff;
+  color: ${({ theme }) => theme.colors.text};
   font-size: 1.5rem;
-  font-weight: 600;
-  margin: 0 0 0.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.35rem;
+  line-height: 1.3;
 `;
 
 const ModalPrice = styled.div`
-  color: ${({ theme }) => theme.colors.brandGreen};
-  font-size: 1.25rem;
+  color: ${({ theme }) => theme.colors.primary};
+  font-size: 1.35rem;
   font-weight: 700;
-  margin-bottom: 1.5rem;
-`;
-
-const ContactButton = styled.a`
-  display: inline-block;
-  background-color: ${({ theme }) => theme.colors.accent};
-  border: none;
-  color: ${({ theme }) => theme.colors.textOnAccent};
-  text-decoration: none;
-  font-size: 1.05rem;
-  font-weight: 600;
-  padding: 0.75rem 2rem;
-  border-radius: ${({ theme }) => theme.radius.md};
-  cursor: pointer;
-  transition: background ${({ theme }) => theme.transition};
-
-  &:hover {
-    background-color: ${({ theme }) => theme.colors.accentHover};
-  }
+  margin-bottom: 1.25rem;
 `;
 
 const ModalSoldBanner = styled.div`
-  background: #b42318;
-  color: #fff;
-  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: #fef2f2;
+  color: #b42318;
+  font-size: 0.85rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  padding: 0.5rem 1.5rem;
-  border-radius: 6px;
-  margin-bottom: 1rem;
+  letter-spacing: 0.04em;
+  padding: 0.35rem 0.85rem;
+  border-radius: ${({ theme }) => theme.radius.full};
+  margin-bottom: 1.25rem;
+  border: 1px solid #fecaca;
 `;
 
-const BikeDetails = styled.div`
-  color: rgba(255, 255, 255, 0.9);
-  max-width: 600px;
-  width: 100%;
-  margin-bottom: 1.5rem;
+const Divider = styled.hr`
+  border: none;
+  border-top: 1px solid ${({ theme }) => theme.colors.border};
+  margin: 0 0 1rem;
 `;
 
-const DetailRow = styled.div`
-  display: flex;
-  gap: 0.5rem;
-  padding: 0.4rem 0;
+const BikeDescription = styled.p`
+  color: ${({ theme }) => theme.colors.textMuted};
   font-size: 0.95rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  line-height: 1.65;
+  margin: 0 0 1.25rem;
+  white-space: pre-line;
+`;
+
+const SpecsGrid = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-bottom: 1.25rem;
+`;
+
+const SpecRow = styled.div`
+  display: flex;
+  align-items: baseline;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
 
   &:last-child {
     border-bottom: none;
   }
 `;
 
-const DetailLabel = styled.span`
+const SpecLabel = styled.span`
+  font-size: 0.8rem;
   font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: ${({ theme }) => theme.colors.textMuted};
   min-width: 110px;
-  color: rgba(255, 255, 255, 0.65);
   flex-shrink: 0;
 `;
 
-const DetailValue = styled.span`
-  color: #fff;
+const SpecValue = styled.span`
+  font-size: 0.95rem;
+  color: ${({ theme }) => theme.colors.text};
+  font-weight: 500;
 `;
 
 const ComponentsList = styled.ul`
-  list-style: disc;
-  padding-left: 1.25rem;
+  list-style: none;
+  padding: 0;
   margin: 0;
-
-  li {
-    padding: 0.15rem 0;
-    font-size: 0.95rem;
-  }
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
 `;
 
-const BikeDescription = styled.p`
-  color: rgba(255, 255, 255, 0.85);
-  font-size: 0.95rem;
-  line-height: 1.6;
-  max-width: 600px;
-  text-align: center;
-  margin: 0 0 1.25rem;
-  white-space: pre-line;
+const ComponentTag = styled.li`
+  display: inline-block;
+  background: ${({ theme }) => theme.colors.bgMuted};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  color: ${({ theme }) => theme.colors.text};
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 0.25rem 0.6rem;
+  border-radius: ${({ theme }) => theme.radius.full};
 `;
 
-const CloseButton = styled.button`
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+const ContactButton = styled.a`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: ${({ theme }) => theme.colors.primary};
+  border: none;
   color: #fff;
-  font-size: 1.5rem;
-  cursor: pointer;
-  padding: 0.35rem 0.6rem;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0.75rem 1.75rem;
   border-radius: ${({ theme }) => theme.radius.sm};
-  line-height: 1;
-  transition: background ${({ theme }) => theme.transition};
+  cursor: pointer;
+  transition: background ${({ theme }) => theme.transition}, transform 0.15s ease;
+  margin-top: auto;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.22);
+    background-color: ${({ theme }) => theme.colors.primaryDark};
+    transform: translateY(-1px);
   }
+
+  &:active {
+    transform: translateY(0);
+  }
+`;
+
+const InfoSpacer = styled.div`
+  flex: 1;
+  min-height: 0.5rem;
 `;
 
 const CONTACT_EMAIL = "support@basementbikemechanic.com";
@@ -653,71 +767,97 @@ function BikesForSale() {
       )}
       {selectedBike && (
         <ModalOverlay onClick={handleBackdropClick}>
-          <CloseButton onClick={handleClose} aria-label={t("bikes.close")}>
-            ×
-          </CloseButton>
-          <SlideshowContainer>
-            <SlideshowImage
-              src={selectedBike.images[slideIndex]}
-              alt={t("bikes.imageAlt", { name: selectedBike.name, index: slideIndex + 1 })}
-              loading="eager"
-            />
-          </SlideshowContainer>
-          {selectedBike.images.length > 1 && (
-            <SlideshowNav>
-              <button onClick={prevSlide} disabled={selectedBike.images.length <= 1}>
-                {t("bikes.prev")}
-              </button>
-              <span>
-                {slideIndex + 1} / {selectedBike.images.length}
-              </span>
-              <button onClick={nextSlide} disabled={selectedBike.images.length <= 1}>
-                {t("bikes.next")}
-              </button>
-            </SlideshowNav>
-          )}
-          <ModalTitle>{selectedBike.name}</ModalTitle>
-          {selectedBike.status === "sold" ? (
-            <ModalSoldBanner>{t("bikes.soldBanner")}</ModalSoldBanner>
-          ) : (
-            <ModalPrice>${selectedBike.price}</ModalPrice>
-          )}
-          {selectedBike.description && (
-            <BikeDescription>{selectedBike.description}</BikeDescription>
-          )}
-          {(selectedBike.frame_size || selectedBike.wheel_size || (selectedBike.components && selectedBike.components.length > 0)) && (
-            <BikeDetails>
-              {selectedBike.frame_size && (
-                <DetailRow>
-                  <DetailLabel>{t("bikes.frameSize")}</DetailLabel>
-                  <DetailValue>{selectedBike.frame_size}</DetailValue>
-                </DetailRow>
+          <ModalCard onClick={(e) => e.stopPropagation()}>
+            <CloseButton onClick={handleClose} aria-label={t("bikes.close")}>
+              ×
+            </CloseButton>
+
+            {/* ── Image panel ── */}
+            <ImagePanel>
+              <ImageArea>
+                <SlideshowImage
+                  src={selectedBike.images[slideIndex]}
+                  alt={t("bikes.imageAlt", { name: selectedBike.name, index: slideIndex + 1 })}
+                  loading="eager"
+                />
+                {selectedBike.images.length > 1 && (
+                  <>
+                    <ChevronButton $side="left" onClick={prevSlide} aria-label={t("bikes.prev")}>
+                      ‹
+                    </ChevronButton>
+                    <ChevronButton $side="right" onClick={nextSlide} aria-label={t("bikes.next")}>
+                      ›
+                    </ChevronButton>
+                  </>
+                )}
+              </ImageArea>
+              {selectedBike.images.length > 1 && (
+                <PaginationDots>
+                  {selectedBike.images.map((_, i) => (
+                    <Dot
+                      key={i}
+                      $active={i === slideIndex}
+                      onClick={() => setSlideIndex(i)}
+                      aria-label={`Image ${i + 1}`}
+                    />
+                  ))}
+                </PaginationDots>
               )}
-              {selectedBike.wheel_size && (
-                <DetailRow>
-                  <DetailLabel>{t("bikes.wheelSize")}</DetailLabel>
-                  <DetailValue>{selectedBike.wheel_size}</DetailValue>
-                </DetailRow>
+            </ImagePanel>
+
+            {/* ── Info panel ── */}
+            <InfoPanel>
+              <ModalTitle>{selectedBike.name}</ModalTitle>
+              {selectedBike.status === "sold" ? (
+                <ModalSoldBanner>● {t("bikes.soldBanner")}</ModalSoldBanner>
+              ) : (
+                <ModalPrice>${selectedBike.price}</ModalPrice>
               )}
-              {selectedBike.components && selectedBike.components.length > 0 && (
-                <DetailRow>
-                  <DetailLabel>{t("bikes.components")}</DetailLabel>
-                  <DetailValue>
-                    <ComponentsList>
-                      {selectedBike.components.map((comp, i) => (
-                        <li key={i}>{comp}</li>
-                      ))}
-                    </ComponentsList>
-                  </DetailValue>
-                </DetailRow>
+              {selectedBike.description && (
+                <>
+                  <Divider />
+                  <BikeDescription>{selectedBike.description}</BikeDescription>
+                </>
               )}
-            </BikeDetails>
-          )}
-          {selectedBike.status !== "sold" && (
-            <ContactButton href={`mailto:${CONTACT_EMAIL}?subject=Inquiry about ${encodeURIComponent(selectedBike.name)}`}>
-              {t("bikes.contactMe")}
-            </ContactButton>
-          )}
+              {(selectedBike.frame_size || selectedBike.wheel_size || (selectedBike.components && selectedBike.components.length > 0)) && (
+                <>
+                  <Divider />
+                  <SpecsGrid>
+                    {selectedBike.frame_size && (
+                      <SpecRow>
+                        <SpecLabel>{t("bikes.frameSize")}</SpecLabel>
+                        <SpecValue>{selectedBike.frame_size}</SpecValue>
+                      </SpecRow>
+                    )}
+                    {selectedBike.wheel_size && (
+                      <SpecRow>
+                        <SpecLabel>{t("bikes.wheelSize")}</SpecLabel>
+                        <SpecValue>{selectedBike.wheel_size}</SpecValue>
+                      </SpecRow>
+                    )}
+                    {selectedBike.components && selectedBike.components.length > 0 && (
+                      <SpecRow>
+                        <SpecLabel>{t("bikes.components")}</SpecLabel>
+                        <SpecValue>
+                          <ComponentsList>
+                            {selectedBike.components.map((comp, i) => (
+                              <ComponentTag key={i}>{comp}</ComponentTag>
+                            ))}
+                          </ComponentsList>
+                        </SpecValue>
+                      </SpecRow>
+                    )}
+                  </SpecsGrid>
+                </>
+              )}
+              <InfoSpacer />
+              {selectedBike.status !== "sold" && (
+                <ContactButton href={`mailto:${CONTACT_EMAIL}?subject=Inquiry about ${encodeURIComponent(selectedBike.name)}`}>
+                  ✉ {t("bikes.contactMe")}
+                </ContactButton>
+              )}
+            </InfoPanel>
+          </ModalCard>
         </ModalOverlay>
       )}
       <Footer onNavigatePrivacy={() => navigate("/privacy")} onNavigateTerms={() => navigate("/terms")} />
