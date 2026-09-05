@@ -370,20 +370,22 @@ const ChevronButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  background: transparent;
   border: none;
   border-radius: ${({ theme }) => theme.radius.full};
-  color: #18181b;
+  color: rgba(255, 255, 255, 0.3);
   font-size: 1.1rem;
   cursor: pointer;
-  transition: background ${({ theme }) => theme.transition}, transform 0.15s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  transition: background 0.25s ease, color 0.25s ease, transform 0.15s ease, box-shadow 0.25s ease;
+  box-shadow: none;
   z-index: 2;
 
   &:hover {
-    background: #fff;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    color: #18181b;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
     transform: translateY(-50%) scale(1.08);
   }
 
