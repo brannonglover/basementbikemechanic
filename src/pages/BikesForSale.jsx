@@ -370,10 +370,10 @@ const ChevronButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  background: transparent;
+  background: rgba(0, 0, 0, 0.3);
   border: none;
   border-radius: ${({ theme }) => theme.radius.full};
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.85);
   font-size: 1.1rem;
   cursor: pointer;
   transition: background 0.25s ease, color 0.25s ease, transform 0.15s ease, box-shadow 0.25s ease;
