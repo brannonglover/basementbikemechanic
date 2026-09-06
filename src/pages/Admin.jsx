@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Header from "../components/Header";
@@ -259,6 +259,46 @@ const LoginForm = styled.form`
 
 const ADMIN_AUTH_KEY = 'basementbikemechanic_admin_auth';
 const ADMIN_PASSWORD_KEY = 'basementbikemechanic_admin_password';
+const FORM_DRAFT_KEY = 'basementbikemechanic_bike_form_draft';
+
+const EMPTY_FORM = {
+  name: "", images: [], price: "", description: "",
+  frame_size: "", wheel_size: "", components: [],
+};
+
+function readDraft() {
+  try {
+    const raw = sessionStorage.getItem(FORM_DRAFT_KEY);
+    if (!raw) return null;
+    const draft = JSON.parse(raw);
+    return {
+      form: { ...EMPTY_FORM, ...draft.form },
+      componentInput: draft.componentInput || "",
+      editingId: draft.editingId ?? null,
+    };
+  } catch {
+    return null;
+  }
+}
+
+function writeDraft(form, componentInput, editingId) {
+  try {
+    sessionStorage.setItem(
+      FORM_DRAFT_KEY,
+      JSON.stringify({ form, componentInput, editingId })
+    );
+  } catch {
+    // Storage full or unavailable — silently ignore
+  }
+}
+
+function clearDraft() {
+  try {
+    sessionStorage.removeItem(FORM_DRAFT_KEY);
+  } catch {
+    // ignore
+  }
+}
 
 const DropZone = styled.label`
   display: flex;
@@ -312,15 +352,19 @@ const ImagePreview = styled.div`
   height: 80px;
   border-radius: ${({ theme }) => theme.radius.sm};
   overflow: hidden;
-  border: 1px solid ${({ theme }) => theme.colors.borderStrong};
+  border: 2px solid ${({ $dropTarget, theme }) => $dropTarget ? theme.colors.primary : theme.colors.borderStrong};
+  cursor: grab;
+  opacity: ${({ $dragging }) => ($dragging ? 0.4 : 1)};
+  transition: border-color 0.15s, opacity 0.15s;
 
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    pointer-events: none;
   }
 
-  button {
+  .remove-btn {
     position: absolute;
     top: 2px;
     right: 2px;
@@ -341,6 +385,23 @@ const ImagePreview = styled.div`
     &:hover {
       background: #8a1c12;
     }
+  }
+
+  .order-badge {
+    position: absolute;
+    bottom: 2px;
+    left: 2px;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 5px;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 20px;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    border-radius: 4px;
+    pointer-events: none;
   }
 `;
 
@@ -414,16 +475,67 @@ function Admin() {
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
   const [bikes, setBikes] = useState([]);
-  const [editingId, setEditingId] = useState(null);
-  const [form, setForm] = useState({
-    name: "", images: [], price: "", description: "",
-    frame_size: "", wheel_size: "", components: [],
+  const [editingId, setEditingId] = useState(() => {
+    const draft = readDraft();
+    return draft ? draft.editingId : null;
   });
-  const [componentInput, setComponentInput] = useState("");
+  const [form, setForm] = useState(() => {
+    const draft = readDraft();
+    return draft ? draft.form : { ...EMPTY_FORM };
+  });
+  const [componentInput, setComponentInput] = useState(() => {
+    const draft = readDraft();
+    return draft ? draft.componentInput : "";
+  });
   const [imageError, setImageError] = useState("");
   const [isDragging, setIsDragging] = useState(false);
   const [toolsMessage, setToolsMessage] = useState("");
   const importInputRef = useRef(null);
+  const draggedImage = useRef(null);
+  const [dropTargetIndex, setDropTargetIndex] = useState(null);
+
+  const handleImageDragStart = useCallback((e, index) => {
+    draggedImage.current = index;
+    e.dataTransfer.effectAllowed = "move";
+  }, []);
+
+  const handleImageDragOver = useCallback((e, index) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+    if (draggedImage.current !== null && draggedImage.current !== index) {
+      setDropTargetIndex(index);
+    }
+  }, []);
+
+  const handleImageDragLeave = useCallback((e) => {
+    if (!e.currentTarget.contains(e.relatedTarget)) {
+      setDropTargetIndex(null);
+    }
+  }, []);
+
+  const handleImageDrop = useCallback((e, toIndex) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const fromIndex = draggedImage.current;
+    setDropTargetIndex(null);
+    draggedImage.current = null;
+    if (fromIndex === null || fromIndex === toIndex) return;
+    setForm((f) => {
+      const imgs = [...f.images];
+      const [moved] = imgs.splice(fromIndex, 1);
+      imgs.splice(toIndex, 0, moved);
+      return { ...f, images: imgs };
+    });
+  }, []);
+
+  const handleImageDragEnd = useCallback(() => {
+    draggedImage.current = null;
+    setDropTargetIndex(null);
+  }, []);
+
+  useEffect(() => {
+    writeDraft(form, componentInput, editingId);
+  }, [form, componentInput, editingId]);
 
   useEffect(() => {
     let isMounted = true;
@@ -534,9 +646,10 @@ function Admin() {
 
     try {
       await persistBikes(updated);
-      setForm({ name: "", images: [], price: "", description: "", frame_size: "", wheel_size: "", components: [] });
+      setForm({ ...EMPTY_FORM });
       setComponentInput("");
       setEditingId(null);
+      clearDraft();
     } catch (err) {
       setImageError(`Database save failed: ${err.message}`);
     }
@@ -628,9 +741,10 @@ function Admin() {
     try {
       await persistBikes(updated);
       if (editingId === id) {
-        setForm({ name: "", images: [], price: "", description: "", frame_size: "", wheel_size: "", components: [] });
+        setForm({ ...EMPTY_FORM });
         setComponentInput("");
         setEditingId(null);
+        clearDraft();
       }
     } catch (err) {
       setToolsMessage(`Delete failed: ${err.message}`);
@@ -638,10 +752,11 @@ function Admin() {
   };
 
   const handleCancelEdit = () => {
-    setForm({ name: "", images: [], price: "", description: "", frame_size: "", wheel_size: "", components: [] });
+    setForm({ ...EMPTY_FORM });
     setComponentInput("");
     setEditingId(null);
     setImageError("");
+    clearDraft();
   };
 
   const handleToggleSold = async (id) => {
@@ -735,9 +850,10 @@ function Admin() {
       const saved = await saveBikesToDatabase(normalized, getAdminPassword());
       saveBikes(saved);
       setBikes(saved);
-      setForm({ name: "", images: [], price: "", description: "", frame_size: "", wheel_size: "", components: [] });
+      setForm({ ...EMPTY_FORM });
       setComponentInput("");
       setEditingId(null);
+      clearDraft();
       setToolsMessage(`Imported ${saved.length} bike listing${saved.length === 1 ? "" : "s"}.`);
     } catch (err) {
       setToolsMessage(`Import failed: ${err.message}`);
@@ -787,12 +903,26 @@ function Admin() {
               </span>
               <span style={{ fontSize: "0.8rem" }}>Keep file sizes reasonable to avoid storage limits.</span>
             </DropZone>
+            {form.images.length > 1 && (
+              <small>Drag images to reorder. The first image is the main listing photo.</small>
+            )}
             {form.images.length > 0 && (
               <ImagePreviews>
                 {form.images.map((src, i) => (
-                  <ImagePreview key={i}>
+                  <ImagePreview
+                    key={i}
+                    draggable
+                    $dragging={draggedImage.current === i}
+                    $dropTarget={dropTargetIndex === i}
+                    onDragStart={(e) => handleImageDragStart(e, i)}
+                    onDragOver={(e) => handleImageDragOver(e, i)}
+                    onDragLeave={handleImageDragLeave}
+                    onDrop={(e) => handleImageDrop(e, i)}
+                    onDragEnd={handleImageDragEnd}
+                  >
                     <img src={src} alt={`Preview ${i + 1}`} />
-                    <button type="button" onClick={() => removeImage(i)} aria-label="Remove image">
+                    <span className="order-badge">{i + 1}</span>
+                    <button className="remove-btn" type="button" onClick={() => removeImage(i)} aria-label="Remove image">
                       ×
                     </button>
                   </ImagePreview>
