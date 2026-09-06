@@ -337,6 +337,8 @@ const ImagePanel = styled.div`
   position: relative;
   background: #000;
   min-height: 0;
+  display: flex;
+  flex-direction: column;
 
   @media screen and (max-width: 860px) {
     aspect-ratio: 4 / 3;
@@ -491,6 +493,18 @@ const BikeDescription = styled.p`
   line-height: 1.65;
   margin: 0 0 1.25rem;
   white-space: pre-line;
+
+  a {
+    color: ${({ theme }) => theme.colors.footerLink};
+    font-weight: 500;
+    text-decoration: none;
+    text-underline-offset: 3px;
+    word-break: break-all;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 `;
 
 const SpecsGrid = styled.div`
@@ -580,6 +594,23 @@ const InfoSpacer = styled.div`
 `;
 
 const CONTACT_EMAIL = "support@basementbikemechanic.com";
+
+const URL_RE = /(https?:\/\/[^\s)<>]+)/g;
+
+function linkifyText(text) {
+  if (!text) return text;
+  const parts = text.split(URL_RE);
+  if (parts.length === 1) return text;
+  return parts.map((part, i) =>
+    URL_RE.test(part) ? (
+      <a key={i} href={part} target="_blank" rel="noopener noreferrer">
+        {part}
+      </a>
+    ) : (
+      part
+    )
+  );
+}
 
 function getBikeIdFromHash(hash) {
   const value = (hash || "").replace(/^#/, "");
@@ -823,7 +854,7 @@ function BikesForSale() {
               {selectedBike.description && (
                 <>
                   <Divider />
-                  <BikeDescription>{selectedBike.description}</BikeDescription>
+                  <BikeDescription>{linkifyText(selectedBike.description)}</BikeDescription>
                 </>
               )}
               {(selectedBike.frame_size || selectedBike.wheel_size || (selectedBike.components && selectedBike.components.length > 0)) && (
