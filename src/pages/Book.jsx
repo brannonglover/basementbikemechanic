@@ -73,11 +73,6 @@ function isBikeEmpty(bike) {
   return !bike.make.trim() && !bike.model.trim() && bike.bikeType === "AUTO";
 }
 
-function formatMiles(value) {
-  if (typeof value !== "number" || !Number.isFinite(value)) return "";
-  return value < 10 ? value.toFixed(1) : Math.round(value).toString();
-}
-
 const PageWrapper = styled.div`
   margin: 0 auto;
   padding: 0;
@@ -415,13 +410,6 @@ const ConsentText = styled.div`
     theme.colors.bg === "#1a1a1e" ? "#cbd5e1" : theme.colors.text};
 `;
 
-const HelperText = styled.p`
-  margin: 0;
-  font-size: 0.85rem;
-  line-height: 1.5;
-  color: ${({ theme }) => theme.colors.textMuted};
-`;
-
 const SavedBikesPanel = styled.div`
   display: grid;
   gap: 0.75rem;
@@ -502,22 +490,6 @@ const ErrorAlert = styled(Alert)`
   background: ${({ theme }) =>
     theme.colors.bg === "#1a1a1e" ? "rgba(127, 29, 29, 0.34)" : "rgba(220, 38, 38, 0.1)"};
   color: ${({ theme }) => (theme.colors.bg === "#1a1a1e" ? "#fecaca" : "#991b1b")};
-`;
-
-const WarningAlert = styled(Alert)`
-  border: 1px solid ${({ theme }) =>
-    theme.colors.bg === "#1a1a1e" ? "rgba(251, 191, 36, 0.28)" : "rgba(245, 158, 11, 0.28)"};
-  background: ${({ theme }) =>
-    theme.colors.bg === "#1a1a1e" ? "rgba(120, 53, 15, 0.28)" : "rgba(245, 158, 11, 0.1)"};
-  color: ${({ theme }) => (theme.colors.bg === "#1a1a1e" ? "#fde68a" : "#92400e")};
-`;
-
-const SuccessAlert = styled(Alert)`
-  border: 1px solid ${({ theme }) =>
-    theme.colors.bg === "#1a1a1e" ? "rgba(52, 211, 153, 0.24)" : "rgba(16, 185, 129, 0.22)"};
-  background: ${({ theme }) =>
-    theme.colors.bg === "#1a1a1e" ? "rgba(6, 78, 59, 0.28)" : "rgba(16, 185, 129, 0.1)"};
-  color: ${({ theme }) => (theme.colors.bg === "#1a1a1e" ? "#a7f3d0" : "#065f46")};
 `;
 
 const InfoCallout = styled(Alert)`
@@ -644,10 +616,6 @@ function Book() {
   const [turnstileResetSignal, setTurnstileResetSignal] = useState(0);
   const [success, setSuccess] = useState(null);
   const [resolvedApiBase, setResolvedApiBase] = useState(BIKEOPS_BASE_URL);
-  const [collectionEligibility, setCollectionEligibility] = useState({
-    status: "idle", // idle | checking | ok | error
-    result: null,
-  });
   const [bikes, setBikes] = useState([{ make: "", model: "", bikeType: "AUTO" }]);
   const dateFieldTouched = useRef({
     dropOffDate: false,
@@ -664,9 +632,6 @@ function Book() {
     dropOffTime: "",
     pickupDate: "",
     pickupTime: "",
-    collectionAddress: "",
-    collectionWindowStart: "",
-    collectionWindowEnd: "",
     customerNotes: "",
     serviceIds: [],
     smsConsent: false,
@@ -767,50 +732,6 @@ function Book() {
         : [...previous.serviceIds, serviceId],
     }));
   };
-
-  const checkCollectionAddress = useCallback(async () => {
-    if (form.deliveryType !== "COLLECTION_SERVICE") {
-      setCollectionEligibility({ status: "idle", result: null });
-      return;
-    }
-
-    const address = form.collectionAddress.trim();
-    if (!address) {
-      setCollectionEligibility({ status: "idle", result: null });
-      return;
-    }
-
-    setCollectionEligibility((p) => ({ ...p, status: "checking" }));
-    for (const apiBasePath of BIKEOPS_API_BASE_PATHS) {
-      try {
-        const res = await fetch(
-          `${resolvedApiBase}${apiBasePath}/collection-eligibility?address=${encodeURIComponent(address)}`
-        );
-        const data = await res.json().catch(() => null);
-        if (!res.ok) {
-          continue;
-        }
-        setCollectionEligibility({ status: "ok", result: data });
-        return;
-      } catch {
-        // Try the next endpoint.
-      }
-    }
-    setCollectionEligibility({ status: "error", result: null });
-  }, [form.collectionAddress, form.deliveryType, resolvedApiBase]);
-
-  useEffect(() => {
-    if (form.deliveryType !== "COLLECTION_SERVICE") return undefined;
-    const address = form.collectionAddress.trim();
-    if (!address) {
-      setCollectionEligibility({ status: "idle", result: null });
-      return undefined;
-    }
-    const timer = setTimeout(() => {
-      checkCollectionAddress();
-    }, 450);
-    return () => clearTimeout(timer);
-  }, [form.collectionAddress, form.deliveryType, checkCollectionAddress]);
 
   const lookupSavedBikes = useCallback(async (identityOverride) => {
     const identity = identityOverride || {
@@ -919,24 +840,6 @@ function Book() {
     setError("");
     setAttemptedSubmit(true);
 
-    if (form.deliveryType === "COLLECTION_SERVICE") {
-      const r = collectionEligibility.result;
-      if (collectionEligibility.status === "checking") {
-        setError(t("book.checkingAddress"));
-        return;
-      }
-      if (r && r.enabled === true) {
-        if (r.ok === true && r.eligible === false) {
-          setError(t("book.outsideRadius"));
-          return;
-        }
-        if (r.ok === false) {
-          setError(r.error || t("book.verifyFailed"));
-          return;
-        }
-      }
-    }
-
     if (!TURNSTILE_SITE_KEY) {
       setError("Booking verification is not configured. Please try again later.");
       return;
@@ -974,18 +877,6 @@ function Book() {
         deliveryType: form.deliveryType,
         ...(dropOffSchedule ? { dropOffDate: dropOffSchedule } : {}),
         ...(pickupSchedule ? { pickupDate: pickupSchedule } : {}),
-        collectionAddress:
-          form.deliveryType === "COLLECTION_SERVICE"
-            ? form.collectionAddress.trim() || null
-            : null,
-        collectionWindowStart:
-          form.deliveryType === "COLLECTION_SERVICE"
-            ? form.collectionWindowStart || null
-            : null,
-        collectionWindowEnd:
-          form.deliveryType === "COLLECTION_SERVICE"
-            ? form.collectionWindowEnd || null
-            : null,
         customerNotes: form.customerNotes.trim() || null,
         serviceIds: form.serviceIds,
         turnstileToken,
@@ -1263,7 +1154,6 @@ function Book() {
               <AddBikeButton type="button" onClick={addBike}>
                 {t("book.addAnotherBike")}
               </AddBikeButton>
-              <HelperText>{t("book.collectionPricingHint")}</HelperText>
             </Section>
 
             <Section>
@@ -1277,25 +1167,11 @@ function Book() {
               />
             </Section>
 
-            <Field>
-              <Label htmlFor="deliveryType">{t("book.deliveryOption")}</Label>
-              <ValidatedSelect
-                id="deliveryType"
-                value={form.deliveryType}
-                onChange={(event) => updateForm("deliveryType", event.target.value)}
-              >
-                <option value="DROP_OFF_AT_SHOP">{t("book.dropOffAtShop")}</option>
-                <option value="COLLECTION_SERVICE">{t("book.collectionService")}</option>
-              </ValidatedSelect>
-            </Field>
-
             <Grid>
               <DateTimeGroup>
                 <Field>
                   <Label htmlFor="dropOffDate">
-                    {form.deliveryType === "COLLECTION_SERVICE"
-                      ? t("book.preferredCollectionPickup")
-                      : t("book.preferredDropOff")}
+{t("book.preferredDropOff")}
                   </Label>
                   <DateTimeFieldWrap $empty={!form.dropOffDate}>
                     <ValidatedInput
@@ -1331,9 +1207,7 @@ function Book() {
               <DateTimeGroup>
                 <Field>
                   <Label htmlFor="pickupDate">
-                    {form.deliveryType === "COLLECTION_SERVICE"
-                      ? t("book.preferredCollectionReturn")
-                      : t("book.preferredPickup")}
+{t("book.preferredPickup")}
                   </Label>
                   <DateTimeFieldWrap $empty={!form.pickupDate}>
                     <ValidatedInput
@@ -1373,97 +1247,6 @@ function Book() {
                 <strong>{t("book.datesOptionalTitle")}</strong> {t("book.datesOptionalBody")}
               </span>
             </InfoCallout>
-
-            {form.deliveryType === "COLLECTION_SERVICE" && (
-              <Grid>
-                <Field>
-                  <Label htmlFor="collectionAddress">{t("book.collectionAddress")}</Label>
-                  <ValidatedInput
-                    id="collectionAddress"
-                    type="text"
-                    required
-                    value={form.collectionAddress}
-                    onChange={(event) =>
-                      updateForm("collectionAddress", event.target.value)
-                    }
-                    $invalid={
-                      attemptedSubmit &&
-                      (form.deliveryType === "COLLECTION_SERVICE" &&
-                        (!form.collectionAddress.trim() ||
-                          (collectionEligibility.result &&
-                            collectionEligibility.result.enabled === true &&
-                            collectionEligibility.result.ok === true &&
-                            collectionEligibility.result.eligible === false)))
-                    }
-                    placeholder={t("book.collectionAddressPlaceholder")}
-                  />
-                  {collectionEligibility.status === "checking" && (
-                    <HelperText>{t("book.checkingCollection")}</HelperText>
-                  )}
-                  {collectionEligibility.status === "error" && (
-                    <HelperText>{t("book.verifyAddressError")}</HelperText>
-                  )}
-                  {collectionEligibility.status === "ok" &&
-                    collectionEligibility.result &&
-                    collectionEligibility.result.enabled === true &&
-                    collectionEligibility.result.ok === true &&
-                    collectionEligibility.result.eligible === false && (
-                      <WarningAlert>
-                        {t("book.collectionUnavailable")}
-                        {typeof collectionEligibility.result.distanceMiles === "number" && (
-                          <> {t("book.milesAway", { miles: formatMiles(collectionEligibility.result.distanceMiles) })}</>
-                        )}{" "}
-                        {t("book.collectWithin", { radius: collectionEligibility.result.radiusMiles })}
-                      </WarningAlert>
-                    )}
-                  {collectionEligibility.status === "ok" &&
-                    collectionEligibility.result &&
-                    collectionEligibility.result.enabled === true &&
-                    collectionEligibility.result.ok === true &&
-                    collectionEligibility.result.eligible === true && (
-                      <SuccessAlert>
-                        {t("book.collectionAvailable", { radius: collectionEligibility.result.radiusMiles })}
-                      </SuccessAlert>
-                    )}
-                </Field>
-                <Field>
-                  <Label htmlFor="collectionWindowStart">{t("book.collectionWindowStart")}</Label>
-                  <DateTimeFieldWrap $empty={!form.collectionWindowStart}>
-                    <ValidatedInput
-                      id="collectionWindowStart"
-                      type="time"
-                      value={form.collectionWindowStart}
-                      onChange={(event) =>
-                        updateForm("collectionWindowStart", event.target.value)
-                      }
-                    />
-                    {!form.collectionWindowStart && (
-                      <FieldPlaceholder aria-hidden="true">{t("book.selectTime")}</FieldPlaceholder>
-                    )}
-                  </DateTimeFieldWrap>
-                </Field>
-                <Field>
-                  <Label htmlFor="collectionWindowEnd">{t("book.collectionWindowEnd")}</Label>
-                  <DateTimeFieldWrap $empty={!form.collectionWindowEnd}>
-                    <ValidatedInput
-                      id="collectionWindowEnd"
-                      type="time"
-                      value={form.collectionWindowEnd}
-                      onChange={(event) =>
-                        updateForm("collectionWindowEnd", event.target.value)
-                      }
-                    />
-                    {!form.collectionWindowEnd && (
-                      <FieldPlaceholder aria-hidden="true">{t("book.selectTime")}</FieldPlaceholder>
-                    )}
-                  </DateTimeFieldWrap>
-                </Field>
-              </Grid>
-            )}
-
-            {form.deliveryType === "COLLECTION_SERVICE" && (
-              <HelperText>{t("book.collectionHelper")}</HelperText>
-            )}
 
             <Field>
               <Label htmlFor="notesTextarea">{t("book.notesLabel")}</Label>

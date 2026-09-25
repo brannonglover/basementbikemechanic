@@ -4,7 +4,7 @@ const siteConfig = {
   phone: "(404) 596-4088",
   email: "support@basementbikemechanic.com",
   site_description:
-    "En Basement Bike Mechanic, todo el trabajo de reparación de bicicletas se realiza aquí en mi taller del sótano en Atlanta: usted deja su bicicleta en el taller y yo me encargo de principio a fin. Atiendo a la comunidad ciclista de Atlanta con reparación experta, mantenimiento y ajustes diseñados para que pedalee con fluidez y seguridad. Si no le resulta conveniente venir, ofrezco recogida opcional dentro de 5 millas: recojo y devuelvo su bicicleta, pero el trabajo de reparación siempre se hace aquí en el taller (no en su domicilio ni en el sitio). Ya sea commuter diario, ciclista de fin de semana o ciclista serio, recibe un servicio amable y profesional en un ambiente acogedor. Desde pinchazos y ajustes de frenos hasta revisiones completas, atiendo todo tipo de bicicletas con cuidado y precisión. ¿Listo para un ajuste? Trabajo exclusivamente con cita para darle a su bicicleta la atención que merece. Escríbame por texto o reserve en línea.",
+    "En Basement Bike Mechanic, todo el trabajo de reparación de bicicletas se realiza aquí en mi taller del sótano en Atlanta: usted deja su bicicleta en el taller y yo me encargo de principio a fin. Atiendo a la comunidad ciclista de Atlanta con reparación experta, mantenimiento y ajustes diseñados para que pedalee con fluidez y seguridad. Todas las reparaciones se hacen aquí en el taller, no en su domicilio ni en el sitio. Ya sea commuter diario, ciclista de fin de semana o ciclista serio, recibe un servicio amable y profesional en un ambiente acogedor. Desde pinchazos y ajustes de frenos hasta revisiones completas, atiendo todo tipo de bicicletas con cuidado y precisión. ¿Listo para un ajuste? Trabajo exclusivamente con cita para darle a su bicicleta la atención que merece. Escríbame por texto o reserve en línea.",
   regular_maintenance_first:
     "Los ajustes regulares y el mantenimiento adecuado son esenciales para mantener su bicicleta segura, eficiente y agradable de usar. Un ajuste ayuda a que frenos y cambios funcionen con suavidad, que los neumáticos estén bien inflados y que todas las piezas móviles estén limpias y lubricadas, lo que reduce el desgaste y prolonga la vida útil de los componentes. El mantenimiento adecuado puede evitar reparaciones costosas al detectar problemas pequeños antes de que se conviertan en fallas mayores, y también mejora el rendimiento, facilitando el pedaleo y haciendo los paseos más cómodos.",
   regular_maintenance_second:
@@ -146,7 +146,7 @@ const siteConfig = {
     { id: 4, service: "Reemplazo de cámara y/o neumático ebike (por neumático)", price: 40 },
     { id: 7, service: "Reemplazo de neumático tubeless (por neumático)", price: 35 },
     { id: 24, service: "Recarga de líquido sellante tubeless", price: 25 },
-    { id: 8, service: "Purga de frenos (por freno)", price: 45 },
+    { id: 8, service: "Purga de frenos (por freno)", price: 65 },
     { id: 25, service: "Purga de frenos (relleno)", price: 35 },
     { id: 15, service: "Limpieza y asentado de pastillas (por freno)", price: 30 },
     { id: 16, service: "Limpieza y asentado de pastillas ebike (por freno)", price: 40 },
@@ -193,7 +193,7 @@ const messages = {
     defaultTitle:
       "Reparación de bicicletas en Atlanta | Ajustes y servicio | Basement Bike Mechanic",
     defaultDescription:
-      "Reparación y ajustes de bicicletas en Atlanta con cita previa. Deje su bici en 2272 Melinda Dr NE — recogida y devolución opcional dentro de 5 millas. Todo el trabajo en mi taller del sótano; sin reparaciones móviles en el sitio. Envíe un texto o reserve en línea.",
+      "Reparación y ajustes de bicicletas en Atlanta con cita previa. Deje su bici en 2272 Melinda Dr NE. Todo el trabajo en mi taller del sótano; sin reparaciones móviles en el sitio. Envíe un texto o reserve en línea.",
     privacyTitle: "Política de privacidad | Basement Bike Mechanic",
     privacyDescription:
       "Cómo Basement Bike Mechanic recopila y usa la información de contacto para servicios de reparación de bicicletas. Sin spam; nunca vendemos sus datos.",
@@ -373,7 +373,7 @@ const messages = {
     trackStatus: "Seguir el estado de su reparación",
     pageTitle: "Reservar una reparación",
     intro:
-      "Complete el formulario a continuación para solicitar servicio. Todas las reparaciones se realizan en mi taller del sótano: deje su bicicleta en el taller o elija recogida dentro de 5 millas. Su reserva se enviará directamente a BikeOps, y el mensaje de consentimiento SMS se muestra aquí antes de enviar.",
+      "Complete el formulario a continuación para solicitar servicio. Todas las reparaciones se realizan en mi taller del sótano: deje su bicicleta en el taller. Su reserva se enviará directamente a BikeOps, y el mensaje de consentimiento SMS se muestra aquí antes de enviar.",
     firstName: "Nombre *",
     lastName: "Apellido *",
     email: "Correo electrónico *",
@@ -399,15 +399,8 @@ const messages = {
     type: "Tipo",
     autoDetect: "Detectar automáticamente por marca/modelo",
     addAnotherBike: "Agregar otra bicicleta",
-    collectionPricingHint:
-      "El precio del servicio de recogida se aplica en BikeOps automáticamente cuando se acepta la reserva.",
     requestedServices: "Servicios solicitados",
-    deliveryOption: "Opción de entrega",
-    dropOffAtShop: "Entrega en el taller",
-    collectionService: "Servicio de recogida",
-    preferredCollectionPickup: "Fecha preferida de recogida",
     preferredDropOff: "Fecha preferida de entrega",
-    preferredCollectionReturn: "Fecha preferida de devolución",
     preferredPickup: "Fecha preferida de recogida",
     time: "Hora",
     optional: "(opcional)",
@@ -417,31 +410,12 @@ const messages = {
     datesOptionalTitle: "Las fechas y horas son opcionales.",
     datesOptionalBody:
       "Déjelas en blanco si aún no está seguro, u omita la hora si es flexible sobre cuándo entregar o recoger.",
-    collectionAddress: "Dirección de recogida",
-    collectionAddressPlaceholder: "Calle, ciudad, código postal",
-    checkingCollection:
-      "Verificando si esta dirección está dentro de nuestra área de recogida de 5 millas…",
-    verifyAddressError:
-      "No pudimos verificar la dirección en este momento. La recogida solo está disponible dentro de 5 millas.",
-    collectionUnavailable: "La recogida no está disponible para esta dirección.",
-    milesAway: "Está a unas {{miles}} mi de distancia.",
-    collectWithin: "Recogemos dentro de {{radius}} mi del taller.",
-    collectionAvailable:
-      "Buenas noticias: esta dirección está dentro de nuestra área de recogida de {{radius}} millas.",
-    collectionWindowStart: "Inicio de ventana de recogida",
-    collectionWindowEnd: "Fin de ventana de recogida",
-    collectionHelper:
-      "El servicio de recogida está disponible dentro de 5 millas del taller. Si prefiere entregar en el taller, elija esa opción arriba.",
     notesLabel: "¿Algo más que debamos saber?",
     notesPlaceholder: "Describa el problema, horarios o cualquier detalle útil.",
     submitting: "Enviando solicitud...",
     bookNow: "Reservar",
     servicesLoadError:
       "No se pudieron cargar los servicios de BikeOps. Actualice e intente de nuevo. Si usa un bloqueador de anuncios o herramienta de privacidad, desactívelo para este sitio.",
-    checkingAddress: "Verificando dirección de recogida… intente de nuevo en un momento.",
-    outsideRadius:
-      "Esa dirección está fuera de nuestro radio de recogida de 5 millas. Elija entrega en el taller.",
-    verifyFailed: "No pudimos verificar esa dirección de recogida. Revísela.",
     submitFailed: "No se pudo enviar la reserva. Intente de nuevo.",
     connectionFailed:
       "No se pudo enviar la reserva. Verifique su conexión e intente de nuevo.",

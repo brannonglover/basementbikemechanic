@@ -5,7 +5,7 @@ const messages = {
     defaultTitle:
       "Bike Repair Atlanta | Tune-Ups & Bicycle Service | Basement Bike Mechanic",
     defaultDescription:
-      "Shop-based Atlanta bike repair and tune-ups by appointment. Drop off at 2272 Melinda Dr NE — optional pickup and return within 5 miles. All work done at my basement workshop; no on-site mobile repairs. Text or book online.",
+      "Shop-based Atlanta bike repair and tune-ups by appointment. Drop off at 2272 Melinda Dr NE. All work done at my basement workshop; no on-site mobile repairs. Text or book online.",
     privacyTitle: "Privacy Policy | Basement Bike Mechanic",
     privacyDescription:
       "How Basement Bike Mechanic collects and uses contact information for bicycle repair services. No spam; we never sell your data.",
@@ -182,7 +182,7 @@ const messages = {
     trackStatus: "Track your repair status",
     pageTitle: "Book a Repair",
     intro:
-      "Fill out the form below to request service. All repairs happen at my basement workshop — drop your bike off at the shop, or choose collection within 5 miles for pickup and return. Your booking will be sent directly into BikeOps, and the SMS consent message is shown here in the form before you submit.",
+      "Fill out the form below to request service. All repairs happen at my basement workshop — drop your bike off at the shop. Your booking will be sent directly into BikeOps, and the SMS consent message is shown here in the form before you submit.",
     firstName: "First name *",
     lastName: "Last name *",
     email: "Email *",
@@ -208,15 +208,8 @@ const messages = {
     type: "Type",
     autoDetect: "Auto-detect from make/model",
     addAnotherBike: "Add another bike",
-    collectionPricingHint:
-      "Collection service pricing is applied in BikeOps automatically when the booking is accepted.",
     requestedServices: "Requested services",
-    deliveryOption: "Delivery option",
-    dropOffAtShop: "Drop-off at shop",
-    collectionService: "Collection service",
-    preferredCollectionPickup: "Preferred collection pickup date",
     preferredDropOff: "Preferred drop-off date",
-    preferredCollectionReturn: "Preferred collection return date",
     preferredPickup: "Preferred pickup date",
     time: "Time",
     optional: "(optional)",
@@ -226,31 +219,12 @@ const messages = {
     datesOptionalTitle: "Dates and times are optional.",
     datesOptionalBody:
       "Leave them blank if you're not sure yet, or skip the time if you're flexible on when you drop off or pick up.",
-    collectionAddress: "Collection address",
-    collectionAddressPlaceholder: "Street, city, ZIP",
-    checkingCollection:
-      "Checking whether this address is within our 5-mile collection area…",
-    verifyAddressError:
-      "We couldn't verify the address right now. Collection is only available within 5 miles.",
-    collectionUnavailable: "Collection isn't available for this address.",
-    milesAway: "It's about {{miles}} mi away.",
-    collectWithin: "We collect within {{radius}} mi of the shop.",
-    collectionAvailable:
-      "Good news — this address is within our {{radius}}-mile collection area.",
-    collectionWindowStart: "Collection window start",
-    collectionWindowEnd: "Collection window end",
-    collectionHelper:
-      "Collection service is available within 5 miles of the shop. If you prefer drop-off instead, choose the shop option above.",
     notesLabel: "Anything else we should know?",
     notesPlaceholder: "Describe the issue, timing, or anything helpful for intake.",
     submitting: "Submitting request...",
     bookNow: "Book now",
     servicesLoadError:
       "Couldn't load services from BikeOps. Please refresh and try again. If you use an ad blocker or privacy tool, try disabling it for this site.",
-    checkingAddress: "Checking collection address… please try again in a moment.",
-    outsideRadius:
-      "That address is outside our 5-mile collection radius. Please choose drop-off instead.",
-    verifyFailed: "We couldn't verify that collection address. Please double-check it.",
     submitFailed: "Unable to submit booking. Please try again.",
     connectionFailed:
       "Unable to submit booking. Please check your connection and try again.",
