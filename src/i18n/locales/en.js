@@ -44,6 +44,11 @@ const messages = {
     heroTitle: "Atlanta Bike Repair & Bicycle Tune-Ups",
     disclaimer:
       "Disclaimer: I do not offer on-site mobile repair services. All work is done at my basement workshop in Atlanta.",
+    awardEyebrow: "Best of 2026 Award",
+    awardTitle: "Best Bicycle Repair Shop in Atlanta",
+    awardSource: "Awarded by BusinessRate, based on Google reviews",
+    awardAriaLabel:
+      "Best of 2026: Best Bicycle Repair Shop in Atlanta, awarded by BusinessRate based on Google reviews (opens BusinessRate in a new tab)",
     reviewsHeading: "What Customers Are Saying",
     aboutHeading: "About",
     aboutP1:

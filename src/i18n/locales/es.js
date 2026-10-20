@@ -232,6 +232,11 @@ const messages = {
     heroTitle: "Reparación de bicicletas y ajustes en Atlanta",
     disclaimer:
       "Aviso: no ofrezco servicios de reparación móvil en el sitio. Todo el trabajo se realiza en mi taller del sótano en Atlanta.",
+    awardEyebrow: "Premio Best of 2026",
+    awardTitle: "Mejor taller de reparación de bicicletas en Atlanta",
+    awardSource: "Otorgado por BusinessRate, según reseñas de Google",
+    awardAriaLabel:
+      "Best of 2026: mejor taller de reparación de bicicletas en Atlanta, otorgado por BusinessRate según reseñas de Google (abre BusinessRate en una pestaña nueva)",
     reviewsHeading: "Lo que dicen los clientes",
     aboutHeading: "Acerca de",
     aboutP1:

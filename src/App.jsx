@@ -13,6 +13,7 @@ import BikesForSale from "./pages/BikesForSale";
 import Admin from "./pages/Admin";
 import Book from "./pages/Book";
 import PageSeo from './components/PageSeo';
+import AwardBadge from './components/AwardBadge';
 import { useLocale } from './i18n/LocaleContext';
 import TuneUp from './images/close-up-hand-repairing-bike.jpg';
 import { useThemeMode } from "./ThemeModeContext";
@@ -152,11 +153,16 @@ const BreakLine = styled.div`
   margin: 4rem auto 0.5rem;
 `;
 
+/** Hero already ends with padding, so the divider above reviews needs no extra top margin. */
+const ReviewsBreakLine = styled(BreakLine)`
+  margin: 0 auto;
+`;
+
 const ReviewsSection = styled.section`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 3rem 1.5rem 1rem;
+  padding: 1.5rem 1.5rem 1rem;
   max-width: ${({ theme }) => theme.maxWidth.content};
   margin: 0 auto;
 
@@ -164,7 +170,9 @@ const ReviewsSection = styled.section`
     font-size: clamp(1.35rem, 2.5vw, 1.85rem);
     font-weight: 700;
     letter-spacing: -0.02em;
-    margin: 0 0 1.5rem;
+    line-height: 1.2;
+    /* Reviews widget adds its own 10px top padding */
+    margin: 0 0 0.25rem;
     color: ${({ theme }) => theme.colors.text};
     text-align: center;
   }
@@ -361,8 +369,9 @@ function HomePage({ width, view, switchViews }) {
         <ServiceCallout>
           {t("home.disclaimer")}
         </ServiceCallout>
+        <AwardBadge />
       </SiteDescription>
-      <BreakLine />
+      <ReviewsBreakLine />
       <ReviewsSection>
         <h2>{t("home.reviewsHeading")}</h2>
         <ReviewsWidget />

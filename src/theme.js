@@ -40,6 +40,8 @@ export const lightTheme = {
     accent: "#e8b00c",
     accentHover: "#d4a20a",
     accentMuted: "#fef3c7",
+    /** Gold readable as text on light surfaces */
+    accentText: "#a16207",
     textOnAccent: "#18181b",
     brandGreen: "#7cb342",
     headerBg: "#0a0a0a",
@@ -74,6 +76,7 @@ export const darkTheme = {
     accent: "#e8b00c",
     accentHover: "#f0c030",
     accentMuted: "rgba(232, 176, 12, 0.18)",
+    accentText: "#e8b00c",
     textOnAccent: "#18181b",
     brandGreen: "#9ccc65",
     headerBg: "#0a0a0a",
